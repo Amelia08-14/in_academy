@@ -248,18 +248,18 @@ export default function Header() {
             />
             <motion.div
               id="mobile-nav-drawer"
-              className="fixed inset-y-0 right-0 z-[1000] flex w-4/5 max-w-xs flex-col overflow-y-auto bg-navy-deeper shadow-2xl md:hidden"
+              className="fixed inset-y-0 right-0 z-[1000] flex w-4/5 max-w-xs flex-col bg-beige-light shadow-2xl md:hidden"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 340, damping: 38 }}
             >
-              <div className="flex justify-end px-5 pt-5">
+              <div className="flex shrink-0 justify-end px-5 pt-5">
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
                   aria-label="Fermer le menu"
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-navy/50 transition-colors hover:bg-navy/10 hover:text-navy"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6 6 18M6 6l12 12" />
@@ -267,54 +267,58 @@ export default function Header() {
                 </button>
               </div>
 
-              {showProfile && (
-                <div className="flex flex-col items-center gap-2 px-6 pb-2 pt-1 text-center">
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gold font-mono text-lg font-bold text-navy-deeper">
-                    {initials(displayName ?? email ?? "?")}
-                  </span>
-                  <span className="max-w-full truncate font-body text-base font-bold text-white">{displayName ?? "Mon compte"}</span>
-                  <span className="max-w-full truncate font-mono text-xs text-white/60">{subLabel}</span>
-                </div>
-              )}
+              {/* Middle region grows to fill all space, so the footer always sits at the bottom
+                  and the nav stays vertically centered — independent of viewport height. */}
+              <div className="flex flex-1 flex-col overflow-y-auto">
+                {showProfile && (
+                  <div className="flex shrink-0 flex-col items-center gap-2 px-6 pb-2 pt-1 text-center">
+                    <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gold font-mono text-lg font-bold text-navy-deeper">
+                      {initials(displayName ?? email ?? "?")}
+                    </span>
+                    <span className="max-w-full truncate font-body text-base font-bold text-navy">{displayName ?? "Mon compte"}</span>
+                    <span className="max-w-full truncate font-mono text-xs text-navy/50">{subLabel}</span>
+                  </div>
+                )}
 
-              <nav className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-8" aria-label="Navigation principale">
-                {NAV_LINKS.map((item) => {
-                  const active = item.href === "/"
-                    ? pathname === "/"
-                    : pathname === item.href || pathname.startsWith(`${item.href}/`);
-                  return (
+                <nav className="flex flex-1 flex-col items-center justify-center gap-7 px-6 py-6" aria-label="Navigation principale">
+                  {NAV_LINKS.map((item) => {
+                    const active = item.href === "/"
+                      ? pathname === "/"
+                      : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center gap-3 font-body text-base font-bold transition-colors ${
+                          active ? "text-gold-dark" : "text-navy hover:text-gold-dark"
+                        }`}
+                      >
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                          <path d={item.icon} />
+                        </svg>
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+
+                  {showProfile && menuItems.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center gap-3 font-body text-base font-bold transition-colors ${
-                        active ? "text-gold" : "text-white hover:text-gold-light"
-                      }`}
+                      className="font-body text-base font-bold text-navy hover:text-gold-dark"
                     >
-                      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                        <path d={item.icon} />
-                      </svg>
                       {item.label}
                     </Link>
-                  );
-                })}
+                  ))}
+                </nav>
+              </div>
 
-                {showProfile && menuItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="font-body text-base font-bold text-white hover:text-gold-light"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-
-              <div className="px-6 pb-12">
+              <div className="shrink-0 px-7 pb-24 pt-8">
                 {showProfile ? (
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex w-full items-center justify-center gap-2 rounded-full border border-white/25 px-5 py-3.5 font-mono text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:border-white/50"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-navy px-6 py-5 font-mono text-xs font-bold uppercase tracking-wider text-white shadow-md transition-transform active:scale-[0.98]"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
@@ -322,16 +326,19 @@ export default function Header() {
                     Se déconnecter
                   </button>
                 ) : (
-                  <div className="flex flex-col gap-3 border-t border-white/10 pt-6">
+                  <div className="flex flex-col gap-4">
                     <Link
                       href="/inscription"
-                      className="rounded-full bg-gold py-3.5 text-center font-mono text-xs font-bold uppercase tracking-wider text-navy-deeper shadow-lg shadow-gold/20 transition-transform active:scale-[0.98]"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-gold px-6 py-5 text-center font-mono text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-gold/30 transition-transform active:scale-[0.98]"
                     >
                       S&apos;inscrire
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
                     </Link>
                     <Link
                       href="/connexion"
-                      className="rounded-full bg-white/5 py-3.5 text-center font-mono text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-white/10"
+                      className="rounded-xl bg-navy px-6 py-5 text-center font-mono text-xs font-bold uppercase tracking-wider text-white shadow-md transition-transform active:scale-[0.98]"
                     >
                       Se connecter
                     </Link>

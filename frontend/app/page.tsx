@@ -253,7 +253,7 @@ function HeroSlider() {
             <div className="hero-slide__media">
               <div className="hero-slide__blob" aria-hidden="true" />
               <div className="hero-slide__img-frame frame-marks">
-                <Image src="/banner2.png" alt="Formation IN Academy" fill style={{ objectFit: "cover" }} priority />
+                <Image src="/banner2.png" alt="Formation IN Academy" fill style={{ objectFit: "contain" }} priority />
                 <span className="frame-marks__mark frame-marks__mark--tr" aria-hidden="true" />
                 <span className="frame-marks__mark frame-marks__mark--bl" aria-hidden="true" />
                 <span className="frame-marks__mark frame-marks__mark--br" aria-hidden="true" />
@@ -328,7 +328,7 @@ function HeroSlider() {
             <div className="hero-slide__media">
               <div className="hero-slide__blob" aria-hidden="true" />
               <div className="hero-slide__img-frame frame-marks">
-                <Image src="/banner.png" alt="IN Academy" fill style={{ objectFit: "cover" }} priority />
+                <Image src="/banner.png" alt="IN Academy" fill style={{ objectFit: "contain" }} priority />
                 <span className="frame-marks__mark frame-marks__mark--tr" aria-hidden="true" />
                 <span className="frame-marks__mark frame-marks__mark--bl" aria-hidden="true" />
                 <span className="frame-marks__mark frame-marks__mark--br" aria-hidden="true" />
