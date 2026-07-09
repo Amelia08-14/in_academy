@@ -43,7 +43,17 @@ router.get("/users", async (_req: AuthRequest, res: Response) => {
       orderBy: { createdAt: "desc" },
       include: {
         learnerProfile: true,
-        companyAdmin: { include: { company: true } },
+        companyAdmin: {
+          include: {
+            company: {
+              include: {
+                activityCategory: true,
+                _count: { select: { quoteRequests: true, enrollments: true } },
+              },
+            },
+          },
+        },
+        _count: { select: { enrollments: true } },
       },
       omit: { hashedPassword: true },
     });

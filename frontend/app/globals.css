@@ -619,7 +619,7 @@ button {
   margin-left: 10%;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  background: transparent;
   z-index: 1;
 }
 
@@ -639,14 +639,20 @@ button {
 
 .hero-slide__tag {
   position: absolute;
-  bottom: 34px;
-  right: -6px;
+  bottom: 28px;
+  right: 4px;
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px 10px;
+  background: var(--navy-deeper);
+  border-radius: 40px;
+  box-shadow: 0 8px 24px rgba(1, 21, 48, 0.3);
   font-family: var(--font-script);
-  font-size: 26px;
-  color: var(--white);
-  transform: rotate(-6deg);
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--gold-light);
+  transform: rotate(-4deg);
   pointer-events: none;
 }
 
@@ -1230,6 +1236,10 @@ button {
   align-items: start;
 }
 
+.mission__layout > * {
+  min-width: 0;
+}
+
 .mission__media {
   position: sticky;
   top: 120px;
@@ -1339,6 +1349,7 @@ button {
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   margin-top: 36px;
+  min-width: 0;
 }
 
 .mission__point-card {
@@ -1350,6 +1361,7 @@ button {
   border: 1px solid var(--border-light);
   border-radius: 12px;
   transition: border-color 0.2s, transform 0.2s;
+  min-width: 0;
 }
 
 .mission__point-card:hover {
@@ -1374,6 +1386,8 @@ button {
   line-height: 1.55;
   color: var(--text-body);
   margin: 0;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .mission__cta-strip {
@@ -1400,6 +1414,7 @@ button {
 
 .mission__cta-strip p {
   flex: 1;
+  min-width: 0;
   font-size: 13px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.8);
@@ -1608,9 +1623,9 @@ button {
 
 .branches-fan {
   position: relative;
-  width: 900px;
+  width: 1040px;
   max-width: 100%;
-  height: 420px;
+  height: 560px;
   margin: 0 auto;
 }
 
@@ -1669,21 +1684,21 @@ button {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -190px;
-  margin-left: -105px;
-  width: 210px;
-  height: 380px;
-  border-radius: 20px;
+  margin-top: -240px;
+  margin-left: -135px;
+  width: 270px;
+  height: 480px;
+  border-radius: 22px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(1, 30, 65, 0.22);
   cursor: pointer;
 }
 
 .branches-fan__card--center {
-  width: 240px;
-  height: 420px;
-  margin-top: -210px;
-  margin-left: -120px;
+  width: 310px;
+  height: 540px;
+  margin-top: -270px;
+  margin-left: -155px;
   box-shadow: 0 26px 54px rgba(1, 30, 65, 0.3);
 }
 
@@ -3346,6 +3361,11 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .branches-listing__grid .bl-card:first-child {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .catalogue__filters {
     flex-direction: column;
   }
@@ -3376,6 +3396,58 @@ button {
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .catalogue__notice-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .catalogue__notice-actions .btn {
+    width: 100%;
+  }
+
+  .mission__cta-strip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mission__cta-strip .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .auth-page {
+    padding: 100px 16px 40px;
+  }
+
+  .auth-card {
+    padding: 32px 22px;
+  }
+
+  .auth-row {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-stepper {
+    margin-bottom: 24px;
+  }
+
+  .auth-step__label {
+    display: none;
+  }
+
+  .auth-step:not(:last-child)::after {
+    width: calc(100% - 28px);
+    left: 28px;
+  }
+
+  .auth-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .auth-form-actions .btn {
+    width: 100%;
   }
 
   .status-group {
@@ -4602,6 +4674,18 @@ button {
   font-size: 20px;
   font-weight: 700;
   color: var(--navy);
+}
+
+.admin-modal-section-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
 }
 
 .admin-modal__close {

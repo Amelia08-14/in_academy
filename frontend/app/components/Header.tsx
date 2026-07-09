@@ -21,10 +21,10 @@ function initials(text: string): string {
 }
 
 const NAV_LINKS = [
-  { href: "/", label: "ACCUEIL" },
-  { href: "/branches", label: "NOS FORMATIONS" },
-  { href: "/formateurs", label: "FORMATEURS" },
-  { href: "/contact", label: "CONTACT" },
+  { href: "/", label: "ACCUEIL", icon: "M3 12l9-9 9 9M5 10v10h14V10" },
+  { href: "/branches", label: "NOS FORMATIONS", icon: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15Z" },
+  { href: "/formateurs", label: "FORMATEURS", icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" },
+  { href: "/contact", label: "CONTACT", icon: "M4 4h16v16H4zM22 6l-10 7L2 6" },
 ];
 
 export default function Header() {
@@ -239,7 +239,7 @@ export default function Header() {
         {mobileOpen && (
           <>
             <motion.div
-              className="fixed inset-0 top-0 z-[999] bg-navy-deeper/70 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[999] bg-navy-deeper/70 backdrop-blur-sm md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -248,13 +248,36 @@ export default function Header() {
             />
             <motion.div
               id="mobile-nav-drawer"
-              className="fixed right-0 top-0 z-[1000] flex h-dvh w-[84vw] max-w-sm flex-col overflow-y-auto bg-navy-deeper px-6 pb-8 pt-24 shadow-2xl md:hidden"
+              className="fixed inset-y-0 right-0 z-[1000] flex w-4/5 max-w-xs flex-col overflow-y-auto bg-navy-deeper shadow-2xl md:hidden"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 32 }}
+              transition={{ type: "spring", stiffness: 340, damping: 38 }}
             >
-              <nav className="flex flex-col gap-1" aria-label="Navigation principale">
+              <div className="flex justify-end px-5 pt-5">
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  aria-label="Fermer le menu"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {showProfile && (
+                <div className="flex flex-col items-center gap-2 px-6 pb-2 pt-1 text-center">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gold font-mono text-lg font-bold text-navy-deeper">
+                    {initials(displayName ?? email ?? "?")}
+                  </span>
+                  <span className="max-w-full truncate font-body text-base font-bold text-white">{displayName ?? "Mon compte"}</span>
+                  <span className="max-w-full truncate font-mono text-xs text-white/60">{subLabel}</span>
+                </div>
+              )}
+
+              <nav className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-8" aria-label="Navigation principale">
                 {NAV_LINKS.map((item) => {
                   const active = item.href === "/"
                     ? pathname === "/"
@@ -263,62 +286,58 @@ export default function Header() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`rounded-xl px-4 py-3.5 font-mono text-sm font-medium uppercase tracking-wider transition-colors ${
-                        active ? "bg-gold/15 text-gold-light" : "text-white/75 hover:bg-white/5 hover:text-white"
+                      className={`flex items-center gap-3 font-body text-base font-bold transition-colors ${
+                        active ? "text-gold" : "text-white hover:text-gold-light"
                       }`}
                     >
+                      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                        <path d={item.icon} />
+                      </svg>
                       {item.label}
                     </Link>
                   );
                 })}
+
+                {showProfile && menuItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="font-body text-base font-bold text-white hover:text-gold-light"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </nav>
 
-              <div className="my-6 h-px bg-white/10" />
-
-              {showProfile ? (
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-3 px-4 pb-4">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold font-mono text-sm font-bold text-navy-deeper">
-                      {initials(displayName ?? email ?? "?")}
-                    </span>
-                    <div className="flex min-w-0 flex-col">
-                      <span className="truncate font-body text-sm font-bold text-white">{displayName ?? "Mon compte"}</span>
-                      <span className="truncate font-mono text-xs text-white/50">{subLabel}</span>
-                    </div>
-                  </div>
-                  {menuItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="rounded-xl px-4 py-3.5 font-body text-sm font-medium text-white/85 transition-colors hover:bg-white/5"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+              <div className="px-6 pb-12">
+                {showProfile ? (
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="rounded-xl px-4 py-3.5 text-left font-body text-sm font-medium text-white/85 transition-colors hover:bg-white/5"
+                    className="flex w-full items-center justify-center gap-2 rounded-full border border-white/25 px-5 py-3.5 font-mono text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:border-white/50"
                   >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+                    </svg>
                     Se déconnecter
                   </button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3">
-                  <Link
-                    href="/connexion"
-                    className="rounded-full border border-white/20 px-5 py-3 text-center font-mono text-xs font-semibold uppercase tracking-wider text-white/85 transition-colors hover:border-white/50 hover:bg-white/5"
-                  >
-                    Se connecter
-                  </Link>
-                  <Link
-                    href="/inscription"
-                    className="rounded-full bg-linear-to-br from-gold to-gold-dark px-5 py-3 text-center font-mono text-xs font-semibold uppercase tracking-wider text-white shadow-md"
-                  >
-                    S&apos;inscrire
-                  </Link>
-                </div>
-              )}
+                ) : (
+                  <div className="flex flex-col gap-3 border-t border-white/10 pt-6">
+                    <Link
+                      href="/inscription"
+                      className="rounded-full bg-gold py-3.5 text-center font-mono text-xs font-bold uppercase tracking-wider text-navy-deeper shadow-lg shadow-gold/20 transition-transform active:scale-[0.98]"
+                    >
+                      S&apos;inscrire
+                    </Link>
+                    <Link
+                      href="/connexion"
+                      className="rounded-full bg-white/5 py-3.5 text-center font-mono text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-white/10"
+                    >
+                      Se connecter
+                    </Link>
+                  </div>
+                )}
+              </div>
             </motion.div>
           </>
         )}

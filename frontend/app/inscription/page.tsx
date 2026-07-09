@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Header from "@/app/components/Header";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
@@ -14,6 +15,8 @@ type FieldValues = {
 const EMPTY: FieldValues = { email: "", password: "", firstName: "", lastName: "", phone: "", jobTitle: "" };
 
 export default function InscriptionPage() {
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "";
   const [step, setStep] = useState(0);
   const [values, setValues] = useState<FieldValues>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FieldValues, string>>>({});
@@ -66,6 +69,18 @@ export default function InscriptionPage() {
         }
         return;
       }
+
+      // Le compte est actif immédiatement (pas de validation manuelle côté admin) :
+      // on connecte directement, puis on renvoie vers la session/page d'origine si besoin.
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("email", values.email);
+      window.dispatchEvent(new Event("authchange"));
+
+      if (redirectTo) {
+        window.location.href = redirectTo;
+        return;
+      }
       setSuccess(true);
     } catch {
       setServerError("Impossible de joindre le serveur.");
@@ -83,11 +98,11 @@ export default function InscriptionPage() {
             <div className="auth-success-icon">✓</div>
             <h2 className="auth-card__title">Inscription réussie !</h2>
             <p className="auth-card__sub">
-              Votre compte particulier a été créé. Un administrateur validera votre dossier
-              sous 24–48h. Vous recevrez une confirmation par email.
+              Votre compte particulier a été créé et vous êtes maintenant connecté.
+              Vous pouvez dès à présent vous inscrire aux formations.
             </p>
-            <Link href="/connexion" className="btn btn--primary" style={{ marginTop: "1.5rem" }}>
-              Se connecter
+            <Link href="/branches" className="btn btn--primary" style={{ marginTop: "1.5rem" }}>
+              Découvrir les formations
             </Link>
           </div>
         </div>

@@ -76,6 +76,33 @@ router.get("/sessions", async (req: AuthRequest, res: Response) => {
   }
 });
 
+// GET /api/sessions/:id — public, détail d'une session (page de lien d'inscription directe)
+router.get("/sessions/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const now = new Date();
+    const s = await prisma.trainingSession.findUnique({
+      where: { id: req.params["id"] as string },
+      include: { category: true, _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } } },
+    });
+
+    if (!s) {
+      res.status(404).json({ error: "Session introuvable" });
+      return;
+    }
+
+    const spotsLeft = s.maxCapacity - s._count.enrollments;
+    const isOpen =
+      OPEN_SESSION_STATUS.includes(s.status as (typeof OPEN_SESSION_STATUS)[number]) &&
+      s.startDate.getTime() >= now.getTime() &&
+      spotsLeft > 0;
+
+    res.json({ ...s, spotsLeft, isOpen });
+  } catch (err) {
+    console.error("[sessions/:id]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // POST /api/contact-requests — public, formulaire de contact simple (/inscrire)
 router.post("/contact-requests", async (req: AuthRequest, res: Response) => {
   try {

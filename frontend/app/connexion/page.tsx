@@ -1,14 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/app/components/Header";
 import { ADMIN_ROLES } from "@/lib/auth";
 
 type State = { errors?: { email?: string[]; password?: string[] }; message?: string } | undefined;
 
-async function loginAction(_prev: State, formData: FormData): Promise<State> {
+async function loginAction(redirectTo: string, _prev: State, formData: FormData): Promise<State> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -38,7 +38,8 @@ async function loginAction(_prev: State, formData: FormData): Promise<State> {
 
     // On reste sur le site : le profil (particulier/entreprise) est accessible
     // depuis le menu du Header, pas via une redirection forcée vers un dashboard.
-    window.location.href = "/";
+    // Sauf si on arrive ici via un lien d'inscription directe à une session (?redirect=...).
+    window.location.href = redirectTo;
     return undefined;
   } catch {
     return { message: "Impossible de joindre le serveur." };
@@ -46,7 +47,9 @@ async function loginAction(_prev: State, formData: FormData): Promise<State> {
 }
 
 export default function ConnexionPage() {
-  const [state, action, pending] = useActionState(loginAction, undefined);
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
+  const [state, action, pending] = useActionState(loginAction.bind(null, redirectTo), undefined);
 
   return (
     <>
@@ -87,7 +90,9 @@ export default function ConnexionPage() {
           <div className="auth-footer-links">
             <p className="auth-footer-link">
               Pas encore de compte ?{" "}
-              <Link href="/inscription">Inscription particulier</Link>
+              <Link href={redirectTo !== "/" ? `/inscription?redirect=${encodeURIComponent(redirectTo)}` : "/inscription"}>
+                Inscription particulier
+              </Link>
               {" · "}
               <Link href="/inscription-entreprise">Compte entreprise</Link>
             </p>

@@ -65,6 +65,18 @@ export default function AdminSessionsPage() {
   const [editing, setEditing] = useState<EditState | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyLink = async (id: string) => {
+    const url = `${window.location.origin}/session/${id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId((v) => (v === id ? null : v)), 2000);
+    } catch {
+      window.prompt("Copiez ce lien :", url);
+    }
+  };
 
   const load = () => {
     setLoading(true);
@@ -170,6 +182,23 @@ export default function AdminSessionsPage() {
             </div>
 
             {saveError && <div className="auth-error">{saveError}</div>}
+
+            {editing.id && (
+              <div
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
+                  padding: "10px 14px", borderRadius: 8, background: "var(--cream)",
+                  border: "1px solid var(--border-light)", fontSize: 12, color: "var(--text-muted)",
+                }}
+              >
+                <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  Lien d&apos;inscription directe : /session/{editing.id}
+                </span>
+                <button type="button" className="admin-btn" onClick={() => copyLink(editing.id as string)}>
+                  {copiedId === editing.id ? "Copié ✓" : "Copier"}
+                </button>
+              </div>
+            )}
 
             <form onSubmit={handleSave} className="auth-form">
               <div className="auth-field">
@@ -323,8 +352,11 @@ export default function AdminSessionsPage() {
                     {STATUS_LABELS[s.status]}
                   </span>
                 </td>
-                <td>
+                <td style={{ display: "flex", gap: 8 }}>
                   <button className="admin-btn" onClick={() => openEdit(s)}>Modifier</button>
+                  <button className="admin-btn" onClick={() => copyLink(s.id)} title="Copier le lien d'inscription directe">
+                    {copiedId === s.id ? "Copié ✓" : "Copier le lien"}
+                  </button>
                 </td>
               </tr>
             ))}

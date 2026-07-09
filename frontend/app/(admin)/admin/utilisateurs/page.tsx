@@ -3,8 +3,25 @@
 import { useEffect, useState } from "react";
 import { adminApi as api } from "@/lib/adminApi";
 
-interface LearnerProfile { firstName: string; lastName: string; phone: string | null }
-interface Company { id: string; raisonSociale: string; wilaya: string | null; commune: string | null }
+interface LearnerProfile {
+  firstName: string;
+  lastName: string;
+  phone: string | null;
+  jobTitle: string | null;
+  companyName: string | null;
+  wilaya: string | null;
+}
+interface Company {
+  id: string;
+  raisonSociale: string;
+  wilaya: string | null;
+  commune: string | null;
+  address: string | null;
+  phone: string | null;
+  activityCategory: { name: string } | null;
+  activityOther: string | null;
+  _count?: { quoteRequests: number; enrollments: number };
+}
 interface CompanyProfile { firstName: string | null; lastName: string | null; company: Company }
 interface User {
   id: string;
@@ -14,6 +31,7 @@ interface User {
   createdAt: string;
   learnerProfile: LearnerProfile | null;
   companyAdmin: CompanyProfile | null;
+  _count?: { enrollments: number };
 }
 
 const ADMIN_ROLES = ["SUPER_ADMIN", "ADMIN", "MANAGER"];
@@ -44,6 +62,7 @@ const EMPTY_FORM = { email: "", password: "", role: "LEARNER", firstName: "", la
 
 export default function AdminUtilisateursPage() {
   const [users, setUsers] = useState<User[]>([]);
+  const [detailUser, setDetailUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"learners" | "companies" | "admins">("learners");
@@ -117,7 +136,10 @@ export default function AdminUtilisateursPage() {
           {u.isActive ? "Actif" : "Inactif"}
         </span>
       </td>
-      <td>
+      <td style={{ display: "flex", gap: 8 }}>
+        <button className="admin-btn" onClick={() => setDetailUser(u)}>
+          Détails
+        </button>
         {!ADMIN_ROLES.includes(u.role) && (
           <button
             className={`admin-btn ${u.isActive ? "admin-btn--cancel" : "admin-btn--confirm"}`}
@@ -330,6 +352,93 @@ export default function AdminUtilisateursPage() {
           </table>
         )}
       </div>
+
+      {detailUser && (
+        <div className="admin-modal-overlay" onClick={() => setDetailUser(null)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal__header">
+              <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
+                {detailUser.companyAdmin?.company.raisonSociale
+                  ?? (detailUser.learnerProfile ? `${detailUser.learnerProfile.firstName} ${detailUser.learnerProfile.lastName}` : detailUser.email)}
+              </h2>
+              <button className="admin-modal__close" onClick={() => setDetailUser(null)}>✕</button>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span className="admin-badge admin-badge--role">{ROLE_LABELS[detailUser.role] ?? detailUser.role}</span>
+                <span className={`admin-badge admin-badge--${detailUser.isActive ? "confirmed" : "cancelled"}`}>
+                  {detailUser.isActive ? "Actif" : "Inactif"}
+                </span>
+              </div>
+
+              <DetailRow label="Email" value={detailUser.email} />
+              <DetailRow label="Inscrit le" value={new Date(detailUser.createdAt).toLocaleDateString("fr-DZ", { day: "numeric", month: "long", year: "numeric" })} />
+
+              {detailUser.learnerProfile && (
+                <>
+                  <div className="admin-modal-section-title">Profil particulier</div>
+                  <DetailRow label="Nom complet" value={`${detailUser.learnerProfile.firstName} ${detailUser.learnerProfile.lastName}`} />
+                  <DetailRow label="Téléphone" value={detailUser.learnerProfile.phone} />
+                  <DetailRow label="Fonction" value={detailUser.learnerProfile.jobTitle} />
+                  <DetailRow label="Entreprise (déclarée)" value={detailUser.learnerProfile.companyName} />
+                  <DetailRow label="Wilaya" value={detailUser.learnerProfile.wilaya} />
+                  <DetailRow label="Formations suivies" value={String(detailUser._count?.enrollments ?? 0)} />
+                </>
+              )}
+
+              {detailUser.companyAdmin && (
+                <>
+                  <div className="admin-modal-section-title">Entreprise</div>
+                  <DetailRow label="Raison sociale" value={detailUser.companyAdmin.company.raisonSociale} />
+                  <DetailRow
+                    label="Contact"
+                    value={`${detailUser.companyAdmin.firstName ?? ""} ${detailUser.companyAdmin.lastName ?? ""}`.trim() || null}
+                  />
+                  <DetailRow label="Téléphone" value={detailUser.companyAdmin.company.phone} />
+                  <DetailRow
+                    label="Adresse"
+                    value={[detailUser.companyAdmin.company.address, detailUser.companyAdmin.company.commune, detailUser.companyAdmin.company.wilaya]
+                      .filter(Boolean).join(", ") || null}
+                  />
+                  <DetailRow
+                    label="Activité professionnelle"
+                    value={detailUser.companyAdmin.company.activityCategory?.name ?? detailUser.companyAdmin.company.activityOther}
+                  />
+                  <DetailRow label="Devis demandés" value={String(detailUser.companyAdmin.company._count?.quoteRequests ?? 0)} />
+                  <DetailRow label="Inscriptions" value={String(detailUser.companyAdmin.company._count?.enrollments ?? 0)} />
+                </>
+              )}
+
+              {ADMIN_ROLES.includes(detailUser.role) && (
+                <>
+                  <div className="admin-modal-section-title">Accès</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {(ROLE_PERMISSIONS[detailUser.role] ?? []).map((p) => (
+                      <span key={p} className="admin-perm-chip">{p}</span>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="auth-form-actions" style={{ marginTop: 20 }}>
+              <button type="button" className="btn btn--outline" onClick={() => setDetailUser(null)}>Fermer</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: string | null | undefined }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", gap: 16, fontSize: 13 }}>
+      <span style={{ color: "var(--text-muted)" }}>{label}</span>
+      <span style={{ color: "var(--text-dark)", fontWeight: 500, textAlign: "right" }}>
+        {value || <span style={{ color: "var(--border)" }}>—</span>}
+      </span>
     </div>
   );
 }

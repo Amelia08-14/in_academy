@@ -10,8 +10,6 @@ import Footer from "./components/Footer";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
 
-import adminGestionImg from "./images/Techniques administratives et gestio.png";
-
 const stripItems = [
   "Transport & Logistique", "Commerce & Ventes", "HSE & Sécurité", "Finance & Comptabilité",
   "Achats & International", "IT & Digital", "RH & Management", "Juridique & Conformité",
@@ -65,8 +63,8 @@ function useIsMobile(breakpoint = 640) {
 function slotStyle(offset: number, compact: boolean) {
   const abs = Math.abs(offset);
   const dir = Math.sign(offset);
-  const x = dir * (compact ? [0, 118, 172] : [0, 220, 330])[abs];
-  const y = (compact ? [0, 16, 32] : [0, 26, 54])[abs];
+  const x = dir * (compact ? [0, 118, 172] : [0, 265, 400])[abs];
+  const y = (compact ? [0, 16, 32] : [0, 32, 64])[abs];
   const rotate = dir * [0, 4, 8][abs];
   const scale = [1, 0.88, 0.78][abs];
   const opacity = [1, 0.9, 0.7][abs];
@@ -100,7 +98,7 @@ function FanCard({ branch, offset, onSelect, compact }: FanCardProps) {
       aria-label={branch.name}
     >
       {img ? (
-        <Image src={img} alt={branch.name} fill sizes="260px" className="branches-fan__img" />
+        <Image src={img} alt={branch.name} fill sizes="320px" className="branches-fan__img" />
       ) : (
         <div className={`branches-fan__gradient branches-fan__gradient--${offset < 0 ? -offset % 4 : offset % 4}`} />
       )}
@@ -330,7 +328,7 @@ function HeroSlider() {
             <div className="hero-slide__media">
               <div className="hero-slide__blob" aria-hidden="true" />
               <div className="hero-slide__img-frame frame-marks">
-                <Image src="/banner.png" alt="IN Academy" fill style={{ objectFit: "cover" }} />
+                <Image src="/banner.png" alt="IN Academy" fill style={{ objectFit: "cover" }} priority />
                 <span className="frame-marks__mark frame-marks__mark--tr" aria-hidden="true" />
                 <span className="frame-marks__mark frame-marks__mark--bl" aria-hidden="true" />
                 <span className="frame-marks__mark frame-marks__mark--br" aria-hidden="true" />
@@ -407,7 +405,7 @@ export default function Home() {
               transition={{ duration: 0.7 }}
             >
               <div className="mission__media-frame">
-                <Image src={adminGestionImg} alt="Équipe IN ACADEMY" fill style={{ objectFit: "cover" }} />
+                <Image src="/mission.jpg" alt="Équipe IN ACADEMY" fill style={{ objectFit: "cover" }} />
                 <div className="mission__media-overlay" />
               </div>
               <div className="mission__media-caption">
@@ -417,7 +415,6 @@ export default function Home() {
                   </svg>
                 </span>
                 <div>
-                  <h4>25+ ans d&apos;expérience</h4>
                   <p>Un accompagnement de terrain, ancré dans les réalités du marché algérien.</p>
                 </div>
               </div>
