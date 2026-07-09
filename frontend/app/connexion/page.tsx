@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/app/components/Header";
@@ -26,8 +26,6 @@ async function loginAction(redirectTo: string, _prev: State, formData: FormData)
 
     if (!res.ok) return { message: data.error ?? "Identifiants incorrects" };
 
-    // Cette page ne gère que les comptes particulier/entreprise du site.
-    // L'administration a sa propre connexion, indépendante, sur /admin.
     if (ADMIN_ROLES.includes(data.role)) {
       return { message: "Compte administrateur : connectez-vous depuis /admin." };
     }
@@ -36,9 +34,6 @@ async function loginAction(redirectTo: string, _prev: State, formData: FormData)
     localStorage.setItem("role", data.role);
     localStorage.setItem("email", email);
 
-    // On reste sur le site : le profil (particulier/entreprise) est accessible
-    // depuis le menu du Header, pas via une redirection forcée vers un dashboard.
-    // Sauf si on arrive ici via un lien d'inscription directe à une session (?redirect=...).
     window.location.href = redirectTo;
     return undefined;
   } catch {
@@ -46,7 +41,7 @@ async function loginAction(redirectTo: string, _prev: State, formData: FormData)
   }
 }
 
-export default function ConnexionPage() {
+function ConnexionForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const [state, action, pending] = useActionState(loginAction.bind(null, redirectTo), undefined);
@@ -100,5 +95,13 @@ export default function ConnexionPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function ConnexionPage() {
+  return (
+    <Suspense fallback={<div className="auth-page">Chargement…</div>}>
+      <ConnexionForm />
+    </Suspense>
   );
 }

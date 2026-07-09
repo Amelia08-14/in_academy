@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/app/components/Header";
@@ -57,7 +57,7 @@ const ENROLL_STATUS: Record<string, { label: string; cls: string }> = {
   COMPLETED: { label: "Terminée",    cls: "completed" },
 };
 
-export default function EspaceEntreprisePage() {
+function EspaceEntrepriseContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { ready, token, role, logout: clearAuth } = useAuth();
@@ -373,5 +373,12 @@ export default function EspaceEntreprisePage() {
 
       <Footer />
     </>
+  );
+}
+export default function EspaceEntreprisePage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
+      <EspaceEntrepriseContent />
+    </Suspense>
   );
 }

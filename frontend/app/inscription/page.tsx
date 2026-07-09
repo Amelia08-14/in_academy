@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Header from "@/app/components/Header";
@@ -14,7 +14,7 @@ type FieldValues = {
 };
 const EMPTY: FieldValues = { email: "", password: "", firstName: "", lastName: "", phone: "", jobTitle: "" };
 
-export default function InscriptionPage() {
+function InscriptionContent() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "";
   const [step, setStep] = useState(0);
@@ -239,5 +239,12 @@ export default function InscriptionPage() {
         </div>
       </div>
     </>
+  );
+}
+export default function InscriptionPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
+      <InscriptionContent />
+    </Suspense>
   );
 }
