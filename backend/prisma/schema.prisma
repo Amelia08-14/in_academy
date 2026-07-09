@@ -1,0 +1,354 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  TRAINER
+  LEARNER
+  COMPANY_ADMIN
+}
+
+enum EnrollmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum EnrollmentType {
+  INDIVIDUAL
+  GROUP
+  COMPANY
+}
+
+enum QuoteStatus {
+  PENDING
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum SessionStatus {
+  SCHEDULED
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum ContactStatut {
+  ENTREPRISE
+  ENTREPRENEUR
+  SALARIE
+  ETUDIANT
+  AUTRE
+}
+
+// ─── User & Profiles ─────────────────────────────────────────────────────────
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  hashedPassword String
+  role           Role      @default(LEARNER)
+  emailVerified  Boolean   @default(false)
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  learnerProfile LearnerProfile?
+  trainerProfile TrainerProfile?
+  companyAdmin   CompanyProfile?
+  enrollments    Enrollment[]
+  certificates   Certificate[]
+
+  @@map("users")
+}
+
+model LearnerProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  firstName   String
+  lastName    String
+  phone       String?
+  jobTitle    String?
+  companyName String?
+  wilaya      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("learner_profiles")
+}
+
+model TrainerProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  firstName String
+  lastName  String
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("trainer_profiles")
+}
+
+// ─── Formateurs (standalone, sans compte User) ───────────────────────────────
+
+model Trainer {
+  id              String   @id @default(uuid())
+  firstName       String
+  lastName        String
+  displayName     String
+  email           String?  @unique
+  phone           String?
+  speciality      String?
+  bio             String?  @db.Text
+  cvUrl           String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  formations FormationTrainer[]
+  sessions   TrainingSession[]
+
+  @@map("trainers")
+}
+
+// ─── Company (B2B) ───────────────────────────────────────────────────────────
+
+model Company {
+  id                 String   @id @default(uuid())
+  raisonSociale      String
+  nif                String?  @unique
+  rc                 String?
+  address            String?
+  wilaya             String?
+  commune            String?
+  phone              String?
+  activityCategoryId String?
+  activityOther      String?
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  activityCategory Category?        @relation(fields: [activityCategoryId], references: [id])
+  profiles         CompanyProfile[]
+  quoteRequests    QuoteRequest[]
+  enrollments      Enrollment[]
+
+  @@map("companies")
+}
+
+model CompanyProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  companyId String
+  firstName String?
+  lastName  String?
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("company_profiles")
+}
+
+// ─── Catalogue ───────────────────────────────────────────────────────────────
+
+model Category {
+  id          String      @id @default(uuid())
+  slug        String      @unique
+  name        String
+  description String?     @db.Text
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  formations      Formation[]
+  sessions        TrainingSession[]
+  contactRequests ContactRequest[]
+  companies       Company[]
+
+  @@map("categories")
+}
+
+model Formation {
+  id                String   @id @default(uuid())
+  slug              String   @unique
+  title             String
+  description       String?  @db.Text
+  duration          String?
+  price             Int?
+  isCertifying      Boolean  @default(true)
+  isActive          Boolean  @default(true)
+  ficheTechniqueUrl String?
+  coverImageUrl     String?
+  categoryId        String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  category   Category           @relation(fields: [categoryId], references: [id])
+  trainers   FormationTrainer[]
+  sessions   TrainingSession[]
+  enrollments Enrollment[]
+  quoteItems QuoteRequestItem[]
+
+  @@map("formations")
+}
+
+// Table pivot Formation ↔ Trainer (plusieurs formateurs par formation)
+model FormationTrainer {
+  formationId String
+  trainerId   String
+  isPrimary   Boolean @default(true)
+
+  formation Formation @relation(fields: [formationId], references: [id], onDelete: Cascade)
+  trainer   Trainer   @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+
+  @@id([formationId, trainerId])
+  @@map("formation_trainers")
+}
+
+model TrainingSession {
+  id            String        @id @default(uuid())
+  title         String
+  description   String?       @db.Text
+  coverImageUrl String?
+  duration      String?
+  categoryId    String
+  formationId   String?
+  trainerId     String?
+  startDate     DateTime
+  endDate       DateTime?
+  location      String?
+  minCapacity   Int           @default(1)
+  maxCapacity   Int           @default(20)
+  type          EnrollmentType @default(GROUP)
+  status        SessionStatus @default(SCHEDULED)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  category    Category       @relation(fields: [categoryId], references: [id])
+  formation   Formation?     @relation(fields: [formationId], references: [id])
+  trainer     Trainer?       @relation(fields: [trainerId], references: [id])
+  enrollments Enrollment[]
+
+  @@index([categoryId, title])
+  @@map("training_sessions")
+}
+
+// ─── Inscription & Suivi ─────────────────────────────────────────────────────
+
+model Enrollment {
+  id          String           @id @default(uuid())
+  userId      String
+  formationId String?
+  sessionId   String?
+  companyId   String?
+  type        EnrollmentType   @default(INDIVIDUAL)
+  status      EnrollmentStatus @default(PENDING)
+  note        String?          @db.Text
+  confirmedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  formation   Formation?       @relation(fields: [formationId], references: [id])
+  session     TrainingSession? @relation(fields: [sessionId], references: [id])
+  company     Company?         @relation(fields: [companyId], references: [id])
+  certificate Certificate?
+  employees   EnrollmentEmployee[]
+
+  @@map("enrollments")
+}
+
+// Employés qu'une entreprise ajoute à une formation pour laquelle elle est inscrite
+model EnrollmentEmployee {
+  id           String   @id @default(uuid())
+  enrollmentId String
+  firstName    String
+  lastName     String
+  email        String?
+  createdAt    DateTime @default(now())
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@map("enrollment_employees")
+}
+
+model Certificate {
+  id           String   @id @default(uuid())
+  userId       String
+  enrollmentId String   @unique
+  issuedAt     DateTime @default(now())
+  pdfUrl       String?
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id])
+
+  @@map("certificates")
+}
+
+// ─── Devis B2B ───────────────────────────────────────────────────────────────
+
+model QuoteRequest {
+  id          String      @id @default(uuid())
+  companyId   String
+  status      QuoteStatus @default(PENDING)
+  message     String?     @db.Text
+  pdfUrl      String?
+  respondedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  company Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  items   QuoteRequestItem[]
+
+  @@map("quote_requests")
+}
+
+model QuoteRequestItem {
+  id             String   @id @default(uuid())
+  quoteRequestId String
+  formationId    String
+  participants   Int      @default(1)
+  preferredDate  String?
+  createdAt      DateTime @default(now())
+
+  quoteRequest QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  formation    Formation    @relation(fields: [formationId], references: [id])
+
+  @@map("quote_request_items")
+}
+
+// ─── Demandes de contact (formulaire simple /inscrire) ───────────────────────
+
+model ContactRequest {
+  id            String        @id @default(uuid())
+  nom           String
+  prenom        String
+  telephone     String
+  email         String
+  statut        ContactStatut
+  categoryId    String?
+  formationName String?
+  message       String        @db.Text
+  createdAt     DateTime      @default(now())
+
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@map("contact_requests")
+}
