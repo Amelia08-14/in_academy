@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticate = authenticate;
 exports.requireRole = requireRole;
-const jwt_1 = require("@/lib/jwt");
+const jwt_1 = require("../lib/jwt");
 function authenticate(req, res, next) {
     const header = req.headers.authorization;
     if (!header?.startsWith("Bearer ")) {

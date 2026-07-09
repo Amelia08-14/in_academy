@@ -38,9 +38,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const db_1 = require("@/lib/db");
-const jwt_1 = require("@/lib/jwt");
-const auth_schema_1 = require("@/validations/auth.schema");
+const db_1 = require("../lib/db");
+const jwt_1 = require("../lib/jwt");
+const auth_schema_1 = require("../validations/auth.schema");
 const router = (0, express_1.Router)();
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
@@ -98,7 +98,7 @@ router.get("/me", async (req, res) => {
         return;
     }
     try {
-        const { verifyToken } = await Promise.resolve().then(() => __importStar(require("@/lib/jwt")));
+        const { verifyToken } = await Promise.resolve().then(() => __importStar(require("../lib/jwt")));
         const payload = verifyToken(header.slice(7));
         const user = await db_1.prisma.user.findUnique({
             where: { id: payload.userId },
