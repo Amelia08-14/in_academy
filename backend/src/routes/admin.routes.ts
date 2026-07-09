@@ -120,10 +120,10 @@ router.post("/users", async (req: AuthRequest, res: Response) => {
 // PATCH /api/admin/users/:id/toggle-active
 router.patch("/users/:id/toggle-active", async (req: AuthRequest, res: Response) => {
   try {
-    const user = await prisma.user.findUnique({ where: { id: req.params["id"] } });
+    const user = await prisma.user.findUnique({ where: { id: (req.params["id"] as string) } });
     if (!user) { res.status(404).json({ error: "Utilisateur introuvable" }); return; }
     const updated = await prisma.user.update({
-      where: { id: req.params["id"] },
+      where: { id: (req.params["id"] as string) },
       data: { isActive: !user.isActive },
     });
     res.json({ isActive: updated.isActive });
@@ -233,7 +233,7 @@ router.patch("/formations/:id", async (req: AuthRequest, res: Response) => {
       coverImageUrl?: string;
     };
     const formation = await prisma.formation.update({
-      where: { id: req.params["id"] },
+      where: { id: (req.params["id"] as string) },
       data: {
         ...(ficheTechniqueUrl !== undefined && { ficheTechniqueUrl }),
         ...(description !== undefined && { description }),
@@ -274,7 +274,7 @@ router.get("/enrollments", async (_req: AuthRequest, res: Response) => {
 router.patch("/enrollments/:id/confirm", async (req: AuthRequest, res: Response) => {
   try {
     const enrollment = await prisma.enrollment.update({
-      where: { id: req.params["id"] },
+      where: { id: (req.params["id"] as string) },
       data: { status: "CONFIRMED", confirmedAt: new Date() },
     });
     res.json(enrollment);
@@ -288,7 +288,7 @@ router.patch("/enrollments/:id/confirm", async (req: AuthRequest, res: Response)
 router.patch("/enrollments/:id/cancel", async (req: AuthRequest, res: Response) => {
   try {
     const enrollment = await prisma.enrollment.update({
-      where: { id: req.params["id"] },
+      where: { id: (req.params["id"] as string) },
       data: { status: "CANCELLED" },
     });
     res.json(enrollment);
@@ -301,7 +301,7 @@ router.patch("/enrollments/:id/cancel", async (req: AuthRequest, res: Response) 
 // DELETE /api/admin/enrollments/:id
 router.delete("/enrollments/:id", async (req: AuthRequest, res: Response) => {
   try {
-    await prisma.enrollment.delete({ where: { id: req.params["id"] } });
+    await prisma.enrollment.delete({ where: { id: (req.params["id"] as string) } });
     res.json({ success: true });
   } catch (err) {
     console.error("[admin/enrollments delete]", err);
@@ -409,7 +409,7 @@ router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
     }
 
     const session = await prisma.trainingSession.update({
-      where: { id: req.params["id"] },
+      where: { id: (req.params["id"] as string) },
       data: {
         ...(title !== undefined && { title }),
         ...(description !== undefined && { description }),
@@ -439,7 +439,7 @@ router.patch("/quotes/:id/status", async (req: AuthRequest, res: Response) => {
     const valid = ["PENDING", "SENT", "ACCEPTED", "REJECTED", "EXPIRED"];
     if (!valid.includes(status)) { res.status(400).json({ error: "Statut invalide" }); return; }
     const quote = await prisma.quoteRequest.update({
-      where: { id: req.params["id"] },
+      where: { id: (req.params["id"] as string) },
       data: { status, respondedAt: new Date() },
     });
     res.json(quote);

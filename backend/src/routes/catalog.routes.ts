@@ -81,7 +81,7 @@ router.get("/sessions/:id", async (req: AuthRequest, res: Response) => {
   try {
     const now = new Date();
     const s = await prisma.trainingSession.findUnique({
-      where: { id: req.params["id"] as string },
+      where: { id: (req.params["id"] as string) as string },
       include: { category: true, _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } } },
     });
 

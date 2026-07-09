@@ -95,7 +95,7 @@ router.patch(
   async (req: AuthRequest, res: Response) => {
     try {
       const enrollment = await prisma.enrollment.update({
-        where: { id: req.params["id"] },
+        where: { id: (req.params["id"] as string) },
         data: { status: "CONFIRMED", confirmedAt: new Date() },
       });
       res.json(enrollment);
@@ -114,7 +114,7 @@ router.patch(
   async (req: AuthRequest, res: Response) => {
     try {
       const enrollment = await prisma.enrollment.update({
-        where: { id: req.params["id"] },
+        where: { id: (req.params["id"] as string) },
         data: { status: "CANCELLED" },
       });
       res.json(enrollment);

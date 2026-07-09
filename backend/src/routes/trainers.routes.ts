@@ -34,7 +34,7 @@ router.get("/", async (_req: AuthRequest, res: Response) => {
 // GET /api/trainers/:id — public
 router.get("/:id", async (req: AuthRequest, res: Response) => {
   const trainer = await prisma.trainer.findUnique({
-    where: { id: req.params["id"] },
+    where: { id: (req.params["id"] as string) },
     include: {
       formations: {
         include: { formation: { include: { category: true } } },
@@ -80,7 +80,7 @@ router.patch("/:id", async (req: AuthRequest, res: Response) => {
     return;
   }
   const trainer = await prisma.trainer.update({
-    where: { id: req.params["id"] },
+    where: { id: (req.params["id"] as string) },
     data: parsed.data,
   });
   res.json(trainer);
@@ -89,7 +89,7 @@ router.patch("/:id", async (req: AuthRequest, res: Response) => {
 // DELETE /api/trainers/:id — supprimer (soft: désactiver)
 router.delete("/:id", async (req: AuthRequest, res: Response) => {
   await prisma.trainer.update({
-    where: { id: req.params["id"] },
+    where: { id: (req.params["id"] as string) },
     data: { isActive: false },
   });
   res.json({ success: true });
@@ -98,7 +98,7 @@ router.delete("/:id", async (req: AuthRequest, res: Response) => {
 // PATCH /api/trainers/:id/formations — lier/délier des formations
 router.patch("/:id/formations", async (req: AuthRequest, res: Response) => {
   const { formationIds }: { formationIds: string[] } = req.body;
-  const trainerId = req.params["id"];
+  const trainerId = (req.params["id"] as string);
 
   // Supprimer les anciennes liaisons
   await prisma.formationTrainer.deleteMany({ where: { trainerId } });

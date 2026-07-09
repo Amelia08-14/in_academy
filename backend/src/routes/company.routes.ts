@@ -91,7 +91,7 @@ router.patch("/quotes/:id/respond", authenticate, async (req: AuthRequest, res: 
     if (!company) { res.status(403).json({ error: "Compte entreprise requis" }); return; }
 
     const { accept } = req.body as { accept: boolean };
-    const quoteId = req.params["id"] as string;
+    const quoteId = (req.params["id"] as string) as string;
     const quote = await prisma.quoteRequest.findUnique({
       where: { id: quoteId },
       include: { items: true },
@@ -196,7 +196,7 @@ router.post("/enrollments/:id/employees", authenticate, async (req: AuthRequest,
     const company = await getCompanyForUser(req.user!.userId);
     if (!company) { res.status(403).json({ error: "Compte entreprise requis" }); return; }
 
-    const enrollment = await prisma.enrollment.findUnique({ where: { id: req.params["id"] } });
+    const enrollment = await prisma.enrollment.findUnique({ where: { id: (req.params["id"] as string) } });
     if (!enrollment || enrollment.companyId !== company.id) {
       res.status(404).json({ error: "Inscription introuvable" });
       return;
@@ -224,13 +224,13 @@ router.delete("/enrollments/:id/employees/:employeeId", authenticate, async (req
     const company = await getCompanyForUser(req.user!.userId);
     if (!company) { res.status(403).json({ error: "Compte entreprise requis" }); return; }
 
-    const enrollment = await prisma.enrollment.findUnique({ where: { id: req.params["id"] } });
+    const enrollment = await prisma.enrollment.findUnique({ where: { id: (req.params["id"] as string) } });
     if (!enrollment || enrollment.companyId !== company.id) {
       res.status(404).json({ error: "Inscription introuvable" });
       return;
     }
 
-    await prisma.enrollmentEmployee.delete({ where: { id: req.params["employeeId"] } });
+    await prisma.enrollmentEmployee.delete({ where: { id: (req.params["employeeId"] as string) } });
     res.json({ success: true });
   } catch (err) {
     console.error("[companies/enrollments employees delete]", err);
