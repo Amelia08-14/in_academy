@@ -313,33 +313,29 @@ export default function Header() {
                 </nav>
               </div>
 
-              <div className="shrink-0 px-7 pb-24 pt-8">
+              {/* Réutilise les boutons du site (.btn) pour rester cohérent avec le hero.
+                  `env(safe-area-inset-bottom)` : le drawer est `fixed inset-y-0`, donc son bas
+                  tombe derrière la barre du navigateur / home indicator sur mobile. */}
+              <div
+                className="shrink-0 px-8 pt-8"
+                style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 10rem)" }}
+              >
                 {showProfile ? (
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-navy px-6 py-5 font-mono text-xs font-bold uppercase tracking-wider text-white shadow-md transition-transform active:scale-[0.98]"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
-                    </svg>
-                    Se déconnecter
-                  </button>
+                  <div className="flex justify-center">
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="btn btn--outline"
+                    >
+                      Se déconnecter
+                    </button>
+                  </div>
                 ) : (
-                  <div className="flex flex-col gap-4">
-                    <Link
-                      href="/inscription"
-                      className="flex items-center justify-center gap-2 rounded-xl bg-gold px-6 py-5 text-center font-mono text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-gold/30 transition-transform active:scale-[0.98]"
-                    >
+                  <div className="flex flex-col items-center gap-4">
+                    <Link href="/inscription" className="btn btn--primary">
                       S&apos;inscrire
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
                     </Link>
-                    <Link
-                      href="/connexion"
-                      className="rounded-xl bg-navy px-6 py-5 text-center font-mono text-xs font-bold uppercase tracking-wider text-white shadow-md transition-transform active:scale-[0.98]"
-                    >
+                    <Link href="/connexion" className="btn btn--outline">
                       Se connecter
                     </Link>
                   </div>
