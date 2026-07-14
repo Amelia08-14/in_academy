@@ -228,6 +228,7 @@ model TrainingSession {
   description   String?       @db.Text
   coverImageUrl String?
   duration      String?
+  price         Int?
   categoryId    String
   formationId   String?
   trainerId     String?

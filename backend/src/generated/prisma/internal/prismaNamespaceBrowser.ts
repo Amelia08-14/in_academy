@@ -223,6 +223,7 @@ export const TrainingSessionScalarFieldEnum = {
   description: 'description',
   coverImageUrl: 'coverImageUrl',
   duration: 'duration',
+  price: 'price',
   categoryId: 'categoryId',
   formationId: 'formationId',
   trainerId: 'trainerId',

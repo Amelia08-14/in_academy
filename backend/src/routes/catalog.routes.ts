@@ -39,7 +39,11 @@ router.get("/sessions", async (req: AuthRequest, res: Response) => {
         ...(categoryId ? { categoryId } : {}),
       },
       orderBy: { startDate: "asc" },
-      include: { category: true, _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } } },
+      include: {
+        category: true,
+        formation: true,
+        _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+      },
     });
 
     const withState = await Promise.all(
@@ -82,7 +86,11 @@ router.get("/sessions/:id", async (req: AuthRequest, res: Response) => {
     const now = new Date();
     const s = await prisma.trainingSession.findUnique({
       where: { id: (req.params["id"] as string) as string },
-      include: { category: true, _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } } },
+      include: {
+        category: true,
+        formation: true,
+        _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+      },
     });
 
     if (!s) {

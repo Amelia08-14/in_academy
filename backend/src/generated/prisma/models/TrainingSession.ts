@@ -27,11 +27,13 @@ export type AggregateTrainingSession = {
 }
 
 export type TrainingSessionAvgAggregateOutputType = {
+  price: number | null
   minCapacity: number | null
   maxCapacity: number | null
 }
 
 export type TrainingSessionSumAggregateOutputType = {
+  price: number | null
   minCapacity: number | null
   maxCapacity: number | null
 }
@@ -42,6 +44,7 @@ export type TrainingSessionMinAggregateOutputType = {
   description: string | null
   coverImageUrl: string | null
   duration: string | null
+  price: number | null
   categoryId: string | null
   formationId: string | null
   trainerId: string | null
@@ -62,6 +65,7 @@ export type TrainingSessionMaxAggregateOutputType = {
   description: string | null
   coverImageUrl: string | null
   duration: string | null
+  price: number | null
   categoryId: string | null
   formationId: string | null
   trainerId: string | null
@@ -82,6 +86,7 @@ export type TrainingSessionCountAggregateOutputType = {
   description: number
   coverImageUrl: number
   duration: number
+  price: number
   categoryId: number
   formationId: number
   trainerId: number
@@ -99,11 +104,13 @@ export type TrainingSessionCountAggregateOutputType = {
 
 
 export type TrainingSessionAvgAggregateInputType = {
+  price?: true
   minCapacity?: true
   maxCapacity?: true
 }
 
 export type TrainingSessionSumAggregateInputType = {
+  price?: true
   minCapacity?: true
   maxCapacity?: true
 }
@@ -114,6 +121,7 @@ export type TrainingSessionMinAggregateInputType = {
   description?: true
   coverImageUrl?: true
   duration?: true
+  price?: true
   categoryId?: true
   formationId?: true
   trainerId?: true
@@ -134,6 +142,7 @@ export type TrainingSessionMaxAggregateInputType = {
   description?: true
   coverImageUrl?: true
   duration?: true
+  price?: true
   categoryId?: true
   formationId?: true
   trainerId?: true
@@ -154,6 +163,7 @@ export type TrainingSessionCountAggregateInputType = {
   description?: true
   coverImageUrl?: true
   duration?: true
+  price?: true
   categoryId?: true
   formationId?: true
   trainerId?: true
@@ -261,6 +271,7 @@ export type TrainingSessionGroupByOutputType = {
   description: string | null
   coverImageUrl: string | null
   duration: string | null
+  price: number | null
   categoryId: string
   formationId: string | null
   trainerId: string | null
@@ -304,6 +315,7 @@ export type TrainingSessionWhereInput = {
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
   categoryId?: Prisma.StringFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
@@ -328,6 +340,7 @@ export type TrainingSessionOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  price?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrderInput | Prisma.SortOrder
   trainerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -356,6 +369,7 @@ export type TrainingSessionWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
   categoryId?: Prisma.StringFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
@@ -380,6 +394,7 @@ export type TrainingSessionOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  price?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrderInput | Prisma.SortOrder
   trainerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -408,6 +423,7 @@ export type TrainingSessionScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
+  price?: Prisma.IntNullableWithAggregatesFilter<"TrainingSession"> | number | null
   categoryId?: Prisma.StringWithAggregatesFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
@@ -428,6 +444,7 @@ export type TrainingSessionCreateInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -449,6 +466,7 @@ export type TrainingSessionUncheckedCreateInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   categoryId: string
   formationId?: string | null
   trainerId?: string | null
@@ -470,6 +488,7 @@ export type TrainingSessionUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -491,6 +510,7 @@ export type TrainingSessionUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -512,6 +532,7 @@ export type TrainingSessionCreateManyInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   categoryId: string
   formationId?: string | null
   trainerId?: string | null
@@ -532,6 +553,7 @@ export type TrainingSessionUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -549,6 +571,7 @@ export type TrainingSessionUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -585,6 +608,7 @@ export type TrainingSessionCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   trainerId?: Prisma.SortOrder
@@ -600,6 +624,7 @@ export type TrainingSessionCountOrderByAggregateInput = {
 }
 
 export type TrainingSessionAvgOrderByAggregateInput = {
+  price?: Prisma.SortOrder
   minCapacity?: Prisma.SortOrder
   maxCapacity?: Prisma.SortOrder
 }
@@ -610,6 +635,7 @@ export type TrainingSessionMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   trainerId?: Prisma.SortOrder
@@ -630,6 +656,7 @@ export type TrainingSessionMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   trainerId?: Prisma.SortOrder
@@ -645,6 +672,7 @@ export type TrainingSessionMinOrderByAggregateInput = {
 }
 
 export type TrainingSessionSumOrderByAggregateInput = {
+  price?: Prisma.SortOrder
   minCapacity?: Prisma.SortOrder
   maxCapacity?: Prisma.SortOrder
 }
@@ -822,6 +850,7 @@ export type TrainingSessionCreateWithoutTrainerInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -842,6 +871,7 @@ export type TrainingSessionUncheckedCreateWithoutTrainerInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   categoryId: string
   formationId?: string | null
   startDate: Date | string
@@ -891,6 +921,7 @@ export type TrainingSessionScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
   categoryId?: Prisma.StringFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
@@ -911,6 +942,7 @@ export type TrainingSessionCreateWithoutCategoryInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -931,6 +963,7 @@ export type TrainingSessionUncheckedCreateWithoutCategoryInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   formationId?: string | null
   trainerId?: string | null
   startDate: Date | string
@@ -977,6 +1010,7 @@ export type TrainingSessionCreateWithoutFormationInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -997,6 +1031,7 @@ export type TrainingSessionUncheckedCreateWithoutFormationInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   categoryId: string
   trainerId?: string | null
   startDate: Date | string
@@ -1043,6 +1078,7 @@ export type TrainingSessionCreateWithoutEnrollmentsInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -1063,6 +1099,7 @@ export type TrainingSessionUncheckedCreateWithoutEnrollmentsInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   categoryId: string
   formationId?: string | null
   trainerId?: string | null
@@ -1099,6 +1136,7 @@ export type TrainingSessionUpdateWithoutEnrollmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1119,6 +1157,7 @@ export type TrainingSessionUncheckedUpdateWithoutEnrollmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1139,6 +1178,7 @@ export type TrainingSessionCreateManyTrainerInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   categoryId: string
   formationId?: string | null
   startDate: Date | string
@@ -1158,6 +1198,7 @@ export type TrainingSessionUpdateWithoutTrainerInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1178,6 +1219,7 @@ export type TrainingSessionUncheckedUpdateWithoutTrainerInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1198,6 +1240,7 @@ export type TrainingSessionUncheckedUpdateManyWithoutTrainerInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1217,6 +1260,7 @@ export type TrainingSessionCreateManyCategoryInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   formationId?: string | null
   trainerId?: string | null
   startDate: Date | string
@@ -1236,6 +1280,7 @@ export type TrainingSessionUpdateWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1256,6 +1301,7 @@ export type TrainingSessionUncheckedUpdateWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1276,6 +1322,7 @@ export type TrainingSessionUncheckedUpdateManyWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1295,6 +1342,7 @@ export type TrainingSessionCreateManyFormationInput = {
   description?: string | null
   coverImageUrl?: string | null
   duration?: string | null
+  price?: number | null
   categoryId: string
   trainerId?: string | null
   startDate: Date | string
@@ -1314,6 +1362,7 @@ export type TrainingSessionUpdateWithoutFormationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1334,6 +1383,7 @@ export type TrainingSessionUncheckedUpdateWithoutFormationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1354,6 +1404,7 @@ export type TrainingSessionUncheckedUpdateManyWithoutFormationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1404,6 +1455,7 @@ export type TrainingSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   description?: boolean
   coverImageUrl?: boolean
   duration?: boolean
+  price?: boolean
   categoryId?: boolean
   formationId?: boolean
   trainerId?: boolean
@@ -1431,6 +1483,7 @@ export type TrainingSessionSelectScalar = {
   description?: boolean
   coverImageUrl?: boolean
   duration?: boolean
+  price?: boolean
   categoryId?: boolean
   formationId?: boolean
   trainerId?: boolean
@@ -1445,7 +1498,7 @@ export type TrainingSessionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TrainingSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "coverImageUrl" | "duration" | "categoryId" | "formationId" | "trainerId" | "startDate" | "endDate" | "location" | "minCapacity" | "maxCapacity" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["trainingSession"]>
+export type TrainingSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "coverImageUrl" | "duration" | "price" | "categoryId" | "formationId" | "trainerId" | "startDate" | "endDate" | "location" | "minCapacity" | "maxCapacity" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["trainingSession"]>
 export type TrainingSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   formation?: boolean | Prisma.TrainingSession$formationArgs<ExtArgs>
@@ -1468,6 +1521,7 @@ export type $TrainingSessionPayload<ExtArgs extends runtime.Types.Extensions.Int
     description: string | null
     coverImageUrl: string | null
     duration: string | null
+    price: number | null
     categoryId: string
     formationId: string | null
     trainerId: string | null
@@ -1858,6 +1912,7 @@ export interface TrainingSessionFieldRefs {
   readonly description: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly coverImageUrl: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly duration: Prisma.FieldRef<"TrainingSession", 'String'>
+  readonly price: Prisma.FieldRef<"TrainingSession", 'Int'>
   readonly categoryId: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly formationId: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly trainerId: Prisma.FieldRef<"TrainingSession", 'String'>

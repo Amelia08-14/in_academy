@@ -35,7 +35,11 @@ router.get("/sessions", async (req, res) => {
                 ...(categoryId ? { categoryId } : {}),
             },
             orderBy: { startDate: "asc" },
-            include: { category: true, _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } } },
+            include: {
+                category: true,
+                formation: true,
+                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+            },
         });
         const withState = await Promise.all(sessions.map(async (s) => {
             const spotsLeft = s.maxCapacity - s._count.enrollments;
@@ -71,7 +75,11 @@ router.get("/sessions/:id", async (req, res) => {
         const now = new Date();
         const s = await db_1.prisma.trainingSession.findUnique({
             where: { id: req.params["id"] },
-            include: { category: true, _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } } },
+            include: {
+                category: true,
+                formation: true,
+                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+            },
         });
         if (!s) {
             res.status(404).json({ error: "Session introuvable" });

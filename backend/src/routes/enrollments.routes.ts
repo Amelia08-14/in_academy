@@ -45,10 +45,10 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response) => {
         return;
       }
 
-      const currentCount = await prisma.enrollment.count({
-        where: { sessionId, status: { in: ["PENDING", "CONFIRMED"] } },
+      const confirmedCount = await prisma.enrollment.count({
+        where: { sessionId, status: "CONFIRMED" },
       });
-      if (currentCount >= session.maxCapacity) {
+      if (confirmedCount >= session.maxCapacity) {
         res.status(409).json({ error: "Cette session est complète" });
         return;
       }
@@ -94,8 +94,30 @@ router.patch(
   requireRole("SUPER_ADMIN", "ADMIN", "MANAGER"),
   async (req: AuthRequest, res: Response) => {
     try {
+      const id = req.params["id"] as string;
+      const existing = await prisma.enrollment.findUnique({
+        where: { id },
+        include: { session: true },
+      });
+
+      if (!existing) {
+        res.status(404).json({ error: "Inscription introuvable" });
+        return;
+      }
+
+      if (existing.session && existing.status !== "CONFIRMED") {
+        const confirmedCount = await prisma.enrollment.count({
+          where: { sessionId: existing.sessionId, status: "CONFIRMED" },
+        });
+
+        if (confirmedCount >= existing.session.maxCapacity) {
+          res.status(409).json({ error: "Cette session est dÃ©jÃ  complÃ¨te" });
+          return;
+        }
+      }
+
       const enrollment = await prisma.enrollment.update({
-        where: { id: (req.params["id"] as string) },
+        where: { id },
         data: { status: "CONFIRMED", confirmedAt: new Date() },
       });
       res.json(enrollment);

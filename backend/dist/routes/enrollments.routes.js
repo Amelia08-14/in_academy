@@ -42,10 +42,10 @@ router.post("/", auth_middleware_1.authenticate, async (req, res) => {
                 res.status(409).json({ error: "Cette session est clôturée" });
                 return;
             }
-            const currentCount = await db_1.prisma.enrollment.count({
-                where: { sessionId, status: { in: ["PENDING", "CONFIRMED"] } },
+            const confirmedCount = await db_1.prisma.enrollment.count({
+                where: { sessionId, status: "CONFIRMED" },
             });
-            if (currentCount >= session.maxCapacity) {
+            if (confirmedCount >= session.maxCapacity) {
                 res.status(409).json({ error: "Cette session est complète" });
                 return;
             }
@@ -91,8 +91,26 @@ router.post("/", auth_middleware_1.authenticate, async (req, res) => {
 // PATCH /api/enrollments/:id/confirm — admin seulement
 router.patch("/:id/confirm", auth_middleware_1.authenticate, (0, auth_middleware_1.requireRole)("SUPER_ADMIN", "ADMIN", "MANAGER"), async (req, res) => {
     try {
+        const id = req.params["id"];
+        const existing = await db_1.prisma.enrollment.findUnique({
+            where: { id },
+            include: { session: true },
+        });
+        if (!existing) {
+            res.status(404).json({ error: "Inscription introuvable" });
+            return;
+        }
+        if (existing.session && existing.status !== "CONFIRMED") {
+            const confirmedCount = await db_1.prisma.enrollment.count({
+                where: { sessionId: existing.sessionId, status: "CONFIRMED" },
+            });
+            if (confirmedCount >= existing.session.maxCapacity) {
+                res.status(409).json({ error: "Cette session est dÃ©jÃ  complÃ¨te" });
+                return;
+            }
+        }
         const enrollment = await db_1.prisma.enrollment.update({
-            where: { id: req.params["id"] },
+            where: { id },
             data: { status: "CONFIRMED", confirmedAt: new Date() },
         });
         res.json(enrollment);

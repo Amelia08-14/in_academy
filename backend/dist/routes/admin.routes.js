@@ -250,8 +250,26 @@ router.get("/enrollments", async (_req, res) => {
 // PATCH /api/admin/enrollments/:id/confirm
 router.patch("/enrollments/:id/confirm", async (req, res) => {
     try {
+        const id = req.params["id"];
+        const existing = await db_1.prisma.enrollment.findUnique({
+            where: { id },
+            include: { session: true },
+        });
+        if (!existing) {
+            res.status(404).json({ error: "Inscription introuvable" });
+            return;
+        }
+        if (existing.session && existing.status !== "CONFIRMED") {
+            const confirmedCount = await db_1.prisma.enrollment.count({
+                where: { sessionId: existing.sessionId, status: "CONFIRMED" },
+            });
+            if (confirmedCount >= existing.session.maxCapacity) {
+                res.status(409).json({ error: "Cette session est dÃ©jÃ  complÃ¨te" });
+                return;
+            }
+        }
         const enrollment = await db_1.prisma.enrollment.update({
-            where: { id: req.params["id"] },
+            where: { id },
             data: { status: "CONFIRMED", confirmedAt: new Date() },
         });
         res.json(enrollment);
@@ -319,7 +337,7 @@ router.get("/sessions", async (_req, res) => {
     try {
         const sessions = await db_1.prisma.trainingSession.findMany({
             orderBy: { startDate: "desc" },
-            include: { category: true, _count: { select: { enrollments: true } } },
+            include: { category: true, formation: true, _count: { select: { enrollments: true } } },
         });
         res.json(sessions);
     }
@@ -331,18 +349,33 @@ router.get("/sessions", async (_req, res) => {
 // POST /api/admin/sessions
 router.post("/sessions", async (req, res) => {
     try {
-        const { title, description, coverImageUrl, duration, categoryId, startDate, endDate, location, minCapacity, maxCapacity, } = req.body;
-        if (!title || !categoryId || !startDate) {
-            res.status(400).json({ error: "title, categoryId et startDate sont requis" });
+        const { title, description, coverImageUrl, duration, price, categoryId, formationId, startDate, endDate, location, minCapacity, maxCapacity, } = req.body;
+        if (!startDate || (!categoryId && !formationId)) {
+            res.status(400).json({ error: "startDate et formation ou branche sont requis" });
+            return;
+        }
+        const formation = formationId
+            ? await db_1.prisma.formation.findUnique({ where: { id: formationId } })
+            : null;
+        if (formationId && !formation) {
+            res.status(404).json({ error: "Formation introuvable" });
+            return;
+        }
+        const resolvedCategoryId = formation?.categoryId ?? categoryId;
+        const resolvedTitle = (title?.trim() || formation?.title)?.trim();
+        if (!resolvedTitle || !resolvedCategoryId) {
+            res.status(400).json({ error: "Titre et branche requis" });
             return;
         }
         const session = await db_1.prisma.trainingSession.create({
             data: {
-                title,
-                description: description ?? null,
-                coverImageUrl: coverImageUrl ?? null,
-                duration: duration ?? null,
-                categoryId,
+                title: resolvedTitle,
+                description: description ?? formation?.description ?? null,
+                coverImageUrl: coverImageUrl ?? formation?.coverImageUrl ?? null,
+                duration: duration ?? formation?.duration ?? null,
+                price: price ?? formation?.price ?? null,
+                categoryId: resolvedCategoryId,
+                formationId: formation?.id ?? null,
                 startDate: new Date(startDate),
                 endDate: endDate ? new Date(endDate) : null,
                 location: location ?? null,
@@ -361,10 +394,17 @@ router.post("/sessions", async (req, res) => {
 // PATCH /api/admin/sessions/:id
 router.patch("/sessions/:id", async (req, res) => {
     try {
-        const { title, description, coverImageUrl, duration, categoryId, startDate, endDate, location, minCapacity, maxCapacity, status, } = req.body;
+        const { title, description, coverImageUrl, duration, price, categoryId, formationId, startDate, endDate, location, minCapacity, maxCapacity, status, } = req.body;
         const validStatus = ["SCHEDULED", "ONGOING", "COMPLETED", "CANCELLED"];
         if (status !== undefined && !validStatus.includes(status)) {
             res.status(400).json({ error: "Statut invalide" });
+            return;
+        }
+        const formation = formationId
+            ? await db_1.prisma.formation.findUnique({ where: { id: formationId } })
+            : null;
+        if (formationId && !formation) {
+            res.status(404).json({ error: "Formation introuvable" });
             return;
         }
         const session = await db_1.prisma.trainingSession.update({
@@ -374,7 +414,17 @@ router.patch("/sessions/:id", async (req, res) => {
                 ...(description !== undefined && { description }),
                 ...(coverImageUrl !== undefined && { coverImageUrl }),
                 ...(duration !== undefined && { duration }),
-                ...(categoryId !== undefined && { categoryId }),
+                ...(price !== undefined && { price }),
+                ...(formationId !== undefined && { formationId }),
+                ...(formation && {
+                    categoryId: formation.categoryId,
+                    title: title ?? formation.title,
+                    description: description !== undefined ? description : formation.description,
+                    coverImageUrl: coverImageUrl !== undefined ? coverImageUrl : formation.coverImageUrl,
+                    duration: duration !== undefined ? duration : formation.duration,
+                    price: price !== undefined ? price : formation.price,
+                }),
+                ...(categoryId !== undefined && !formation && { categoryId }),
                 ...(startDate !== undefined && { startDate: new Date(startDate) }),
                 ...(endDate !== undefined && { endDate: endDate ? new Date(endDate) : null }),
                 ...(location !== undefined && { location }),
@@ -382,7 +432,7 @@ router.patch("/sessions/:id", async (req, res) => {
                 ...(maxCapacity !== undefined && { maxCapacity }),
                 ...(status !== undefined && { status: status }),
             },
-            include: { category: true },
+            include: { category: true, formation: true },
         });
         res.json(session);
     }
