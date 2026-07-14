@@ -3028,21 +3028,24 @@ button {
 }
 
 .session-detail__hero {
-  aspect-ratio: 16 / 7;
+  aspect-ratio: 16 / 9;
   min-height: 0;
-  border-radius: 18px;
-  margin-bottom: 34px;
+  max-height: 560px;
+  border-radius: 16px;
+  margin-bottom: 36px;
   display: block;
-  box-shadow: 0 18px 42px rgba(15, 35, 64, 0.14);
+  background: var(--navy-deeper);
+  border: 1px solid rgba(15, 35, 64, 0.1);
+  box-shadow: 0 18px 42px rgba(15, 35, 64, 0.12);
 }
 
 .session-detail__hero-media {
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
 }
 
 .session-detail__hero-media img {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -3561,7 +3564,13 @@ button {
   }
 
   .session-detail__hero {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+
+  .session-detail__hero-media {
+    border-radius: 12px;
   }
 
   .session-detail__content {
