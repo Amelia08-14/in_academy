@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const db_1 = require("../lib/db");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
+const mail_1 = require("../lib/mail");
 const router = (0, express_1.Router)();
 // GET /api/enrollments — admin : toutes / user : les siennes
 router.get("/", auth_middleware_1.authenticate, async (req, res) => {
@@ -80,7 +81,23 @@ router.post("/", auth_middleware_1.authenticate, async (req, res) => {
                 type: type ?? "INDIVIDUAL",
                 status: "PENDING",
             },
+            include: {
+                user: { include: { learnerProfile: true } },
+                session: { include: { category: true, formation: true } },
+                formation: true,
+            },
         });
+        const learnerName = enrollment.user.learnerProfile
+            ? `${enrollment.user.learnerProfile.firstName} ${enrollment.user.learnerProfile.lastName}`
+            : enrollment.user.email;
+        const formationTitle = enrollment.session?.title ?? enrollment.formation?.title ?? "Formation IN ACADEMY";
+        void (0, mail_1.sendEnrollmentPendingEmail)({
+            to: enrollment.user.email,
+            learnerName,
+            formationTitle,
+            startDate: enrollment.session?.startDate ?? null,
+            location: enrollment.session?.location ?? null,
+        }).catch((err) => console.error("[mail enrollment pending]", err));
         res.status(201).json(enrollment);
     }
     catch (err) {
@@ -112,7 +129,25 @@ router.patch("/:id/confirm", auth_middleware_1.authenticate, (0, auth_middleware
         const enrollment = await db_1.prisma.enrollment.update({
             where: { id },
             data: { status: "CONFIRMED", confirmedAt: new Date() },
+            include: {
+                user: { include: { learnerProfile: true } },
+                session: { include: { category: true, formation: true } },
+                formation: true,
+            },
         });
+        if (existing.status !== "CONFIRMED") {
+            const learnerName = enrollment.user.learnerProfile
+                ? `${enrollment.user.learnerProfile.firstName} ${enrollment.user.learnerProfile.lastName}`
+                : enrollment.user.email;
+            const formationTitle = enrollment.session?.title ?? enrollment.formation?.title ?? "Formation IN ACADEMY";
+            void (0, mail_1.sendEnrollmentConfirmedEmail)({
+                to: enrollment.user.email,
+                learnerName,
+                formationTitle,
+                startDate: enrollment.session?.startDate ?? null,
+                location: enrollment.session?.location ?? null,
+            }).catch((err) => console.error("[mail enrollment confirmed]", err));
+        }
         res.json(enrollment);
     }
     catch (err) {

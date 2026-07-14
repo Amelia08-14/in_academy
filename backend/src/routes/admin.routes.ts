@@ -2,6 +2,7 @@ import { Router, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
+import { sendEnrollmentConfirmedEmail } from "@/lib/mail";
 
 const router = Router();
 
@@ -257,7 +258,24 @@ router.get("/enrollments", async (_req: AuthRequest, res: Response) => {
       orderBy: { createdAt: "desc" },
       include: {
         user: { include: { learnerProfile: true }, omit: { hashedPassword: true } },
-        session: { include: { formation: true, category: true } },
+        session: {
+          select: {
+            title: true,
+            description: true,
+            duration: true,
+            startDate: true,
+            location: true,
+            category: { select: { name: true } },
+            formation: {
+              select: {
+                title: true,
+                description: true,
+                duration: true,
+                price: true,
+              },
+            },
+          },
+        },
         formation: true,
         company: true,
         employees: true,
@@ -276,7 +294,11 @@ router.patch("/enrollments/:id/confirm", async (req: AuthRequest, res: Response)
     const id = req.params["id"] as string;
     const existing = await prisma.enrollment.findUnique({
       where: { id },
-      include: { session: true },
+      select: {
+        status: true,
+        sessionId: true,
+        session: { select: { maxCapacity: true } },
+      },
     });
 
     if (!existing) {
@@ -298,7 +320,36 @@ router.patch("/enrollments/:id/confirm", async (req: AuthRequest, res: Response)
     const enrollment = await prisma.enrollment.update({
       where: { id },
       data: { status: "CONFIRMED", confirmedAt: new Date() },
+      include: {
+        user: { include: { learnerProfile: true } },
+        session: {
+          select: {
+            title: true,
+            startDate: true,
+            location: true,
+            category: true,
+            formation: true,
+          },
+        },
+        formation: true,
+      },
     });
+
+    if (existing.status !== "CONFIRMED") {
+      const learnerName = enrollment.user.learnerProfile
+        ? `${enrollment.user.learnerProfile.firstName} ${enrollment.user.learnerProfile.lastName}`
+        : enrollment.user.email;
+      const formationTitle = enrollment.session?.title ?? enrollment.formation?.title ?? "Formation IN ACADEMY";
+
+      void sendEnrollmentConfirmedEmail({
+        to: enrollment.user.email,
+        learnerName,
+        formationTitle,
+        startDate: enrollment.session?.startDate ?? null,
+        location: enrollment.session?.location ?? null,
+      }).catch((err) => console.error("[mail admin enrollment confirmed]", err));
+    }
+
     res.json(enrollment);
   } catch (err) {
     console.error("[admin/enrollments confirm]", err);

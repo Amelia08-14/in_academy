@@ -1,6 +1,7 @@
 import { Router, Response } from "express";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
+import { sendEnrollmentConfirmedEmail, sendEnrollmentPendingEmail } from "@/lib/mail";
 
 const router = Router();
 
@@ -78,7 +79,25 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response) => {
         type:       type ?? "INDIVIDUAL",
         status:     "PENDING",
       },
+      include: {
+        user: { include: { learnerProfile: true } },
+        session: { include: { category: true, formation: true } },
+        formation: true,
+      },
     });
+
+    const learnerName = enrollment.user.learnerProfile
+      ? `${enrollment.user.learnerProfile.firstName} ${enrollment.user.learnerProfile.lastName}`
+      : enrollment.user.email;
+    const formationTitle = enrollment.session?.title ?? enrollment.formation?.title ?? "Formation IN ACADEMY";
+
+    void sendEnrollmentPendingEmail({
+      to: enrollment.user.email,
+      learnerName,
+      formationTitle,
+      startDate: enrollment.session?.startDate ?? null,
+      location: enrollment.session?.location ?? null,
+    }).catch((err) => console.error("[mail enrollment pending]", err));
 
     res.status(201).json(enrollment);
   } catch (err) {
@@ -119,7 +138,28 @@ router.patch(
       const enrollment = await prisma.enrollment.update({
         where: { id },
         data: { status: "CONFIRMED", confirmedAt: new Date() },
+        include: {
+          user: { include: { learnerProfile: true } },
+          session: { include: { category: true, formation: true } },
+          formation: true,
+        },
       });
+
+      if (existing.status !== "CONFIRMED") {
+        const learnerName = enrollment.user.learnerProfile
+          ? `${enrollment.user.learnerProfile.firstName} ${enrollment.user.learnerProfile.lastName}`
+          : enrollment.user.email;
+        const formationTitle = enrollment.session?.title ?? enrollment.formation?.title ?? "Formation IN ACADEMY";
+
+        void sendEnrollmentConfirmedEmail({
+          to: enrollment.user.email,
+          learnerName,
+          formationTitle,
+          startDate: enrollment.session?.startDate ?? null,
+          location: enrollment.session?.location ?? null,
+        }).catch((err) => console.error("[mail enrollment confirmed]", err));
+      }
+
       res.json(enrollment);
     } catch (err) {
       console.error("[enrollments confirm]", err);
