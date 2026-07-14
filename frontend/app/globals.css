@@ -3564,7 +3564,7 @@ button {
   }
 
   .session-detail__hero {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 16 / 9;
     border-radius: 12px;
     margin-bottom: 24px;
   }
