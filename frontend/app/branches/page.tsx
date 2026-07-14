@@ -5,11 +5,26 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useAuth } from "../hooks/useAuth";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
+import { fileUrl } from "@/lib/fileUrl";
+import { formatDa, formatDurationDays } from "@/lib/format";
 
 interface Formation { id: string; title: string; isCertifying: boolean }
 interface Category { id: string; slug: string; name: string; description: string | null; formations: Formation[] }
+interface Session {
+  id: string;
+  title: string;
+  coverImageUrl: string | null;
+  duration: string | null;
+  price: number | null;
+  startDate: string;
+  location: string | null;
+  spotsLeft: number;
+  isOpen: boolean;
+  category: { slug: string; name: string };
+}
 
 function DomainGrid({ categories }: { categories: Category[] }) {
   return (
@@ -61,18 +76,77 @@ function DomainGrid({ categories }: { categories: Category[] }) {
   );
 }
 
+function SessionGrid({ sessions }: { sessions: Session[] }) {
+  return (
+    <section className="branches-listing">
+      <div className="container">
+        {sessions.length === 0 ? (
+          <div className="catalogue__empty">
+            <p>Aucune session ouverte pour le moment.</p>
+            <Link href="/contact" className="btn btn--outline" style={{ marginTop: 16 }}>
+              Demander une formation specifique
+            </Link>
+          </div>
+        ) : (
+          <div className="catalogue__grid">
+            {sessions.map((s) => {
+              const img = s.coverImageUrl ? fileUrl(s.coverImageUrl) : branchImage(s.category.slug);
+              const duration = formatDurationDays(s.duration);
+              const price = formatDa(s.price);
+
+              return (
+                <Link href={`/session/${s.id}`} className="catalogue__item catalogue__item--link" key={s.id}>
+                  <div className="catalogue__item-media">
+                    {img && <Image src={img} alt={s.title} fill sizes="(max-width: 900px) 100vw, 360px" />}
+                  </div>
+                  <div className="catalogue__item-body">
+                    <span className="catalogue__item-badge">{s.category.name}</span>
+                    <h3 className="catalogue__item-title">{s.title}</h3>
+                    <div className="catalogue__item-meta">
+                      <span className="catalogue__item-duration">
+                        {new Date(s.startDate).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
+                      </span>
+                      {duration && <span className="catalogue__item-duration">{duration}</span>}
+                      {price && <span className="catalogue__item-price">{price}</span>}
+                    </div>
+                    <div className="bd-formation-item__action">
+                      <span className="btn btn--primary">Voir les details</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default function BranchesPage() {
+  const { role } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get<Category[]>("/categories").then(setCategories).finally(() => setLoading(false));
+    Promise.all([
+      api.get<Category[]>("/categories"),
+      api.get<Session[]>("/sessions"),
+    ])
+      .then(([c, s]) => {
+        setCategories(c);
+        setSessions(s.filter((session) => session.isOpen));
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const totalFormations = categories.reduce((n, c) => n + c.formations.length, 0);
+  const totalOpenSessions = sessions.length;
   const pctCertifying = totalFormations > 0
     ? Math.round(100 * categories.reduce((n, c) => n + c.formations.filter((f) => f.isCertifying).length, 0) / totalFormations)
     : 100;
+  const showDomains = role === "COMPANY_ADMIN";
 
   return (
     <>
@@ -94,10 +168,14 @@ export default function BranchesPage() {
         </div>
         <div className="branches-page-hero__bg" />
         <div className="container branches-page-hero__inner">
-          <span className="section-eyebrow branches-page-hero__eyebrow">Domaines de formation</span>
+          <span className="section-eyebrow branches-page-hero__eyebrow">
+            {showDomains ? "Domaines de formation" : "Sessions ouvertes"}
+          </span>
           <h1 className="branches-page-hero__title">Nos Formations</h1>
           <p className="branches-page-hero__sub">
-            {categories.length || "12"} domaines de compétences stratégiques — formations certifiantes de 1 à 7 jours, alignées sur les besoins du marché.
+            {showDomains
+              ? `${categories.length || "12"} domaines de competences strategiques pour construire vos parcours d'entreprise.`
+              : "Sessions ouvertes aux inscriptions, avec duree, tarif et details pratiques avant validation."}
           </p>
           <div className="branches-page-hero__actions">
             <a href="#catalogue" className="btn btn--primary">Explorer le catalogue</a>
@@ -105,17 +183,17 @@ export default function BranchesPage() {
           </div>
           <div className="branches-page-hero__stats">
             <div className="branches-page-hero__stat">
-              <span className="branches-page-hero__stat-num">{loading ? "—" : categories.length}</span>
+              <span className="branches-page-hero__stat-num">{loading ? "-" : categories.length}</span>
               <span className="branches-page-hero__stat-lbl">Domaines</span>
             </div>
             <div className="branches-page-hero__stat-sep" />
             <div className="branches-page-hero__stat">
-              <span className="branches-page-hero__stat-num">{loading ? "—" : totalFormations}</span>
-              <span className="branches-page-hero__stat-lbl">Formations</span>
+              <span className="branches-page-hero__stat-num">{loading ? "-" : showDomains ? totalFormations : totalOpenSessions}</span>
+              <span className="branches-page-hero__stat-lbl">{showDomains ? "Formations" : "Sessions ouvertes"}</span>
             </div>
             <div className="branches-page-hero__stat-sep" />
             <div className="branches-page-hero__stat">
-              <span className="branches-page-hero__stat-num">{loading ? "—" : `${pctCertifying}%`}</span>
+              <span className="branches-page-hero__stat-num">{loading ? "-" : `${pctCertifying}%`}</span>
               <span className="branches-page-hero__stat-lbl">Certifiantes</span>
             </div>
           </div>
@@ -123,7 +201,7 @@ export default function BranchesPage() {
       </section>
 
       <div id="catalogue">
-        <DomainGrid categories={categories} />
+        {showDomains ? <DomainGrid categories={categories} /> : <SessionGrid sessions={sessions} />}
       </div>
 
       <Footer />

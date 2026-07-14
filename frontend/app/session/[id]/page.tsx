@@ -9,6 +9,8 @@ import Footer from "../../components/Footer";
 import { useAuth } from "../../hooks/useAuth";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
+import { fileUrl } from "@/lib/fileUrl";
+import { formatDa, formatDurationDays } from "@/lib/format";
 
 interface Session {
   id: string;
@@ -16,14 +18,61 @@ interface Session {
   description: string | null;
   coverImageUrl: string | null;
   duration: string | null;
+  price: number | null;
   startDate: string;
   location: string | null;
   spotsLeft: number;
+  maxCapacity: number;
   isOpen: boolean;
   category: { slug: string; name: string };
+  formation: { title: string; description: string | null; duration: string | null; price: number | null } | null;
 }
 
-const fileUrl = (url: string) => `/api/files/${url.replace("/uploads/", "")}`;
+function DescriptionBlock({ text }: { text: string }) {
+  const blocks = text
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  return (
+    <div className="session-detail__description">
+      {blocks.map((block, index) => {
+        const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+        const isList = lines.every((line) => /^[-*•]\s+/.test(line));
+
+        if (isList) {
+          return (
+            <ul key={index}>
+              {lines.map((line) => (
+                <li key={line}>{line.replace(/^[-*•]\s+/, "")}</li>
+              ))}
+            </ul>
+          );
+        }
+
+        if (lines.length > 1) {
+          const [first, ...rest] = lines;
+          const restIsList = rest.every((line) => /^[-*•]\s+/.test(line));
+
+          if (first && restIsList) {
+            return (
+              <div className="session-detail__description-group" key={index}>
+                <h3>{first}</h3>
+                <ul>
+                  {rest.map((line) => (
+                    <li key={line}>{line.replace(/^[-*•]\s+/, "")}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          }
+        }
+
+        return <p key={index}>{lines.join(" ")}</p>;
+      })}
+    </div>
+  );
+}
 
 export default function SessionDirectPage() {
   const params = useParams<{ id: string }>();
@@ -41,6 +90,8 @@ export default function SessionDirectPage() {
     setEnrollState("sending");
     try {
       await api.post("/enrollments", { sessionId: params.id });
+      const updatedSession = await api.get<Session>(`/sessions/${params.id}`);
+      setSession(updatedSession);
       setEnrollState("done");
     } catch {
       setEnrollState("error");
@@ -52,7 +103,7 @@ export default function SessionDirectPage() {
       <>
         <Header />
         <div style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <p style={{ color: "var(--text-muted)" }}>Chargement…</p>
+          <p style={{ color: "var(--text-muted)" }}>Chargement...</p>
         </div>
         <Footer />
       </>
@@ -74,85 +125,111 @@ export default function SessionDirectPage() {
 
   const img = session.coverImageUrl ? fileUrl(session.coverImageUrl) : branchImage(session.category.slug);
   const redirectPath = `/session/${session.id}`;
+  const duration = formatDurationDays(session.duration ?? session.formation?.duration);
+  const price = formatDa(session.price ?? session.formation?.price);
+  const description = session.description ?? session.formation?.description;
 
   return (
     <>
       <Header />
 
-      <section className="bd-page">
-        <div className="container" style={{ maxWidth: 760 }}>
+      <section className="bd-page session-detail">
+        <div className="container session-detail__container">
           <Link href={`/branches/${session.category.slug}`} className="bd-back">
-            ← {session.category.name}
+            {session.category.name}
           </Link>
 
-          <div className="bd-hero-banner" style={{ minHeight: 320, borderRadius: 20, marginBottom: 40 }}>
-            <div className="bd-hero-banner__media" style={{ borderRadius: 20, overflow: "hidden" }}>
-              {img && <Image src={img} alt={session.title} fill sizes="760px" />}
-              <div className="bd-hero-banner__scrim" />
-            </div>
-            <div className="bd-hero-banner__inner" style={{ paddingTop: 48, paddingBottom: 32 }}>
-              <span className="section-eyebrow" style={{ color: "var(--gold-light)" }}>
-                {session.category.name}
-              </span>
-              <h1 className="bd-hero-banner__title" style={{ fontSize: "clamp(28px, 4vw, 42px)" }}>
-                {session.title}
-              </h1>
-              <p className="bd-hero-banner__desc">
-                {new Date(session.startDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
-                {session.duration ? ` · ${session.duration}` : ""}
-                {session.location ? ` · ${session.location}` : ""}
-              </p>
+          <div className="bd-hero-banner session-detail__hero">
+            <div className="bd-hero-banner__media session-detail__hero-media">
+              {img && <Image src={img} alt={session.title} fill sizes="(max-width: 900px) 100vw, 980px" />}
             </div>
           </div>
+          <h1 className="session-detail__sr-only">{session.title}</h1>
 
-          {session.description && (
-            <p style={{ color: "var(--text-body)", lineHeight: 1.75, marginBottom: 32 }}>
-              {session.description}
-            </p>
-          )}
+          <div className="session-detail__layout">
+            <article className="session-detail__content">
+              <h2>Programme de la formation</h2>
+              {description ? (
+                <DescriptionBlock text={description} />
+              ) : (
+                <p>Les informations detaillees de cette formation seront completees prochainement.</p>
+              )}
+            </article>
 
-          {!session.isOpen ? (
-            <div className="catalogue__empty">
-              <p>Cette session n&apos;est plus ouverte aux inscriptions.</p>
-              <Link href={`/branches/${session.category.slug}`} className="btn btn--outline" style={{ marginTop: 16 }}>
-                Voir les autres sessions du domaine
-              </Link>
-            </div>
-          ) : !ready ? null : !isAuthenticated ? (
-            <div className="catalogue__notice">
-              <span>Créez un compte ou connectez-vous pour vous inscrire directement à cette formation.</span>
-              <div className="catalogue__notice-actions">
-                <Link href={`/connexion?redirect=${encodeURIComponent(redirectPath)}`} className="btn btn--outline">
-                  Se connecter
-                </Link>
-                <Link href={`/inscription?redirect=${encodeURIComponent(redirectPath)}`} className="btn btn--primary">
-                  Créer un compte
-                </Link>
+            <aside className="session-detail__aside">
+              <div className="session-detail__summary">
+                <div>
+                  <span>Date</span>
+                  <strong>{new Date(session.startDate).toLocaleDateString("fr-FR")}</strong>
+                </div>
+                {duration && (
+                  <div>
+                    <span>Duree</span>
+                    <strong>{duration}</strong>
+                  </div>
+                )}
+                {price && (
+                  <div>
+                    <span>Tarif</span>
+                    <strong>{price}</strong>
+                  </div>
+                )}
+                {session.location && (
+                  <div>
+                    <span>Lieu</span>
+                    <strong>{session.location}</strong>
+                  </div>
+                )}
+                <div>
+                  <span>Capacite</span>
+                  <strong>{session.spotsLeft}/{session.maxCapacity} restantes sur la totalite de la capacite</strong>
+                </div>
               </div>
-            </div>
-          ) : role === "LEARNER" ? (
-            <button
-              type="button"
-              className="btn btn--primary catalogue__quote-btn"
-              style={{ width: "100%" }}
-              disabled={enrollState === "sending" || enrollState === "done"}
-              onClick={enroll}
-            >
-              {enrollState === "done" ? "Inscription envoyée ✓"
-                : enrollState === "sending" ? "Envoi…"
-                : enrollState === "error" ? "Réessayer"
-                : `S'inscrire (${session.spotsLeft} place${session.spotsLeft > 1 ? "s" : ""})`}
-            </button>
-          ) : (
-            <div className="catalogue__notice">
-              <span>Cette inscription directe est réservée aux comptes particulier.</span>
-              <div className="catalogue__notice-actions">
-                <Link href={`/branches/${session.category.slug}`} className="btn btn--outline">
-                  Voir le domaine
-                </Link>
-              </div>
-            </div>
-          )}
+
+              {!session.isOpen ? (
+                <div className="catalogue__empty">
+                  <p>Cette session n&apos;est plus ouverte aux inscriptions.</p>
+                  <Link href={`/branches/${session.category.slug}`} className="btn btn--outline" style={{ marginTop: 16 }}>
+                    Voir les autres sessions du domaine
+                  </Link>
+                </div>
+              ) : !ready ? null : !isAuthenticated ? (
+                <div className="catalogue__notice">
+                  <span>Creez un compte ou connectez-vous pour vous inscrire directement a cette formation.</span>
+                  <div className="catalogue__notice-actions">
+                    <Link href={`/connexion?redirect=${encodeURIComponent(redirectPath)}`} className="btn btn--outline">
+                      Se connecter
+                    </Link>
+                    <Link href={`/inscription?redirect=${encodeURIComponent(redirectPath)}`} className="btn btn--primary">
+                      Creer un compte
+                    </Link>
+                  </div>
+                </div>
+              ) : role === "LEARNER" ? (
+                <button
+                  type="button"
+                  className="btn btn--primary catalogue__quote-btn"
+                  style={{ width: "100%" }}
+                  disabled={enrollState === "sending" || enrollState === "done"}
+                  onClick={enroll}
+                >
+                  {enrollState === "done" ? "Inscription envoyee"
+                    : enrollState === "sending" ? "Envoi..."
+                      : enrollState === "error" ? "Reessayer"
+                        : `S'inscrire (${session.spotsLeft} place${session.spotsLeft > 1 ? "s" : ""})`}
+                </button>
+              ) : (
+                <div className="catalogue__notice">
+                  <span>Cette inscription directe est reservee aux comptes particulier.</span>
+                  <div className="catalogue__notice-actions">
+                    <Link href={`/branches/${session.category.slug}`} className="btn btn--outline">
+                      Voir le domaine
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </aside>
+          </div>
         </div>
       </section>
 

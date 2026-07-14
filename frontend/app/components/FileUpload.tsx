@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { fileUrl } from "@/lib/fileUrl";
 
 interface FileUploadProps {
   label: string;
@@ -17,8 +18,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 function fileProxyUrl(url: string): string {
   // url = "/uploads/timestamp-filename.pdf"
   // proxy via Next.js API to avoid cross-origin blocking
-  const filename = url.replace("/uploads/", "");
-  return `/api/files/${filename}`;
+  return fileUrl(url);
 }
 
 function getFileName(url: string): string {

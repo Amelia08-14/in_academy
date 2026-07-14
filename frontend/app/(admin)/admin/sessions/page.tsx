@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { adminApi as api } from "@/lib/adminApi";
 import FileUpload from "@/app/components/FileUpload";
+import { formatDa } from "@/lib/format";
 
 interface Category { id: string; name: string }
 interface Session {
@@ -11,6 +12,7 @@ interface Session {
   description: string | null;
   coverImageUrl: string | null;
   duration: string | null;
+  price: number | null;
   categoryId: string;
   category: Category;
   startDate: string;
@@ -28,6 +30,7 @@ interface EditState {
   description: string;
   coverImageUrl: string | null;
   duration: string;
+  price: number | null;
   categoryId: string;
   startDate: string;
   location: string;
@@ -42,6 +45,7 @@ const EMPTY: EditState = {
   description: "",
   coverImageUrl: null,
   duration: "",
+  price: null,
   categoryId: "",
   startDate: "",
   location: "",
@@ -82,13 +86,15 @@ export default function AdminSessionsPage() {
     setLoading(true);
     Promise.all([
       api.get<Session[]>("/admin/sessions"),
-      api.get<Category[]>("/categories"),
+      api.get<Category[]>("/admin/categories"),
     ])
       .then(([s, c]) => { setSessions(s); setCategories(c); })
       .finally(() => setLoading(false));
   };
 
-  useEffect(load, []);
+  useEffect(() => {
+    void Promise.resolve().then(load);
+  }, []);
 
   const filtered = sessions.filter((s) =>
     s.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -107,6 +113,7 @@ export default function AdminSessionsPage() {
       description: s.description ?? "",
       coverImageUrl: s.coverImageUrl,
       duration: s.duration ?? "",
+      price: s.price,
       categoryId: s.categoryId,
       startDate: s.startDate.slice(0, 10),
       location: s.location ?? "",
@@ -128,6 +135,7 @@ export default function AdminSessionsPage() {
         description: editing.description || null,
         coverImageUrl: editing.coverImageUrl,
         duration: editing.duration || null,
+        price: editing.price,
         categoryId: editing.categoryId,
         startDate: editing.startDate,
         location: editing.location || null,
@@ -236,6 +244,16 @@ export default function AdminSessionsPage() {
                 </div>
               </div>
 
+              <div className="auth-field">
+                <label className="auth-label">Tarif</label>
+                <input
+                  type="number" className="auth-input" min={0}
+                  value={editing.price ?? ""}
+                  onChange={(e) => setEditing((v) => v ? { ...v, price: e.target.value ? Number(e.target.value) : null } : v)}
+                  placeholder="Ex : 45000"
+                />
+              </div>
+
               <div className="auth-row">
                 <div className="auth-field">
                   <label className="auth-label">Date</label>
@@ -329,6 +347,7 @@ export default function AdminSessionsPage() {
               <th>Branche</th>
               <th>Date</th>
               <th>Durée</th>
+              <th>Tarif</th>
               <th>Inscrits</th>
               <th>Statut</th>
               <th>Actions</th>
@@ -337,7 +356,7 @@ export default function AdminSessionsPage() {
           <tbody>
             {filtered.length === 0 && !loading && (
               <tr>
-                <td colSpan={7} className="admin-table__empty">Aucune session trouvée</td>
+                <td colSpan={8} className="admin-table__empty">Aucune session trouvée</td>
               </tr>
             )}
             {filtered.map((s) => (
@@ -346,6 +365,7 @@ export default function AdminSessionsPage() {
                 <td style={{ fontSize: 12, color: "var(--text-muted)" }}>{s.category.name}</td>
                 <td style={{ fontSize: 13 }}>{new Date(s.startDate).toLocaleDateString("fr-FR")}</td>
                 <td style={{ fontSize: 13 }}>{s.duration ?? <span style={{ color: "var(--border)" }}>—</span>}</td>
+                <td style={{ fontSize: 13 }}>{formatDa(s.price) ?? <span style={{ color: "var(--border)" }}>—</span>}</td>
                 <td style={{ fontSize: 13 }}>{s._count.enrollments} / {s.maxCapacity}</td>
                 <td>
                   <span className={`admin-badge admin-badge--${s.status === "CANCELLED" ? "cancelled" : s.status === "COMPLETED" ? "cancelled" : "confirmed"}`}>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { adminApi as api } from "@/lib/adminApi";
 import FileUpload from "@/app/components/FileUpload";
 
-const fileUrl = (url: string) => `/api/files/${url.replace("/uploads/", "")}`;
+import { fileUrl } from "@/lib/fileUrl";
 
 interface Formation { id: string; title: string }
 interface FormationLink { formation: Formation; isPrimary: boolean }
