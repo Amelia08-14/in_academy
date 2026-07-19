@@ -234,18 +234,18 @@ export default function AdminSessionsPage() {
                   </select>
                 </div>
                 <div className="auth-field">
-                  <label className="auth-label">Durée</label>
+                  <label className="auth-label">Durée (jours)</label>
                   <input
                     type="text" className="auth-input"
                     value={editing.duration}
                     onChange={(e) => setEditing((v) => v ? { ...v, duration: e.target.value } : v)}
-                    placeholder="Ex : 3 jours"
+                    placeholder="Ex : 8"
                   />
                 </div>
               </div>
 
               <div className="auth-field">
-                <label className="auth-label">Tarif</label>
+                <label className="auth-label">Tarif (DA)</label>
                 <input
                   type="number" className="auth-input" min={0}
                   value={editing.price ?? ""}

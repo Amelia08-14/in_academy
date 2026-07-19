@@ -23,6 +23,7 @@ interface Session {
   location: string | null;
   spotsLeft: number;
   isOpen: boolean;
+  status: "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED";
   category: { slug: string; name: string };
 }
 
@@ -82,9 +83,9 @@ function SessionGrid({ sessions }: { sessions: Session[] }) {
       <div className="container">
         {sessions.length === 0 ? (
           <div className="catalogue__empty">
-            <p>Aucune session ouverte pour le moment.</p>
+            <p>Aucune session pour le moment.</p>
             <Link href="/contact" className="btn btn--outline" style={{ marginTop: 16 }}>
-              Demander une formation specifique
+              Demander une formation spécifique
             </Link>
           </div>
         ) : (
@@ -98,6 +99,9 @@ function SessionGrid({ sessions }: { sessions: Session[] }) {
                 <Link href={`/session/${s.id}`} className="catalogue__item catalogue__item--link" key={s.id}>
                   <div className="catalogue__item-media">
                     {img && <Image src={img} alt={s.title} fill sizes="(max-width: 900px) 100vw, 360px" />}
+                    <span className={`session-state session-state--${s.isOpen ? "open" : "full"}`}>
+                      {s.isOpen ? "En cours" : "Complet"}
+                    </span>
                   </div>
                   <div className="catalogue__item-body">
                     <span className="catalogue__item-badge">{s.category.name}</span>
@@ -110,7 +114,7 @@ function SessionGrid({ sessions }: { sessions: Session[] }) {
                       {price && <span className="catalogue__item-price">{price}</span>}
                     </div>
                     <div className="bd-formation-item__action">
-                      <span className="btn btn--primary">Voir les details</span>
+                      <span className="btn btn--primary">Voir les détails</span>
                     </div>
                   </div>
                 </Link>
@@ -136,13 +140,18 @@ export default function BranchesPage() {
     ])
       .then(([c, s]) => {
         setCategories(c);
-        setSessions(s.filter((session) => session.isOpen));
+        // On garde les sessions complètes/terminées (affichées "Complet"),
+        // on retire seulement les annulées. Les ouvertes d'abord.
+        const visible = s
+          .filter((session) => session.status !== "CANCELLED")
+          .sort((a, b) => Number(b.isOpen) - Number(a.isOpen));
+        setSessions(visible);
       })
       .finally(() => setLoading(false));
   }, []);
 
   const totalFormations = categories.reduce((n, c) => n + c.formations.length, 0);
-  const totalOpenSessions = sessions.length;
+  const totalOpenSessions = sessions.filter((s) => s.isOpen).length;
   const pctCertifying = totalFormations > 0
     ? Math.round(100 * categories.reduce((n, c) => n + c.formations.filter((f) => f.isCertifying).length, 0) / totalFormations)
     : 100;
@@ -174,8 +183,8 @@ export default function BranchesPage() {
           <h1 className="branches-page-hero__title">Nos Formations</h1>
           <p className="branches-page-hero__sub">
             {showDomains
-              ? `${categories.length || "12"} domaines de competences strategiques pour construire vos parcours d'entreprise.`
-              : "Sessions ouvertes aux inscriptions, avec duree, tarif et details pratiques avant validation."}
+              ? `${categories.length || "12"} domaines de compétences stratégiques pour construire vos parcours d'entreprise.`
+              : "Sessions de formation avec durée, tarif et détails pratiques — inscrivez-vous aux sessions en cours."}
           </p>
           <div className="branches-page-hero__actions">
             <a href="#catalogue" className="btn btn--primary">Explorer le catalogue</a>

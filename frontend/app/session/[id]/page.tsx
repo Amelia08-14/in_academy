@@ -139,12 +139,25 @@ export default function SessionDirectPage() {
             {session.category.name}
           </Link>
 
-          <div className="bd-hero-banner session-detail__hero">
-            <div className="bd-hero-banner__media session-detail__hero-media">
+          <div className="session-detail__hero">
+            <div className="session-detail__hero-media">
               {img && <Image src={img} alt={session.title} fill sizes="(max-width: 900px) 100vw, 980px" />}
             </div>
+            <div className="session-detail__hero-scrim" />
+            <span className={`session-state session-state--${session.isOpen ? "open" : "full"} session-detail__hero-state`}>
+              {session.isOpen ? "En cours" : "Complet"}
+            </span>
+            <div className="session-detail__hero-content">
+              <span className="session-detail__hero-eyebrow">{session.category.name}</span>
+              <h1 className="session-detail__hero-title">{session.title}</h1>
+              <div className="session-detail__hero-meta">
+                <span>{new Date(session.startDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</span>
+                {duration && <span>{duration}</span>}
+                {price && <span>{price}</span>}
+                {session.location && <span>{session.location}</span>}
+              </div>
+            </div>
           </div>
-          <h1 className="session-detail__sr-only">{session.title}</h1>
 
           <div className="session-detail__layout">
             <article className="session-detail__content">
@@ -152,7 +165,7 @@ export default function SessionDirectPage() {
               {description ? (
                 <DescriptionBlock text={description} />
               ) : (
-                <p>Les informations detaillees de cette formation seront completees prochainement.</p>
+                <p>Les informations détaillées de cette formation seront complétées prochainement.</p>
               )}
             </article>
 
@@ -164,7 +177,7 @@ export default function SessionDirectPage() {
                 </div>
                 {duration && (
                   <div>
-                    <span>Duree</span>
+                    <span>Durée</span>
                     <strong>{duration}</strong>
                   </div>
                 )}
@@ -181,27 +194,28 @@ export default function SessionDirectPage() {
                   </div>
                 )}
                 <div>
-                  <span>Capacite</span>
-                  <strong>{session.spotsLeft}/{session.maxCapacity} restantes sur la totalite de la capacite</strong>
+                  <span>Places</span>
+                  <strong>{session.isOpen ? `${session.spotsLeft} restante${session.spotsLeft > 1 ? "s" : ""}` : "Session complète"}</strong>
                 </div>
               </div>
 
               {!session.isOpen ? (
-                <div className="catalogue__empty">
+                <div className="session-detail__cta-full">
+                  <span className="session-state session-state--full session-detail__cta-badge">Complet</span>
                   <p>Cette session n&apos;est plus ouverte aux inscriptions.</p>
-                  <Link href={`/branches/${session.category.slug}`} className="btn btn--outline" style={{ marginTop: 16 }}>
-                    Voir les autres sessions du domaine
+                  <Link href={`/branches`} className="btn btn--outline" style={{ width: "100%" }}>
+                    Voir les sessions en cours
                   </Link>
                 </div>
               ) : !ready ? null : !isAuthenticated ? (
                 <div className="catalogue__notice">
-                  <span>Creez un compte ou connectez-vous pour vous inscrire directement a cette formation.</span>
+                  <span>Créez un compte ou connectez-vous pour vous inscrire directement à cette formation.</span>
                   <div className="catalogue__notice-actions">
                     <Link href={`/connexion?redirect=${encodeURIComponent(redirectPath)}`} className="btn btn--outline">
                       Se connecter
                     </Link>
                     <Link href={`/inscription?redirect=${encodeURIComponent(redirectPath)}`} className="btn btn--primary">
-                      Creer un compte
+                      Créer un compte
                     </Link>
                   </div>
                 </div>
@@ -213,14 +227,14 @@ export default function SessionDirectPage() {
                   disabled={enrollState === "sending" || enrollState === "done"}
                   onClick={enroll}
                 >
-                  {enrollState === "done" ? "Inscription envoyee"
-                    : enrollState === "sending" ? "Envoi..."
-                      : enrollState === "error" ? "Reessayer"
+                  {enrollState === "done" ? "Inscription envoyée ✓"
+                    : enrollState === "sending" ? "Envoi…"
+                      : enrollState === "error" ? "Réessayer"
                         : `S'inscrire (${session.spotsLeft} place${session.spotsLeft > 1 ? "s" : ""})`}
                 </button>
               ) : (
                 <div className="catalogue__notice">
-                  <span>Cette inscription directe est reservee aux comptes particulier.</span>
+                  <span>Cette inscription directe est réservée aux comptes particulier.</span>
                   <div className="catalogue__notice-actions">
                     <Link href={`/branches/${session.category.slug}`} className="btn btn--outline">
                       Voir le domaine
