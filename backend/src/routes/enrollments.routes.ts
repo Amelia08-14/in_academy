@@ -41,15 +41,18 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response) => {
       const session = await prisma.trainingSession.findUnique({ where: { id: sessionId } });
       if (!session) { res.status(404).json({ error: "Session introuvable" }); return; }
 
-      if (["COMPLETED", "CANCELLED"].includes(session.status) || session.startDate.getTime() < Date.now()) {
+      // On bloque uniquement les sessions annulées / terminées, pas selon la date.
+      if (["COMPLETED", "CANCELLED"].includes(session.status)) {
         res.status(409).json({ error: "Cette session est clôturée" });
         return;
       }
 
-      const confirmedCount = await prisma.enrollment.count({
-        where: { sessionId, status: "CONFIRMED" },
+      // Une place est réservée dès qu'une inscription est en attente ou confirmée :
+      // "complet" = toutes les places prises.
+      const reservedCount = await prisma.enrollment.count({
+        where: { sessionId, status: { in: ["PENDING", "CONFIRMED"] } },
       });
-      if (confirmedCount >= session.maxCapacity) {
+      if (reservedCount >= session.maxCapacity) {
         res.status(409).json({ error: "Cette session est complète" });
         return;
       }

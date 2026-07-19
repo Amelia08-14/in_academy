@@ -2879,13 +2879,15 @@ button {
 }
 
 .session-state--open {
-  background: rgba(46, 125, 132, 0.9);
-  color: #eafff2;
+  background: var(--teal);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(46, 125, 132, 0.4);
 }
 
 .session-state--full {
-  background: rgba(15, 35, 64, 0.82);
-  color: rgba(255, 255, 255, 0.75);
+  background: #c0392b;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.4);
 }
 
 .catalogue__item-body {
@@ -3078,17 +3080,24 @@ button {
 .session-detail__hero-media {
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 
+/* L'image de couverture peut être une affiche avec son propre texte : on la floute
+   et l'assombrit pour qu'elle serve de fond, et que seul notre texte reste lisible.
+   Le scale évite les bords transparents créés par le flou. */
 .session-detail__hero-media img {
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center;
+  filter: brightness(0.42) blur(3px);
+  transform: scale(1.08);
 }
 
 .session-detail__hero-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(1, 21, 48, 0.92) 0%, rgba(1, 21, 48, 0.45) 42%, rgba(1, 21, 48, 0.05) 100%);
+  background:
+    linear-gradient(to top, rgba(1, 21, 48, 0.85) 0%, rgba(1, 21, 48, 0.5) 55%, rgba(1, 21, 48, 0.45) 100%);
 }
 
 .session-detail__hero-state {
