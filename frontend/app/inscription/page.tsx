@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Header from "@/app/components/Header";
+import AuthTabs from "@/app/components/AuthTabs";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 const STEPS = ["Compte", "Profil", "Confirmation"];
@@ -115,10 +116,8 @@ function InscriptionContent() {
       <Header />
       <div className="auth-page">
         <div className="auth-card auth-card--wide">
-          <div className="auth-type-badge auth-type-badge--particulier">
-            Compte Particulier
-          </div>
-          <h1 className="auth-card__title">Créer un compte</h1>
+          <AuthTabs active="particulier" />
+          <h1 className="auth-card__title">Créer un compte particulier</h1>
 
           {/* Stepper */}
           <div className="auth-stepper">
@@ -232,8 +231,6 @@ function InscriptionContent() {
           )}
 
           <p className="auth-footer-link">
-            Entreprise ? <Link href="/inscription-entreprise">Créer un compte entreprise</Link>
-            {" · "}
             Déjà inscrit ? <Link href="/connexion">Se connecter</Link>
           </p>
         </div>

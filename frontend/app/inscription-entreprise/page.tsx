@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "@/app/components/Header";
+import AuthTabs from "@/app/components/AuthTabs";
 import { api } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
@@ -149,9 +150,7 @@ export default function InscriptionEntreprisePage() {
       <Header />
       <div className="auth-page">
         <div className="auth-card auth-card--wide">
-          <div className="auth-type-badge auth-type-badge--entreprise">
-            Compte Entreprise B2B
-          </div>
+          <AuthTabs active="entreprise" />
           <h1 className="auth-card__title">Ouvrir un compte entreprise</h1>
           <p className="auth-card__sub">
             Accédez aux formations B2B, demandez des devis et gérez vos équipes
@@ -327,8 +326,6 @@ export default function InscriptionEntreprisePage() {
           )}
 
           <p className="auth-footer-link">
-            Particulier ? <Link href="/inscription">Inscription individuelle</Link>
-            {" · "}
             Déjà inscrit ? <Link href="/connexion">Se connecter</Link>
           </p>
         </div>

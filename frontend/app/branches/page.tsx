@@ -90,7 +90,7 @@ function SessionGrid({ sessions }: { sessions: Session[] }) {
           </div>
         ) : (
           <div className="catalogue__grid">
-            {sessions.map((s) => {
+            {sessions.map((s, i) => {
               const img = s.coverImageUrl ? fileUrl(s.coverImageUrl) : branchImage(s.category.slug);
               const duration = formatDurationDays(s.duration);
               const price = formatDa(s.price);
@@ -106,10 +106,13 @@ function SessionGrid({ sessions }: { sessions: Session[] }) {
                   <div className="catalogue__item-body">
                     <span className="catalogue__item-badge">{s.category.name}</span>
                     <h3 className="catalogue__item-title">{s.title}</h3>
+                    <span className={`session-date session-date--${i % 4}`}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                      </svg>
+                      {new Date(s.startDate).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
+                    </span>
                     <div className="catalogue__item-meta">
-                      <span className="catalogue__item-duration">
-                        {new Date(s.startDate).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
-                      </span>
                       {duration && <span className="catalogue__item-duration">{duration}</span>}
                       {price && <span className="catalogue__item-price">{price}</span>}
                     </div>

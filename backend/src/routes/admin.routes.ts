@@ -260,11 +260,14 @@ router.get("/enrollments", async (_req: AuthRequest, res: Response) => {
         user: { include: { learnerProfile: true }, omit: { hashedPassword: true } },
         session: {
           select: {
+            id: true,
             title: true,
             description: true,
             duration: true,
             startDate: true,
             location: true,
+            price: true,
+            maxCapacity: true,
             category: { select: { name: true } },
             formation: {
               select: {

@@ -9,11 +9,14 @@ interface User { email: string; learnerProfile: LearnerProfile | null }
 interface Formation { title: string; description: string | null; duration: string | null; price: number | null }
 interface Category { name: string }
 interface Session {
+  id: string;
   title: string;
   description: string | null;
   duration: string | null;
   location: string | null;
   startDate: string;
+  price: number | null;
+  maxCapacity: number;
   category: Category;
   formation: Formation | null;
 }
@@ -75,11 +78,24 @@ export default function AdminInscriptionsPage() {
     load();
   };
 
-  const getFormationTitle = (e: Enrollment) =>
-    e.session?.title ?? e.session?.formation?.title ?? e.formation?.title ?? "—";
-
   const pending = enrollments.filter((e) => e.status === "PENDING");
-  const others  = enrollments.filter((e) => e.status !== "PENDING");
+
+  // On regroupe les inscrits par session. Les inscriptions sans session
+  // (formations directes / devis entreprise) vont dans un groupe à part.
+  const sessionGroups = new Map<string, { session: Session; items: Enrollment[] }>();
+  const noSession: Enrollment[] = [];
+  for (const e of enrollments) {
+    if (e.session) {
+      const key = e.session.id;
+      if (!sessionGroups.has(key)) sessionGroups.set(key, { session: e.session, items: [] });
+      sessionGroups.get(key)!.items.push(e);
+    } else {
+      noSession.push(e);
+    }
+  }
+  const groups = Array.from(sessionGroups.values()).sort(
+    (a, b) => new Date(a.session.startDate).getTime() - new Date(b.session.startDate).getTime()
+  );
 
   const UserCell = ({ e }: { e: Enrollment }) => {
     const name = e.company
@@ -100,7 +116,7 @@ export default function AdminInscriptionsPage() {
 
   const DetailsRow = ({ e }: { e: Enrollment }) => (
     <tr className="admin-details-row">
-      <td colSpan={6}>
+      <td colSpan={4}>
         <div className="admin-details">
           {e.company ? (
             <>
@@ -175,42 +191,48 @@ export default function AdminInscriptionsPage() {
     </tr>
   );
 
-  const renderRows = (list: Enrollment[], withActions: boolean) =>
+  const renderRows = (list: Enrollment[]) =>
     list.map((e) => (
       <Fragment key={e.id}>
         <tr>
           <td><UserCell e={e} /></td>
-          <td>{getFormationTitle(e)}</td>
           <td>
             <span className="admin-badge admin-badge--role">{TYPE_LABELS[e.type] ?? e.type}</span>
           </td>
           <td>{new Date(e.createdAt).toLocaleDateString("fr-DZ")}</td>
-          {withActions ? (
-            <td>
-              <div className="admin-actions">
-                <button className="admin-btn admin-btn--confirm" onClick={() => confirm(e.id)}>✓ Confirmer</button>
-                <button className="admin-btn admin-btn--cancel" onClick={() => cancel(e.id)}>✕ Refuser</button>
-                <button className="admin-btn" onClick={() => setExpanded(expanded === e.id ? null : e.id)}>
-                  {expanded === e.id ? "Masquer" : "Détails"}
-                </button>
-                <button className="admin-btn admin-btn--cancel" onClick={() => remove(e.id)}>Supprimer</button>
-              </div>
-            </td>
-          ) : (
-            <td style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span className={`admin-badge admin-badge--${e.status.toLowerCase()}`}>
-                {STATUS_LABELS[e.status]}
-              </span>
+          <td>
+            <div className="admin-actions">
+              {e.status === "PENDING" ? (
+                <>
+                  <button className="admin-btn admin-btn--confirm" onClick={() => confirm(e.id)}>✓ Confirmer</button>
+                  <button className="admin-btn admin-btn--cancel" onClick={() => cancel(e.id)}>✕ Refuser</button>
+                </>
+              ) : (
+                <span className={`admin-badge admin-badge--${e.status.toLowerCase()}`}>
+                  {STATUS_LABELS[e.status]}
+                </span>
+              )}
               <button className="admin-btn" onClick={() => setExpanded(expanded === e.id ? null : e.id)}>
                 {expanded === e.id ? "Masquer" : "Détails"}
               </button>
               <button className="admin-btn admin-btn--cancel" onClick={() => remove(e.id)}>Supprimer</button>
-            </td>
-          )}
+            </div>
+          </td>
         </tr>
         {expanded === e.id && <DetailsRow e={e} />}
       </Fragment>
     ));
+
+  const GroupTable = ({ list }: { list: Enrollment[] }) => (
+    <div className="admin-table-wrap">
+      <table className="admin-table">
+        <thead>
+          <tr><th>Apprenant</th><th>Type</th><th>Inscrit le</th><th>Statut / Actions</th></tr>
+        </thead>
+        <tbody>{renderRows(list)}</tbody>
+      </table>
+    </div>
+  );
 
   return (
     <div className="admin-page">
@@ -224,40 +246,46 @@ export default function AdminInscriptionsPage() {
       {loading && <p className="admin-loading">Chargement…</p>}
       {error && <div className="auth-error">{error}</div>}
 
-      {pending.length > 0 && (
-        <section className="admin-section">
-          <div className="admin-section__header">
-            <h2 className="admin-section__title">En attente de validation</h2>
-          </div>
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr><th>Apprenant</th><th>Formation</th><th>Type</th><th>Date</th><th>Actions</th></tr>
-              </thead>
-              <tbody>{renderRows(pending, true)}</tbody>
-            </table>
-          </div>
-        </section>
+      {!loading && groups.length === 0 && noSession.length === 0 && (
+        <p className="admin-table__empty" style={{ padding: 40 }}>Aucune inscription pour le moment.</p>
       )}
 
-      <section className="admin-section">
-        <div className="admin-section__header">
-          <h2 className="admin-section__title">Historique</h2>
-        </div>
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr><th>Apprenant</th><th>Formation</th><th>Type</th><th>Date</th><th>Statut</th></tr>
-            </thead>
-            <tbody>
-              {others.length === 0 && !loading && (
-                <tr><td colSpan={5} className="admin-table__empty">Aucune inscription traitée</td></tr>
-              )}
-              {renderRows(others, false)}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      {groups.map(({ session, items }, idx) => {
+        const confirmed = items.filter((e) => e.status === "CONFIRMED").length;
+        const waiting = items.filter((e) => e.status === "PENDING").length;
+        return (
+          <section className="admin-section admin-session-group" key={session.id}>
+            <div className="admin-session-group__header">
+              <div className="admin-session-group__title-wrap">
+                <h2 className="admin-section__title">{session.title}</h2>
+                <div className="admin-session-group__meta">
+                  <span className={`session-date session-date--${idx % 4}`}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+                    </svg>
+                    {new Date(session.startDate).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
+                  </span>
+                  <span className="admin-session-group__branch">{session.category.name}</span>
+                </div>
+              </div>
+              <span className="admin-kpi admin-kpi--inline">
+                {confirmed}/{session.maxCapacity} inscrit{confirmed > 1 ? "s" : ""}
+                {waiting > 0 ? ` · ${waiting} en attente` : ""}
+              </span>
+            </div>
+            <GroupTable list={items} />
+          </section>
+        );
+      })}
+
+      {noSession.length > 0 && (
+        <section className="admin-section">
+          <div className="admin-section__header">
+            <h2 className="admin-section__title">Autres inscriptions (formations directes / entreprises)</h2>
+          </div>
+          <GroupTable list={noSession} />
+        </section>
+      )}
     </div>
   );
 }

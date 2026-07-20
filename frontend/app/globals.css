@@ -2936,6 +2936,27 @@ button {
   color: var(--gold);
 }
 
+/* Chip de date coloré, couleurs alternées de la charte pour un affichage organisé */
+.session-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 10px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.session-date svg { flex-shrink: 0; }
+
+.session-date--0 { background: rgba(46, 125, 132, 0.12); color: var(--teal-dark); }
+.session-date--1 { background: rgba(196, 146, 42, 0.15); color: var(--gold-dark); }
+.session-date--2 { background: rgba(15, 35, 64, 0.10); color: var(--navy); }
+.session-date--3 { background: rgba(46, 125, 132, 0.18); color: var(--teal-dark); }
+
 .catalogue__item-badge {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -4020,6 +4041,57 @@ button {
   margin-bottom: 16px;
 }
 
+/* Onglets Particulier / Entreprise — commutateur pilule (piste pleine + pilule active) */
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 6px;
+  margin-bottom: 28px;
+  background: var(--navy);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.auth-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 16px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.auth-tab svg { flex-shrink: 0; opacity: 0.75; }
+
+.auth-tab:hover {
+  color: var(--white);
+}
+
+.auth-tab--active {
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.auth-tab--active svg { opacity: 1; color: var(--gold-dark); }
+
+@media (max-width: 420px) {
+  .auth-tab {
+    padding: 12px 10px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .auth-tab svg { width: 15px; height: 15px; }
+}
+
 .auth-type-badge--particulier {
   background: rgba(0, 112, 120, 0.1);
   color: var(--teal);
@@ -4650,6 +4722,46 @@ button {
   color: var(--teal);
   font-weight: 600;
   text-decoration: none;
+}
+
+/* Groupe d'inscriptions par session */
+.admin-session-group {
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 20px 22px;
+  background: var(--white);
+  box-shadow: 0 2px 10px rgba(15, 35, 64, 0.04);
+}
+
+.admin-session-group__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.admin-session-group__title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-session-group__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-session-group__branch {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 /* ── Table ── */
