@@ -237,11 +237,14 @@ router.get("/enrollments", async (_req, res) => {
                 user: { include: { learnerProfile: true }, omit: { hashedPassword: true } },
                 session: {
                     select: {
+                        id: true,
                         title: true,
                         description: true,
                         duration: true,
                         startDate: true,
                         location: true,
+                        price: true,
+                        maxCapacity: true,
                         category: { select: { name: true } },
                         formation: {
                             select: {
@@ -349,6 +352,31 @@ router.delete("/enrollments/:id", async (req, res) => {
     }
     catch (err) {
         console.error("[admin/enrollments delete]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// PATCH /api/admin/enrollments/:id/reassign — déplacer une inscription vers une autre session
+router.patch("/enrollments/:id/reassign", async (req, res) => {
+    try {
+        const id = req.params["id"];
+        const { sessionId } = req.body;
+        if (!sessionId) {
+            res.status(400).json({ error: "sessionId requis" });
+            return;
+        }
+        const session = await db_1.prisma.trainingSession.findUnique({ where: { id: sessionId } });
+        if (!session) {
+            res.status(404).json({ error: "Session introuvable" });
+            return;
+        }
+        const enrollment = await db_1.prisma.enrollment.update({
+            where: { id },
+            data: { sessionId, formationId: null },
+        });
+        res.json(enrollment);
+    }
+    catch (err) {
+        console.error("[admin/enrollments reassign]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
@@ -486,6 +514,20 @@ router.patch("/sessions/:id", async (req, res) => {
     }
     catch (err) {
         console.error("[admin/sessions patch]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// DELETE /api/admin/sessions/:id — supprime une session et ses inscriptions liées
+router.delete("/sessions/:id", async (req, res) => {
+    try {
+        const id = req.params["id"];
+        // On retire d'abord les inscriptions rattachées pour éviter les contraintes.
+        await db_1.prisma.enrollment.deleteMany({ where: { sessionId: id } });
+        await db_1.prisma.trainingSession.delete({ where: { id } });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[admin/sessions delete]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });

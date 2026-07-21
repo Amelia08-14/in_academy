@@ -29,7 +29,6 @@ router.get("/categories", async (_req, res) => {
 router.get("/sessions", async (req, res) => {
     try {
         const { categoryId } = req.query;
-        const now = new Date();
         const sessions = await db_1.prisma.trainingSession.findMany({
             where: {
                 ...(categoryId ? { categoryId } : {}),
@@ -38,30 +37,18 @@ router.get("/sessions", async (req, res) => {
             include: {
                 category: true,
                 formation: true,
-                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+                // Une place est "réservée" dès qu'une inscription est en attente ou confirmée.
+                _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } },
             },
         });
-        const withState = await Promise.all(sessions.map(async (s) => {
-            const spotsLeft = s.maxCapacity - s._count.enrollments;
-            const isOpen = OPEN_SESSION_STATUS.includes(s.status) &&
-                s.startDate.getTime() >= now.getTime() &&
-                spotsLeft > 0;
-            let nextSessionId = null;
-            if (!isOpen) {
-                const next = await db_1.prisma.trainingSession.findFirst({
-                    where: {
-                        id: { not: s.id },
-                        categoryId: s.categoryId,
-                        title: { equals: s.title },
-                        startDate: { gt: now },
-                        status: { in: OPEN_SESSION_STATUS },
-                    },
-                    orderBy: { startDate: "asc" },
-                });
-                nextSessionId = next?.id ?? null;
-            }
-            return { ...s, spotsLeft, isOpen, nextSessionId };
-        }));
+        // "Complet" = toutes les places réservées. "En cours" = places encore disponibles.
+        // L'ouverture ne dépend PAS de la date de début (une session du jour reste ouverte).
+        const withState = sessions.map((s) => {
+            const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments);
+            const isFull = spotsLeft <= 0;
+            const isOpen = OPEN_SESSION_STATUS.includes(s.status) && !isFull;
+            return { ...s, spotsLeft, isFull, isOpen, nextSessionId: null };
+        });
         res.json(withState);
     }
     catch (err) {
@@ -72,24 +59,22 @@ router.get("/sessions", async (req, res) => {
 // GET /api/sessions/:id — public, détail d'une session (page de lien d'inscription directe)
 router.get("/sessions/:id", async (req, res) => {
     try {
-        const now = new Date();
         const s = await db_1.prisma.trainingSession.findUnique({
             where: { id: req.params["id"] },
             include: {
                 category: true,
                 formation: true,
-                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+                _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } },
             },
         });
         if (!s) {
             res.status(404).json({ error: "Session introuvable" });
             return;
         }
-        const spotsLeft = s.maxCapacity - s._count.enrollments;
-        const isOpen = OPEN_SESSION_STATUS.includes(s.status) &&
-            s.startDate.getTime() >= now.getTime() &&
-            spotsLeft > 0;
-        res.json({ ...s, spotsLeft, isOpen });
+        const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments);
+        const isFull = spotsLeft <= 0;
+        const isOpen = OPEN_SESSION_STATUS.includes(s.status) && !isFull;
+        res.json({ ...s, spotsLeft, isFull, isOpen });
     }
     catch (err) {
         console.error("[sessions/:id]", err);

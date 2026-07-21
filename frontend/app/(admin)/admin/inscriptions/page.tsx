@@ -138,11 +138,22 @@ export default function AdminInscriptionsPage() {
   const sessionGroups = new Map<string, { session: Session; items: Enrollment[] }>(
     sessionsList.map((session) => [session.id, { session, items: [] }])
   );
+  const sessionIdByIdentity = new Map(
+    sessionsList.map((session) => [
+      `${session.title.trim().toLocaleLowerCase("fr")}::${session.startDate.slice(0, 10)}`,
+      session.id,
+    ])
+  );
   const noSession: Enrollment[] = [];
   for (const e of enrollments) {
     if (e.session) {
-      const key = e.session.id;
-      if (!sessionGroups.has(key)) sessionGroups.set(key, { session: e.session, items: [] });
+      const identity = `${e.session.title.trim().toLocaleLowerCase("fr")}::${e.session.startDate.slice(0, 10)}`;
+      const key = sessionGroups.has(e.session.id)
+        ? e.session.id
+        : (sessionIdByIdentity.get(identity) ?? e.session.id);
+      if (!sessionGroups.has(key)) {
+        sessionGroups.set(key, { session: e.session, items: [] });
+      }
       sessionGroups.get(key)!.items.push(e);
     } else {
       noSession.push(e);
