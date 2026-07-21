@@ -22,6 +22,7 @@ interface Session {
   startDate: string;
   location: string | null;
   spotsLeft: number;
+  maxCapacity: number;
   isOpen: boolean;
   status: "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED";
   category: { slug: string; name: string };
@@ -115,6 +116,9 @@ function SessionGrid({ sessions }: { sessions: Session[] }) {
                     <div className="catalogue__item-meta">
                       {duration && <span className="catalogue__item-duration">{duration}</span>}
                       {price && <span className="catalogue__item-price">{price}</span>}
+                      <span className={`catalogue__item-spots${s.spotsLeft === 0 ? " catalogue__item-spots--full" : ""}`}>
+                        {s.spotsLeft}/{s.maxCapacity} place{s.spotsLeft > 1 ? "s" : ""} restante{s.spotsLeft > 1 ? "s" : ""}
+                      </span>
                     </div>
                     <div className="bd-formation-item__action">
                       <span className="btn btn--primary">Voir les détails</span>

@@ -2936,6 +2936,21 @@ button {
   color: var(--gold);
 }
 
+.catalogue__item-spots {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--teal-dark);
+  background: rgba(46, 125, 132, 0.1);
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.catalogue__item-spots--full {
+  color: #b9342b;
+  background: rgba(185, 52, 43, 0.1);
+}
+
 /* Chip de date coloré, couleurs alternées de la charte pour un affichage organisé */
 .session-date {
   display: inline-flex;
