@@ -51,11 +51,30 @@ export default function AdminInscriptionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
+
+  const toggleGroup = (key: string) =>
+    setOpenGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
 
   const load = () => {
     setLoading(true);
     api.get<Enrollment[]>("/admin/enrollments")
-      .then(setEnrollments)
+      .then((data) => {
+        setEnrollments(data);
+        // On ouvre automatiquement les sessions qui ont des inscriptions en attente.
+        setOpenGroups((prev) => {
+          const next = new Set(prev);
+          for (const e of data) {
+            if (e.session && e.status === "PENDING") next.add(e.session.id);
+          }
+          return next;
+        });
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   };
@@ -253,9 +272,15 @@ export default function AdminInscriptionsPage() {
       {groups.map(({ session, items }, idx) => {
         const confirmed = items.filter((e) => e.status === "CONFIRMED").length;
         const waiting = items.filter((e) => e.status === "PENDING").length;
+        const isOpen = openGroups.has(session.id);
         return (
           <section className="admin-section admin-session-group" key={session.id}>
-            <div className="admin-session-group__header">
+            <button
+              type="button"
+              className="admin-session-group__header admin-session-group__header--btn"
+              onClick={() => toggleGroup(session.id)}
+              aria-expanded={isOpen}
+            >
               <div className="admin-session-group__title-wrap">
                 <h2 className="admin-section__title">{session.title}</h2>
                 <div className="admin-session-group__meta">
@@ -268,22 +293,44 @@ export default function AdminInscriptionsPage() {
                   <span className="admin-session-group__branch">{session.category.name}</span>
                 </div>
               </div>
-              <span className="admin-kpi admin-kpi--inline">
-                {confirmed}/{session.maxCapacity} inscrit{confirmed > 1 ? "s" : ""}
-                {waiting > 0 ? ` · ${waiting} en attente` : ""}
-              </span>
-            </div>
-            <GroupTable list={items} />
+              <div className="admin-session-group__right">
+                <span className="admin-kpi admin-kpi--inline">
+                  {confirmed}/{session.maxCapacity} inscrit{confirmed > 1 ? "s" : ""}
+                  {waiting > 0 ? ` · ${waiting} en attente` : ""}
+                </span>
+                <span className={`admin-session-group__chevron${isOpen ? " admin-session-group__chevron--open" : ""}`} aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </div>
+            </button>
+            {isOpen && <GroupTable list={items} />}
           </section>
         );
       })}
 
       {noSession.length > 0 && (
-        <section className="admin-section">
-          <div className="admin-section__header">
-            <h2 className="admin-section__title">Autres inscriptions (formations directes / entreprises)</h2>
-          </div>
-          <GroupTable list={noSession} />
+        <section className="admin-section admin-session-group">
+          <button
+            type="button"
+            className="admin-session-group__header admin-session-group__header--btn"
+            onClick={() => toggleGroup("__no_session__")}
+            aria-expanded={openGroups.has("__no_session__")}
+          >
+            <div className="admin-session-group__title-wrap">
+              <h2 className="admin-section__title">Autres inscriptions (formations directes / entreprises)</h2>
+              <div className="admin-session-group__meta">
+                <span className="admin-session-group__branch">{noSession.length} inscription{noSession.length > 1 ? "s" : ""}</span>
+              </div>
+            </div>
+            <span className={`admin-session-group__chevron${openGroups.has("__no_session__") ? " admin-session-group__chevron--open" : ""}`} aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          </button>
+          {openGroups.has("__no_session__") && <GroupTable list={noSession} />}
         </section>
       )}
     </div>

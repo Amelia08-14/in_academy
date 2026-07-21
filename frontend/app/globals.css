@@ -4742,6 +4742,54 @@ button {
   margin-bottom: 16px;
 }
 
+/* En-tête cliquable (accordéon) */
+.admin-session-group__header--btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  margin-bottom: 0;
+  padding: 2px;
+  border-radius: 8px;
+  align-items: center;
+  transition: background var(--transition-fast);
+}
+
+.admin-session-group__header--btn:hover {
+  background: var(--beige-light);
+}
+
+.admin-session-group__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-session-group__chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--navy);
+  background: var(--beige);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.admin-session-group__chevron--open {
+  transform: rotate(180deg);
+  background: var(--gold-pale);
+  color: var(--gold-dark);
+}
+
+/* Quand l'accordéon est ouvert, on ré-espace la table du header */
+.admin-session-group__header--btn[aria-expanded="true"] {
+  margin-bottom: 16px;
+}
+
 .admin-session-group__title-wrap {
   display: flex;
   flex-direction: column;
