@@ -5000,7 +5000,18 @@ button {
 .admin-badge--role { background: rgba(1,30,65,0.08); color: var(--navy); }
 
 /* ── Actions buttons ── */
-.admin-actions { display: flex; gap: 8px; align-items: center; }
+.admin-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.admin-move-select {
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--navy);
+  max-width: 220px;
+  cursor: pointer;
+}
 
 .admin-btn {
   padding: 6px 14px;

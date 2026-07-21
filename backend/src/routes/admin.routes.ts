@@ -385,6 +385,31 @@ router.delete("/enrollments/:id", async (req: AuthRequest, res: Response) => {
   }
 });
 
+// PATCH /api/admin/enrollments/:id/reassign — déplacer une inscription vers une autre session
+router.patch("/enrollments/:id/reassign", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    const { sessionId } = req.body as { sessionId?: string };
+    if (!sessionId) {
+      res.status(400).json({ error: "sessionId requis" });
+      return;
+    }
+    const session = await prisma.trainingSession.findUnique({ where: { id: sessionId } });
+    if (!session) {
+      res.status(404).json({ error: "Session introuvable" });
+      return;
+    }
+    const enrollment = await prisma.enrollment.update({
+      where: { id },
+      data: { sessionId, formationId: null },
+    });
+    res.json(enrollment);
+  } catch (err) {
+    console.error("[admin/enrollments reassign]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // GET /api/admin/quotes
 router.get("/quotes", async (_req: AuthRequest, res: Response) => {
   try {

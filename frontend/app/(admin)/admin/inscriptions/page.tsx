@@ -46,11 +46,15 @@ const TYPE_LABELS: Record<string, string> = {
   COMPANY: "Entreprise",
 };
 
+interface SessionOption { id: string; title: string; startDate: string }
+
 export default function AdminInscriptionsPage() {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [sessionsList, setSessionsList] = useState<SessionOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [moving, setMoving] = useState<string | null>(null);
   const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
 
   const toggleGroup = (key: string) =>
@@ -63,9 +67,13 @@ export default function AdminInscriptionsPage() {
 
   const load = () => {
     setLoading(true);
-    api.get<Enrollment[]>("/admin/enrollments")
-      .then((data) => {
+    Promise.all([
+      api.get<Enrollment[]>("/admin/enrollments"),
+      api.get<SessionOption[]>("/admin/sessions"),
+    ])
+      .then(([data, sessions]) => {
         setEnrollments(data);
+        setSessionsList(sessions);
         // On ouvre automatiquement les sessions qui ont des inscriptions en attente.
         setOpenGroups((prev) => {
           const next = new Set(prev);
@@ -83,6 +91,12 @@ export default function AdminInscriptionsPage() {
 
   const confirm = async (id: string) => {
     await api.patch(`/admin/enrollments/${id}/confirm`);
+    load();
+  };
+
+  const reassign = async (id: string, sessionId: string) => {
+    await api.patch(`/admin/enrollments/${id}/reassign`, { sessionId });
+    setMoving(null);
     load();
   };
 
@@ -234,6 +248,24 @@ export default function AdminInscriptionsPage() {
               <button className="admin-btn" onClick={() => setExpanded(expanded === e.id ? null : e.id)}>
                 {expanded === e.id ? "Masquer" : "Détails"}
               </button>
+              {moving === e.id ? (
+                <select
+                  className="admin-move-select"
+                  defaultValue=""
+                  autoFocus
+                  onChange={(ev) => { if (ev.target.value) reassign(e.id, ev.target.value); }}
+                  onBlur={() => setMoving(null)}
+                >
+                  <option value="" disabled>Déplacer vers…</option>
+                  {sessionsList.map((s) => (
+                    <option key={s.id} value={s.id} disabled={s.id === e.session?.id}>
+                      {s.title.trim()} — {new Date(s.startDate).toLocaleDateString("fr-FR")}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <button className="admin-btn" onClick={() => setMoving(e.id)}>Déplacer</button>
+              )}
               <button className="admin-btn admin-btn--cancel" onClick={() => remove(e.id)}>Supprimer</button>
             </div>
           </td>
