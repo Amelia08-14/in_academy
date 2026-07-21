@@ -3089,8 +3089,8 @@ button {
 
 .session-detail__hero {
   position: relative;
-  aspect-ratio: 16 / 10;
-  max-height: 460px;
+  width: 100%;
+  height: 340px;
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 36px;
@@ -3177,6 +3177,23 @@ button {
   color: rgba(255, 255, 255, 0.4);
 }
 
+/* Dans la colonne latérale étroite, le bloc "Créez un compte" doit s'empiler
+   verticalement avec des boutons pleine largeur (sinon ils débordent). */
+.session-detail__aside .catalogue__notice {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.session-detail__aside .catalogue__notice-actions {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.session-detail__aside .catalogue__notice-actions .btn {
+  width: 100%;
+}
+
 .session-detail__cta-full {
   display: flex;
   flex-direction: column;
@@ -3239,6 +3256,51 @@ button {
 .session-detail__description-group {
   display: grid;
   gap: 10px;
+}
+
+/* Liste ordonnée des niveaux de la formation */
+.session-detail__levels {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: level;
+}
+
+.session-detail__levels li {
+  position: relative;
+  padding: 14px 16px 14px 52px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--white);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-body);
+  counter-increment: level;
+}
+
+.session-detail__levels li::before {
+  content: counter(level);
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--navy);
+  color: var(--gold-light);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.session-detail__levels strong {
+  color: var(--navy);
+  font-weight: 700;
 }
 
 .session-detail__description h3 {
@@ -3698,8 +3760,7 @@ button {
   }
 
   .session-detail__hero {
-    aspect-ratio: 4 / 5;
-    max-height: 420px;
+    height: 240px;
     border-radius: 12px;
     margin-bottom: 24px;
   }

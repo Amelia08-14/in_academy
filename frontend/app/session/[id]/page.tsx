@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -28,50 +28,83 @@ interface Session {
   formation: { title: string; description: string | null; duration: string | null; price: number | null } | null;
 }
 
+const isBullet = (l: string) => /^[-*•]\s+/.test(l);
+const isLevel = (l: string) => /^niveau\s+\d/i.test(l);
+// Un titre court : ligne brève, sans ponctuation finale ni ":", et pas un item "Niveau".
+const isHeading = (l: string) =>
+  l.length <= 46 && !isBullet(l) && !isLevel(l) && !/[.:!?]$/.test(l) && !/\s:\s/.test(l);
+
+function LevelLine({ text }: { text: string }) {
+  // "Niveau 1 — Découverte : contenu…" → préfixe en gras + contenu.
+  const m = text.match(/^(.*?:)\s*(.*)$/);
+  if (m) {
+    return (
+      <span>
+        <strong>{m[1]}</strong> {m[2]}
+      </span>
+    );
+  }
+  return <span>{text}</span>;
+}
+
 function DescriptionBlock({ text }: { text: string }) {
-  const blocks = text
-    .split(/\n\s*\n/)
-    .map((block) => block.trim())
-    .filter(Boolean);
+  const lines = text.split("\n").map((l) => l.trim());
+  const out: ReactNode[] = [];
+  let bullets: string[] = [];
+  let levels: string[] = [];
 
-  return (
-    <div className="session-detail__description">
-      {blocks.map((block, index) => {
-        const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
-        const isList = lines.every((line) => /^[-*•]\s+/.test(line));
+  const flushBullets = (key: string) => {
+    if (bullets.length) {
+      out.push(
+        <ul key={`ul-${key}`}>
+          {bullets.map((b, i) => (
+            <li key={i}>{b}</li>
+          ))}
+        </ul>
+      );
+      bullets = [];
+    }
+  };
+  const flushLevels = (key: string) => {
+    if (levels.length) {
+      out.push(
+        <ol className="session-detail__levels" key={`ol-${key}`}>
+          {levels.map((l, i) => (
+            <li key={i}>
+              <LevelLine text={l} />
+            </li>
+          ))}
+        </ol>
+      );
+      levels = [];
+    }
+  };
 
-        if (isList) {
-          return (
-            <ul key={index}>
-              {lines.map((line) => (
-                <li key={line}>{line.replace(/^[-*•]\s+/, "")}</li>
-              ))}
-            </ul>
-          );
-        }
+  lines.forEach((line, i) => {
+    if (!line) {
+      flushBullets(String(i));
+      flushLevels(String(i));
+      return;
+    }
+    if (isBullet(line)) {
+      flushLevels(String(i));
+      bullets.push(line.replace(/^[-*•]\s+/, ""));
+      return;
+    }
+    if (isLevel(line)) {
+      flushBullets(String(i));
+      levels.push(line);
+      return;
+    }
+    flushBullets(String(i));
+    flushLevels(String(i));
+    if (isHeading(line)) out.push(<h3 key={i}>{line}</h3>);
+    else out.push(<p key={i}>{line}</p>);
+  });
+  flushBullets("end");
+  flushLevels("end");
 
-        if (lines.length > 1) {
-          const [first, ...rest] = lines;
-          const restIsList = rest.every((line) => /^[-*•]\s+/.test(line));
-
-          if (first && restIsList) {
-            return (
-              <div className="session-detail__description-group" key={index}>
-                <h3>{first}</h3>
-                <ul>
-                  {rest.map((line) => (
-                    <li key={line}>{line.replace(/^[-*•]\s+/, "")}</li>
-                  ))}
-                </ul>
-              </div>
-            );
-          }
-        }
-
-        return <p key={index}>{lines.join(" ")}</p>;
-      })}
-    </div>
-  );
+  return <div className="session-detail__description">{out}</div>;
 }
 
 export default function SessionDirectPage() {

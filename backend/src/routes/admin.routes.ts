@@ -546,6 +546,20 @@ router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
   }
 });
 
+// DELETE /api/admin/sessions/:id — supprime une session et ses inscriptions liées
+router.delete("/sessions/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    // On retire d'abord les inscriptions rattachées pour éviter les contraintes.
+    await prisma.enrollment.deleteMany({ where: { sessionId: id } });
+    await prisma.trainingSession.delete({ where: { id } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/sessions delete]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // PATCH /api/admin/quotes/:id/status
 router.patch("/quotes/:id/status", async (req: AuthRequest, res: Response) => {
   try {
