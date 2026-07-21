@@ -56,7 +56,7 @@ async function sendMail(to: string, subject: string, html: string, text: string)
   });
 }
 
-function enrollmentHtml(title: string, intro: string, data: EnrollmentMailData) {
+function enrollmentHtml(title: string, intro: string, data: EnrollmentMailData, arrivalTime?: string) {
   const date = formatDate(data.startDate);
   const safeName = escapeHtml(data.learnerName);
   const safeFormation = escapeHtml(data.formationTitle);
@@ -70,6 +70,7 @@ function enrollmentHtml(title: string, intro: string, data: EnrollmentMailData) 
       <div style="border:1px solid #e5dccd;border-radius:10px;padding:16px;margin:20px 0;background:#fbf7ef">
         <strong style="display:block;margin-bottom:8px">${safeFormation}</strong>
         ${date ? `<div>Date : ${escapeHtml(date)}</div>` : ""}
+        ${arrivalTime ? `<div>Heure d'arrivée : ${escapeHtml(arrivalTime)}</div>` : ""}
         ${safeLocation ? `<div>Lieu : ${safeLocation}</div>` : ""}
       </div>
       <p style="margin-top:20px">Equipe IN ACADEMY</p>
@@ -92,13 +93,14 @@ export async function sendEnrollmentPendingEmail(data: EnrollmentMailData) {
 
 export async function sendEnrollmentConfirmedEmail(data: EnrollmentMailData) {
   const subject = "Inscription confirmee";
-  const intro = "Votre inscription a ete confirmee par notre administration. Vous recevrez les informations pratiques de suivi si necessaire.";
+  const intro =
+    "Votre inscription a ete confirmee par notre administration. Merci de vous presenter le jour de la formation a 09h00.";
   const details = `${data.formationTitle}${data.startDate ? ` - ${formatDate(data.startDate)}` : ""}`;
 
   await sendMail(
     data.to,
     subject,
-    enrollmentHtml("Inscription confirmee", intro, data),
-    `Bonjour ${data.learnerName}, votre inscription a ete confirmee. Formation: ${details}.`
+    enrollmentHtml("Inscription confirmee", intro, data, "09h00"),
+    `Bonjour ${data.learnerName}, votre inscription a ete confirmee. Merci de vous presenter le jour de la formation a 09h00. Formation: ${details}.`
   );
 }

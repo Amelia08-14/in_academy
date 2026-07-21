@@ -95,19 +95,31 @@ export default function AdminInscriptionsPage() {
   };
 
   const reassign = async (id: string, sessionId: string) => {
-    await api.patch(`/admin/enrollments/${id}/reassign`, { sessionId });
-    setMoving(null);
-    load();
+    setError("");
+    try {
+      await api.patch(`/admin/enrollments/${id}/reassign`, { sessionId });
+      setMoving(null);
+      load();
+    } catch (e) {
+      setMoving(null);
+      setError(e instanceof Error ? e.message : "Impossible de déplacer cette inscription.");
+    }
   };
 
   const [movingGroup, setMovingGroup] = useState<string | null>(null);
 
   const reassignGroup = async (ids: string[], sessionId: string) => {
-    for (const id of ids) {
-      await api.patch(`/admin/enrollments/${id}/reassign`, { sessionId });
+    setError("");
+    try {
+      for (const id of ids) {
+        await api.patch(`/admin/enrollments/${id}/reassign`, { sessionId });
+      }
+      setMovingGroup(null);
+      load();
+    } catch (e) {
+      setMovingGroup(null);
+      setError(e instanceof Error ? e.message : "Impossible de déplacer ces inscriptions.");
     }
-    setMovingGroup(null);
-    load();
   };
 
   const cancel = async (id: string) => {
