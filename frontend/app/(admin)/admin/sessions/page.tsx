@@ -33,6 +33,8 @@ interface EditState {
   price: number | null;
   categoryId: string;
   startDate: string;
+  originalStartDate: string;
+  enrollmentsCount: number;
   location: string;
   minCapacity: number;
   maxCapacity: number;
@@ -48,6 +50,8 @@ const EMPTY: EditState = {
   price: null,
   categoryId: "",
   startDate: "",
+  originalStartDate: "",
+  enrollmentsCount: 0,
   location: "",
   minCapacity: 1,
   maxCapacity: 20,
@@ -116,6 +120,8 @@ export default function AdminSessionsPage() {
       price: s.price,
       categoryId: s.categoryId,
       startDate: s.startDate.slice(0, 10),
+      originalStartDate: s.startDate.slice(0, 10),
+      enrollmentsCount: s._count.enrollments,
       location: s.location ?? "",
       minCapacity: s.minCapacity,
       maxCapacity: s.maxCapacity,
@@ -253,6 +259,14 @@ export default function AdminSessionsPage() {
                   placeholder="Ex : 45000"
                 />
               </div>
+
+              {editing.id && editing.enrollmentsCount > 0 && editing.startDate !== editing.originalStartDate && (
+                <div className="admin-inline-warning">
+                  ⚠ Cette session compte {editing.enrollmentsCount} inscrit{editing.enrollmentsCount > 1 ? "s" : ""}.
+                  Changer sa date déplacera <strong>tous ces inscrits</strong> sous la nouvelle date.
+                  Pour une nouvelle date distincte, créez plutôt une <strong>nouvelle session</strong>.
+                </div>
+              )}
 
               <div className="auth-row">
                 <div className="auth-field">
