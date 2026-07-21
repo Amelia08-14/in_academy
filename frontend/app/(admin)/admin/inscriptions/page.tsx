@@ -46,11 +46,9 @@ const TYPE_LABELS: Record<string, string> = {
   COMPANY: "Entreprise",
 };
 
-interface SessionOption { id: string; title: string; startDate: string }
-
 export default function AdminInscriptionsPage() {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
-  const [sessionsList, setSessionsList] = useState<SessionOption[]>([]);
+  const [sessionsList, setSessionsList] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -69,7 +67,7 @@ export default function AdminInscriptionsPage() {
     setLoading(true);
     Promise.all([
       api.get<Enrollment[]>("/admin/enrollments"),
-      api.get<SessionOption[]>("/admin/sessions"),
+      api.get<Session[]>("/admin/sessions"),
     ])
       .then(([data, sessions]) => {
         setEnrollments(data);
@@ -137,7 +135,9 @@ export default function AdminInscriptionsPage() {
 
   // On regroupe les inscrits par session. Les inscriptions sans session
   // (formations directes / devis entreprise) vont dans un groupe à part.
-  const sessionGroups = new Map<string, { session: Session; items: Enrollment[] }>();
+  const sessionGroups = new Map<string, { session: Session; items: Enrollment[] }>(
+    sessionsList.map((session) => [session.id, { session, items: [] }])
+  );
   const noSession: Enrollment[] = [];
   for (const e of enrollments) {
     if (e.session) {
