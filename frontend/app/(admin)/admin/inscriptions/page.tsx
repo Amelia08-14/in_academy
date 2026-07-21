@@ -100,6 +100,16 @@ export default function AdminInscriptionsPage() {
     load();
   };
 
+  const [movingGroup, setMovingGroup] = useState<string | null>(null);
+
+  const reassignGroup = async (ids: string[], sessionId: string) => {
+    for (const id of ids) {
+      await api.patch(`/admin/enrollments/${id}/reassign`, { sessionId });
+    }
+    setMovingGroup(null);
+    load();
+  };
+
   const cancel = async (id: string) => {
     await api.patch(`/admin/enrollments/${id}/cancel`);
     load();
@@ -337,7 +347,38 @@ export default function AdminInscriptionsPage() {
                 </span>
               </div>
             </button>
-            {isOpen && <GroupTable list={items} />}
+            {isOpen && (
+              <>
+                {sessionsList.length > 1 && (
+                  <div className="admin-group-toolbar">
+                    {movingGroup === session.id ? (
+                      <>
+                        <span>Déplacer les {items.length} inscrit{items.length > 1 ? "s" : ""} vers :</span>
+                        <select
+                          className="admin-move-select"
+                          defaultValue=""
+                          autoFocus
+                          onChange={(ev) => { if (ev.target.value) reassignGroup(items.map((e) => e.id), ev.target.value); }}
+                        >
+                          <option value="" disabled>Choisir une session…</option>
+                          {sessionsList.filter((s) => s.id !== session.id).map((s) => (
+                            <option key={s.id} value={s.id}>
+                              {s.title.trim()} — {new Date(s.startDate).toLocaleDateString("fr-FR")}
+                            </option>
+                          ))}
+                        </select>
+                        <button className="admin-btn" onClick={() => setMovingGroup(null)}>Annuler</button>
+                      </>
+                    ) : (
+                      <button className="admin-btn" onClick={() => setMovingGroup(session.id)}>
+                        ⇄ Déplacer tous vers une autre session
+                      </button>
+                    )}
+                  </div>
+                )}
+                <GroupTable list={items} />
+              </>
+            )}
           </section>
         );
       })}
