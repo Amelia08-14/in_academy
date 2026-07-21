@@ -49,10 +49,10 @@ router.post("/", authenticate, async (req: AuthRequest, res: Response) => {
 
       // Une place est réservée dès qu'une inscription est en attente ou confirmée :
       // "complet" = toutes les places prises.
-      const reservedCount = await prisma.enrollment.count({
-        where: { sessionId, status: { in: ["PENDING", "CONFIRMED"] } },
+      const confirmedCount = await prisma.enrollment.count({
+        where: { sessionId, status: "CONFIRMED" },
       });
-      if (reservedCount >= session.maxCapacity) {
+      if (confirmedCount >= session.maxCapacity) {
         res.status(409).json({ error: "Cette session est complète" });
         return;
       }

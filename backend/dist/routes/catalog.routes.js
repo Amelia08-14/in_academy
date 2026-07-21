@@ -38,7 +38,7 @@ router.get("/sessions", async (req, res) => {
                 category: true,
                 formation: true,
                 // Une place est "réservée" dès qu'une inscription est en attente ou confirmée.
-                _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } },
+                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
             },
         });
         // "Complet" = toutes les places réservées. "En cours" = places encore disponibles.
@@ -64,7 +64,7 @@ router.get("/sessions/:id", async (req, res) => {
             include: {
                 category: true,
                 formation: true,
-                _count: { select: { enrollments: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } } },
+                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
             },
         });
         if (!s) {

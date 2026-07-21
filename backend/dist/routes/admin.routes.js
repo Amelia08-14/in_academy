@@ -369,6 +369,23 @@ router.patch("/enrollments/:id/reassign", async (req, res) => {
             res.status(404).json({ error: "Session introuvable" });
             return;
         }
+        const existing = await db_1.prisma.enrollment.findUnique({
+            where: { id },
+            select: { status: true },
+        });
+        if (!existing) {
+            res.status(404).json({ error: "Inscription introuvable" });
+            return;
+        }
+        if (existing.status === "CONFIRMED") {
+            const confirmedCount = await db_1.prisma.enrollment.count({
+                where: { sessionId, status: "CONFIRMED" },
+            });
+            if (confirmedCount >= session.maxCapacity) {
+                res.status(409).json({ error: "Cette session est d\u00e9j\u00e0 compl\u00e8te" });
+                return;
+            }
+        }
         const enrollment = await db_1.prisma.enrollment.update({
             where: { id },
             data: { sessionId, formationId: null },
@@ -413,7 +430,11 @@ router.get("/sessions", async (_req, res) => {
     try {
         const sessions = await db_1.prisma.trainingSession.findMany({
             orderBy: { startDate: "desc" },
-            include: { category: true, formation: true, _count: { select: { enrollments: true } } },
+            include: {
+                category: true,
+                formation: true,
+                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+            },
         });
         res.json(sessions);
     }
