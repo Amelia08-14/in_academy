@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import PartnersStrip from "../components/PartnersStrip";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
@@ -219,6 +220,8 @@ export default function BranchesPage() {
       <div id="catalogue">
         {showDomains ? <DomainGrid categories={categories} /> : <SessionGrid sessions={sessions} />}
       </div>
+
+      <PartnersStrip />
 
       <Footer />
     </>

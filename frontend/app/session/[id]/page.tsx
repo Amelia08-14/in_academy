@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import PartnersStrip from "../../components/PartnersStrip";
 import { useAuth } from "../../hooks/useAuth";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
@@ -279,6 +280,8 @@ export default function SessionDirectPage() {
           </div>
         </div>
       </section>
+
+      <PartnersStrip />
 
       <Footer />
     </>

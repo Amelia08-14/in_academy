@@ -7,6 +7,7 @@ import { useParams, notFound } from "next/navigation";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { useAuth } from "../../hooks/useAuth";
+import { useQuoteCart } from "../../hooks/useQuoteCart";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
 import { fileUrl } from "@/lib/fileUrl";
@@ -84,38 +85,24 @@ function FormationCards({
 }
 
 function FormationsForCompany({ formations, fallbackImage }: { formations: Formation[]; fallbackImage: string | null }) {
-  const [quoteState, setQuoteState] = useState<Record<string, "idle" | "sending" | "sent" | "error">>({});
-
-  const requestQuote = async (formationId: string) => {
-    setQuoteState((s) => ({ ...s, [formationId]: "sending" }));
-    try {
-      await api.post("/companies/quotes", { formationId, participants: 1 });
-      setQuoteState((s) => ({ ...s, [formationId]: "sent" }));
-    } catch {
-      setQuoteState((s) => ({ ...s, [formationId]: "error" }));
-    }
-  };
+  const cart = useQuoteCart();
 
   return (
     <FormationCards
       formations={formations}
       fallbackImage={fallbackImage}
-      renderAction={(f) => (
-        <button
-          type="button"
-          className="btn btn--outline catalogue__quote-btn"
-          disabled={quoteState[f.id] === "sending" || quoteState[f.id] === "sent"}
-          onClick={() => requestQuote(f.id)}
-        >
-          {quoteState[f.id] === "sent"
-            ? "Devis demande"
-            : quoteState[f.id] === "sending"
-              ? "Envoi..."
-              : quoteState[f.id] === "error"
-                ? "Reessayer"
-                : "Demander un devis"}
-        </button>
-      )}
+      renderAction={(f) => {
+        const inCart = cart.has(f.id);
+        return (
+          <button
+            type="button"
+            className={`btn ${inCart ? "btn--primary" : "btn--outline"} catalogue__quote-btn`}
+            onClick={() => (inCart ? cart.remove(f.id) : cart.add({ formationId: f.id, title: f.title, participants: 1 }))}
+          >
+            {inCart ? "✓ Dans le devis — retirer" : "+ Ajouter au devis"}
+          </button>
+        );
+      }}
     />
   );
 }

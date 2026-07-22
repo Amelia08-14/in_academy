@@ -70,7 +70,7 @@ router.post("/register", async (req, res) => {
         res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
         return;
     }
-    const { email, password, firstName, lastName, phone, jobTitle } = parsed.data;
+    const { email, password, firstName, lastName, phone, jobTitle, birthDate } = parsed.data;
     const existing = await db_1.prisma.user.findUnique({ where: { email } });
     if (existing) {
         res.status(409).json({ error: "Cet email est déjà utilisé" });
@@ -83,7 +83,13 @@ router.post("/register", async (req, res) => {
             hashedPassword,
             role: "LEARNER",
             learnerProfile: {
-                create: { firstName, lastName, phone, jobTitle },
+                create: {
+                    firstName,
+                    lastName,
+                    phone,
+                    jobTitle,
+                    birthDate: birthDate ? new Date(birthDate) : null,
+                },
             },
         },
     });

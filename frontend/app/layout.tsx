@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter, IBM_Plex_Mono, Caveat } from "next/font/google";
 import "./globals.css";
+import QuoteCartFab from "./components/QuoteCartFab";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -43,7 +44,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${bricolage.variable} ${inter.variable} ${plexMono.variable} ${caveat.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <QuoteCartFab />
+      </body>
     </html>
   );
 }

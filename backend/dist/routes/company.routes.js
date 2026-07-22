@@ -135,14 +135,22 @@ router.post("/quotes", auth_middleware_1.authenticate, async (req, res) => {
             res.status(403).json({ error: "Compte entreprise requis" });
             return;
         }
-        const { formationId, participants, preferredDate, message } = req.body;
-        if (!formationId) {
-            res.status(400).json({ error: "formationId requis" });
+        const { formationId, participants, preferredDate, message, items } = req.body;
+        // Deux modes : panier multi-formations (`items`) ou formation unique (`formationId`).
+        const cartItems = items && items.length > 0
+            ? items
+            : formationId
+                ? [{ formationId, participants, preferredDate }]
+                : [];
+        if (cartItems.length === 0) {
+            res.status(400).json({ error: "Au moins une formation est requise" });
             return;
         }
-        const formation = await db_1.prisma.formation.findUnique({ where: { id: formationId } });
-        if (!formation) {
-            res.status(404).json({ error: "Formation introuvable" });
+        // Vérifie que toutes les formations existent.
+        const ids = cartItems.map((i) => i.formationId);
+        const found = await db_1.prisma.formation.findMany({ where: { id: { in: ids } }, select: { id: true } });
+        if (found.length !== new Set(ids).size) {
+            res.status(404).json({ error: "Une des formations est introuvable" });
             return;
         }
         const quote = await db_1.prisma.quoteRequest.create({
@@ -150,11 +158,11 @@ router.post("/quotes", auth_middleware_1.authenticate, async (req, res) => {
                 companyId: company.id,
                 message: message ?? null,
                 items: {
-                    create: {
-                        formationId,
-                        participants: participants ?? 1,
-                        preferredDate: preferredDate ?? null,
-                    },
+                    create: cartItems.map((i) => ({
+                        formationId: i.formationId,
+                        participants: i.participants && i.participants > 0 ? i.participants : 1,
+                        preferredDate: i.preferredDate ?? null,
+                    })),
                 },
             },
             include: { items: { include: { formation: true } } },

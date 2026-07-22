@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEnrollmentPendingEmail = sendEnrollmentPendingEmail;
 exports.sendEnrollmentConfirmedEmail = sendEnrollmentConfirmedEmail;
+exports.sendAdminNotificationEmail = sendAdminNotificationEmail;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const smtpHost = process.env.SMTP_HOST;
 const smtpPort = Number(process.env.SMTP_PORT ?? 465);
@@ -80,4 +81,19 @@ async function sendEnrollmentConfirmedEmail(data) {
     const intro = "Votre inscription a ete confirmee par notre administration. Merci de vous presenter le jour de la formation a 09h00.";
     const details = `${data.formationTitle}${data.startDate ? ` - ${formatDate(data.startDate)}` : ""}`;
     await sendMail(data.to, subject, enrollmentHtml("Inscription confirmee", intro, data, "09h00"), `Bonjour ${data.learnerName}, votre inscription a ete confirmee. Merci de vous presenter le jour de la formation a 09h00. Formation: ${details}.`);
+}
+// Notification générique à l'administration (dépôt de reçu, nouvelle candidature, etc.)
+const adminEmail = process.env.ADMIN_EMAIL ?? smtpUser;
+async function sendAdminNotificationEmail(subject, lines) {
+    if (!adminEmail) {
+        console.warn("[mail] ADMIN_EMAIL non configuré, notification admin ignorée:", subject);
+        return;
+    }
+    const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f2340;max-width:620px;margin:0 auto;padding:24px">
+      <h1 style="font-size:20px;margin:0 0 16px;color:#0b2545">${escapeHtml(subject)}</h1>
+      ${lines.map((l) => `<p style="margin:6px 0">${escapeHtml(l)}</p>`).join("")}
+      <p style="margin-top:20px;color:#8a8a8a;font-size:13px">Notification automatique — back-office IN ACADEMY</p>
+    </div>`;
+    await sendMail(adminEmail, subject, html, lines.join("\n"));
 }

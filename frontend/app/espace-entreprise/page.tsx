@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
+import DocumentUploader from "@/app/components/DocumentUploader";
 import { useAuth } from "@/app/hooks/useAuth";
 import { roleHomeRoute } from "@/lib/auth";
 import { api } from "@/lib/api";
@@ -368,6 +369,21 @@ function EspaceEntrepriseContent() {
               )}
             </section>
           )}
+
+          {/* Dossier administratif entreprise (tâche 5) */}
+          <section className="dashboard-section">
+            <h2 className="dashboard-section__title">Dossier administratif</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 16 }}>
+              Déposez les pièces administratives de votre entreprise (registre de commerce, NIF, conventions…).
+            </p>
+            <div style={{ maxWidth: 420 }}>
+              <DocumentUploader
+                type="DOSSIER_ADMIN"
+                label="Dossier administratif entreprise"
+                hint="Image ou PDF — reçu par l'administration IN ACADEMY."
+              />
+            </div>
+          </section>
         </main>
       </div>
 

@@ -70,3 +70,21 @@ export const ContactStatut = {
 } as const
 
 export type ContactStatut = (typeof ContactStatut)[keyof typeof ContactStatut]
+
+
+export const DocumentType = {
+  RECU: 'RECU',
+  DOSSIER_ADMIN: 'DOSSIER_ADMIN'
+} as const
+
+export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType]
+
+
+export const TrainerApplicationStatus = {
+  PENDING: 'PENDING',
+  REVIEWED: 'REVIEWED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type TrainerApplicationStatus = (typeof TrainerApplicationStatus)[keyof typeof TrainerApplicationStatus]

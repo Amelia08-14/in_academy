@@ -4,6 +4,21 @@ const express_1 = require("express");
 const db_1 = require("../lib/db");
 const router = (0, express_1.Router)();
 const OPEN_SESSION_STATUS = ["SCHEDULED", "ONGOING"];
+// GET /api/partners — public, avantages partenaires actifs (espace client, tâche 3)
+router.get("/partners", async (_req, res) => {
+    try {
+        const partners = await db_1.prisma.partner.findMany({
+            where: { isActive: true },
+            orderBy: { createdAt: "desc" },
+            select: { id: true, name: true, description: true, discountRate: true, contact: true },
+        });
+        res.json(partners);
+    }
+    catch (err) {
+        console.error("[partners]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 // GET /api/categories — public, catalogue complet (branches + formations)
 router.get("/categories", async (_req, res) => {
     try {

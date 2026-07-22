@@ -11,9 +11,9 @@ const STEPS = ["Compte", "Profil", "Confirmation"];
 
 type FieldValues = {
   email: string; password: string;
-  firstName: string; lastName: string; phone: string; jobTitle: string;
+  firstName: string; lastName: string; phone: string; jobTitle: string; birthDate: string;
 };
-const EMPTY: FieldValues = { email: "", password: "", firstName: "", lastName: "", phone: "", jobTitle: "" };
+const EMPTY: FieldValues = { email: "", password: "", firstName: "", lastName: "", phone: "", jobTitle: "", birthDate: "" };
 
 function InscriptionContent() {
   const searchParams = useSearchParams();
@@ -194,6 +194,15 @@ function InscriptionContent() {
                   className="auth-input" value={values.jobTitle} onChange={set("jobTitle")}
                 />
               </div>
+              <div className="auth-field">
+                <label htmlFor="birthDate" className="auth-label">Date d&apos;anniversaire</label>
+                <input
+                  id="birthDate" type="date"
+                  className="auth-input" value={values.birthDate} onChange={set("birthDate")}
+                  max={new Date().toISOString().slice(0, 10)}
+                />
+                <span className="auth-field-hint">🎁 Renseignez-la pour profiter de nos offres spéciales anniversaire.</span>
+              </div>
               <div className="auth-form-actions">
                 <button type="button" className="btn btn--outline" onClick={() => setStep(0)}>← Retour</button>
                 <button type="submit" className="btn btn--primary">Continuer →</button>
@@ -212,6 +221,7 @@ function InscriptionContent() {
                   <li><span>Nom</span><strong>{values.lastName}</strong></li>
                   {values.phone && <li><span>Téléphone</span><strong>{values.phone}</strong></li>}
                   {values.jobTitle && <li><span>Fonction</span><strong>{values.jobTitle}</strong></li>}
+                  {values.birthDate && <li><span>Anniversaire</span><strong>{new Date(values.birthDate).toLocaleDateString("fr-FR")}</strong></li>}
                 </ul>
               </div>
               <p className="auth-confirm-terms">

@@ -236,6 +236,7 @@ export type EnrollmentWhereInput = {
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   certificate?: Prisma.XOR<Prisma.CertificateNullableScalarRelationFilter, Prisma.CertificateWhereInput> | null
   employees?: Prisma.EnrollmentEmployeeListRelationFilter
+  documents?: Prisma.DocumentListRelationFilter
 }
 
 export type EnrollmentOrderByWithRelationInput = {
@@ -256,6 +257,7 @@ export type EnrollmentOrderByWithRelationInput = {
   company?: Prisma.CompanyOrderByWithRelationInput
   certificate?: Prisma.CertificateOrderByWithRelationInput
   employees?: Prisma.EnrollmentEmployeeOrderByRelationAggregateInput
+  documents?: Prisma.DocumentOrderByRelationAggregateInput
   _relevance?: Prisma.EnrollmentOrderByRelevanceInput
 }
 
@@ -280,6 +282,7 @@ export type EnrollmentWhereUniqueInput = Prisma.AtLeast<{
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   certificate?: Prisma.XOR<Prisma.CertificateNullableScalarRelationFilter, Prisma.CertificateWhereInput> | null
   employees?: Prisma.EnrollmentEmployeeListRelationFilter
+  documents?: Prisma.DocumentListRelationFilter
 }, "id">
 
 export type EnrollmentOrderByWithAggregationInput = {
@@ -330,6 +333,7 @@ export type EnrollmentCreateInput = {
   company?: Prisma.CompanyCreateNestedOneWithoutEnrollmentsInput
   certificate?: Prisma.CertificateCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUncheckedCreateInput = {
@@ -346,6 +350,7 @@ export type EnrollmentUncheckedCreateInput = {
   updatedAt?: Date | string
   certificate?: Prisma.CertificateUncheckedCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeUncheckedCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUpdateInput = {
@@ -362,6 +367,7 @@ export type EnrollmentUpdateInput = {
   company?: Prisma.CompanyUpdateOneWithoutEnrollmentsNestedInput
   certificate?: Prisma.CertificateUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateInput = {
@@ -378,6 +384,7 @@ export type EnrollmentUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   certificate?: Prisma.CertificateUncheckedUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUncheckedUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentCreateManyInput = {
@@ -479,6 +486,11 @@ export type EnrollmentMinOrderByAggregateInput = {
 export type EnrollmentScalarRelationFilter = {
   is?: Prisma.EnrollmentWhereInput
   isNot?: Prisma.EnrollmentWhereInput
+}
+
+export type EnrollmentNullableScalarRelationFilter = {
+  is?: Prisma.EnrollmentWhereInput | null
+  isNot?: Prisma.EnrollmentWhereInput | null
 }
 
 export type EnrollmentCreateNestedManyWithoutUserInput = {
@@ -681,6 +693,22 @@ export type EnrollmentUpdateOneRequiredWithoutCertificateNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EnrollmentUpdateToOneWithWhereWithoutCertificateInput, Prisma.EnrollmentUpdateWithoutCertificateInput>, Prisma.EnrollmentUncheckedUpdateWithoutCertificateInput>
 }
 
+export type EnrollmentCreateNestedOneWithoutDocumentsInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutDocumentsInput, Prisma.EnrollmentUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutDocumentsInput
+  connect?: Prisma.EnrollmentWhereUniqueInput
+}
+
+export type EnrollmentUpdateOneWithoutDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutDocumentsInput, Prisma.EnrollmentUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutDocumentsInput
+  upsert?: Prisma.EnrollmentUpsertWithoutDocumentsInput
+  disconnect?: Prisma.EnrollmentWhereInput | boolean
+  delete?: Prisma.EnrollmentWhereInput | boolean
+  connect?: Prisma.EnrollmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EnrollmentUpdateToOneWithWhereWithoutDocumentsInput, Prisma.EnrollmentUpdateWithoutDocumentsInput>, Prisma.EnrollmentUncheckedUpdateWithoutDocumentsInput>
+}
+
 export type EnrollmentCreateWithoutUserInput = {
   id?: string
   type?: $Enums.EnrollmentType
@@ -694,6 +722,7 @@ export type EnrollmentCreateWithoutUserInput = {
   company?: Prisma.CompanyCreateNestedOneWithoutEnrollmentsInput
   certificate?: Prisma.CertificateCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUncheckedCreateWithoutUserInput = {
@@ -709,6 +738,7 @@ export type EnrollmentUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   certificate?: Prisma.CertificateUncheckedCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeUncheckedCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentCreateOrConnectWithoutUserInput = {
@@ -767,6 +797,7 @@ export type EnrollmentCreateWithoutCompanyInput = {
   session?: Prisma.TrainingSessionCreateNestedOneWithoutEnrollmentsInput
   certificate?: Prisma.CertificateCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUncheckedCreateWithoutCompanyInput = {
@@ -782,6 +813,7 @@ export type EnrollmentUncheckedCreateWithoutCompanyInput = {
   updatedAt?: Date | string
   certificate?: Prisma.CertificateUncheckedCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeUncheckedCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentCreateOrConnectWithoutCompanyInput = {
@@ -823,6 +855,7 @@ export type EnrollmentCreateWithoutFormationInput = {
   company?: Prisma.CompanyCreateNestedOneWithoutEnrollmentsInput
   certificate?: Prisma.CertificateCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUncheckedCreateWithoutFormationInput = {
@@ -838,6 +871,7 @@ export type EnrollmentUncheckedCreateWithoutFormationInput = {
   updatedAt?: Date | string
   certificate?: Prisma.CertificateUncheckedCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeUncheckedCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentCreateOrConnectWithoutFormationInput = {
@@ -879,6 +913,7 @@ export type EnrollmentCreateWithoutSessionInput = {
   company?: Prisma.CompanyCreateNestedOneWithoutEnrollmentsInput
   certificate?: Prisma.CertificateCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUncheckedCreateWithoutSessionInput = {
@@ -894,6 +929,7 @@ export type EnrollmentUncheckedCreateWithoutSessionInput = {
   updatedAt?: Date | string
   certificate?: Prisma.CertificateUncheckedCreateNestedOneWithoutEnrollmentInput
   employees?: Prisma.EnrollmentEmployeeUncheckedCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentCreateOrConnectWithoutSessionInput = {
@@ -935,6 +971,7 @@ export type EnrollmentCreateWithoutEmployeesInput = {
   session?: Prisma.TrainingSessionCreateNestedOneWithoutEnrollmentsInput
   company?: Prisma.CompanyCreateNestedOneWithoutEnrollmentsInput
   certificate?: Prisma.CertificateCreateNestedOneWithoutEnrollmentInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUncheckedCreateWithoutEmployeesInput = {
@@ -950,6 +987,7 @@ export type EnrollmentUncheckedCreateWithoutEmployeesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   certificate?: Prisma.CertificateUncheckedCreateNestedOneWithoutEnrollmentInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentCreateOrConnectWithoutEmployeesInput = {
@@ -981,6 +1019,7 @@ export type EnrollmentUpdateWithoutEmployeesInput = {
   session?: Prisma.TrainingSessionUpdateOneWithoutEnrollmentsNestedInput
   company?: Prisma.CompanyUpdateOneWithoutEnrollmentsNestedInput
   certificate?: Prisma.CertificateUpdateOneWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateWithoutEmployeesInput = {
@@ -996,6 +1035,7 @@ export type EnrollmentUncheckedUpdateWithoutEmployeesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   certificate?: Prisma.CertificateUncheckedUpdateOneWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentCreateWithoutCertificateInput = {
@@ -1011,6 +1051,7 @@ export type EnrollmentCreateWithoutCertificateInput = {
   session?: Prisma.TrainingSessionCreateNestedOneWithoutEnrollmentsInput
   company?: Prisma.CompanyCreateNestedOneWithoutEnrollmentsInput
   employees?: Prisma.EnrollmentEmployeeCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentUncheckedCreateWithoutCertificateInput = {
@@ -1026,6 +1067,7 @@ export type EnrollmentUncheckedCreateWithoutCertificateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employees?: Prisma.EnrollmentEmployeeUncheckedCreateNestedManyWithoutEnrollmentInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutEnrollmentInput
 }
 
 export type EnrollmentCreateOrConnectWithoutCertificateInput = {
@@ -1057,6 +1099,7 @@ export type EnrollmentUpdateWithoutCertificateInput = {
   session?: Prisma.TrainingSessionUpdateOneWithoutEnrollmentsNestedInput
   company?: Prisma.CompanyUpdateOneWithoutEnrollmentsNestedInput
   employees?: Prisma.EnrollmentEmployeeUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateWithoutCertificateInput = {
@@ -1071,6 +1114,87 @@ export type EnrollmentUncheckedUpdateWithoutCertificateInput = {
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employees?: Prisma.EnrollmentEmployeeUncheckedUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentCreateWithoutDocumentsInput = {
+  id?: string
+  type?: $Enums.EnrollmentType
+  status?: $Enums.EnrollmentStatus
+  note?: string | null
+  confirmedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEnrollmentsInput
+  formation?: Prisma.FormationCreateNestedOneWithoutEnrollmentsInput
+  session?: Prisma.TrainingSessionCreateNestedOneWithoutEnrollmentsInput
+  company?: Prisma.CompanyCreateNestedOneWithoutEnrollmentsInput
+  certificate?: Prisma.CertificateCreateNestedOneWithoutEnrollmentInput
+  employees?: Prisma.EnrollmentEmployeeCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentUncheckedCreateWithoutDocumentsInput = {
+  id?: string
+  userId: string
+  formationId?: string | null
+  sessionId?: string | null
+  companyId?: string | null
+  type?: $Enums.EnrollmentType
+  status?: $Enums.EnrollmentStatus
+  note?: string | null
+  confirmedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  certificate?: Prisma.CertificateUncheckedCreateNestedOneWithoutEnrollmentInput
+  employees?: Prisma.EnrollmentEmployeeUncheckedCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutDocumentsInput, Prisma.EnrollmentUncheckedCreateWithoutDocumentsInput>
+}
+
+export type EnrollmentUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.EnrollmentUpdateWithoutDocumentsInput, Prisma.EnrollmentUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutDocumentsInput, Prisma.EnrollmentUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.EnrollmentWhereInput
+}
+
+export type EnrollmentUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.EnrollmentWhereInput
+  data: Prisma.XOR<Prisma.EnrollmentUpdateWithoutDocumentsInput, Prisma.EnrollmentUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type EnrollmentUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumEnrollmentTypeFieldUpdateOperationsInput | $Enums.EnrollmentType
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEnrollmentsNestedInput
+  formation?: Prisma.FormationUpdateOneWithoutEnrollmentsNestedInput
+  session?: Prisma.TrainingSessionUpdateOneWithoutEnrollmentsNestedInput
+  company?: Prisma.CompanyUpdateOneWithoutEnrollmentsNestedInput
+  certificate?: Prisma.CertificateUpdateOneWithoutEnrollmentNestedInput
+  employees?: Prisma.EnrollmentEmployeeUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentUncheckedUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumEnrollmentTypeFieldUpdateOperationsInput | $Enums.EnrollmentType
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  certificate?: Prisma.CertificateUncheckedUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
@@ -1100,6 +1224,7 @@ export type EnrollmentUpdateWithoutUserInput = {
   company?: Prisma.CompanyUpdateOneWithoutEnrollmentsNestedInput
   certificate?: Prisma.CertificateUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateWithoutUserInput = {
@@ -1115,6 +1240,7 @@ export type EnrollmentUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   certificate?: Prisma.CertificateUncheckedUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUncheckedUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateManyWithoutUserInput = {
@@ -1156,6 +1282,7 @@ export type EnrollmentUpdateWithoutCompanyInput = {
   session?: Prisma.TrainingSessionUpdateOneWithoutEnrollmentsNestedInput
   certificate?: Prisma.CertificateUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateWithoutCompanyInput = {
@@ -1171,6 +1298,7 @@ export type EnrollmentUncheckedUpdateWithoutCompanyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   certificate?: Prisma.CertificateUncheckedUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUncheckedUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateManyWithoutCompanyInput = {
@@ -1212,6 +1340,7 @@ export type EnrollmentUpdateWithoutFormationInput = {
   company?: Prisma.CompanyUpdateOneWithoutEnrollmentsNestedInput
   certificate?: Prisma.CertificateUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateWithoutFormationInput = {
@@ -1227,6 +1356,7 @@ export type EnrollmentUncheckedUpdateWithoutFormationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   certificate?: Prisma.CertificateUncheckedUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUncheckedUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateManyWithoutFormationInput = {
@@ -1268,6 +1398,7 @@ export type EnrollmentUpdateWithoutSessionInput = {
   company?: Prisma.CompanyUpdateOneWithoutEnrollmentsNestedInput
   certificate?: Prisma.CertificateUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateWithoutSessionInput = {
@@ -1283,6 +1414,7 @@ export type EnrollmentUncheckedUpdateWithoutSessionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   certificate?: Prisma.CertificateUncheckedUpdateOneWithoutEnrollmentNestedInput
   employees?: Prisma.EnrollmentEmployeeUncheckedUpdateManyWithoutEnrollmentNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentUncheckedUpdateManyWithoutSessionInput = {
@@ -1305,10 +1437,12 @@ export type EnrollmentUncheckedUpdateManyWithoutSessionInput = {
 
 export type EnrollmentCountOutputType = {
   employees: number
+  documents: number
 }
 
 export type EnrollmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employees?: boolean | EnrollmentCountOutputTypeCountEmployeesArgs
+  documents?: boolean | EnrollmentCountOutputTypeCountDocumentsArgs
 }
 
 /**
@@ -1326,6 +1460,13 @@ export type EnrollmentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
  */
 export type EnrollmentCountOutputTypeCountEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EnrollmentEmployeeWhereInput
+}
+
+/**
+ * EnrollmentCountOutputType without action
+ */
+export type EnrollmentCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentWhereInput
 }
 
 
@@ -1347,6 +1488,7 @@ export type EnrollmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   company?: boolean | Prisma.Enrollment$companyArgs<ExtArgs>
   certificate?: boolean | Prisma.Enrollment$certificateArgs<ExtArgs>
   employees?: boolean | Prisma.Enrollment$employeesArgs<ExtArgs>
+  documents?: boolean | Prisma.Enrollment$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.EnrollmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["enrollment"]>
 
@@ -1374,6 +1516,7 @@ export type EnrollmentInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   company?: boolean | Prisma.Enrollment$companyArgs<ExtArgs>
   certificate?: boolean | Prisma.Enrollment$certificateArgs<ExtArgs>
   employees?: boolean | Prisma.Enrollment$employeesArgs<ExtArgs>
+  documents?: boolean | Prisma.Enrollment$documentsArgs<ExtArgs>
   _count?: boolean | Prisma.EnrollmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1386,6 +1529,7 @@ export type $EnrollmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     company: Prisma.$CompanyPayload<ExtArgs> | null
     certificate: Prisma.$CertificatePayload<ExtArgs> | null
     employees: Prisma.$EnrollmentEmployeePayload<ExtArgs>[]
+    documents: Prisma.$DocumentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1745,6 +1889,7 @@ export interface Prisma__EnrollmentClient<T, Null = never, ExtArgs extends runti
   company<T extends Prisma.Enrollment$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   certificate<T extends Prisma.Enrollment$certificateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$certificateArgs<ExtArgs>>): Prisma.Prisma__CertificateClient<runtime.Types.Result.GetResult<Prisma.$CertificatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   employees<T extends Prisma.Enrollment$employeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  documents<T extends Prisma.Enrollment$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2230,6 +2375,30 @@ export type Enrollment$employeesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.EnrollmentEmployeeScalarFieldEnum | Prisma.EnrollmentEmployeeScalarFieldEnum[]
+}
+
+/**
+ * Enrollment.documents
+ */
+export type Enrollment$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Document
+   */
+  select?: Prisma.DocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Document
+   */
+  omit?: Prisma.DocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentInclude<ExtArgs> | null
+  where?: Prisma.DocumentWhereInput
+  orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[]
 }
 
 /**

@@ -10,7 +10,8 @@ interface FileUploadProps {
   onUploaded: (url: string, originalName: string) => void;
   hint?: string;
   /** Clé localStorage du token à utiliser pour l'upload (site: "token", admin: "admin_token") */
-  tokenStorageKey?: string;
+  tokenStorageKey?: string | null;
+  uploadPath?: string;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
@@ -27,7 +28,15 @@ function getFileName(url: string): string {
   return decodeURIComponent(withoutTimestamp);
 }
 
-export default function FileUpload({ label, accept = ".pdf,.doc,.docx", currentUrl, onUploaded, hint, tokenStorageKey = "token" }: FileUploadProps) {
+export default function FileUpload({
+  label,
+  accept = ".pdf,.doc,.docx",
+  currentUrl,
+  onUploaded,
+  hint,
+  tokenStorageKey = "token",
+  uploadPath = "/upload",
+}: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -40,14 +49,14 @@ export default function FileUpload({ label, accept = ".pdf,.doc,.docx", currentU
     setError("");
     setUploading(true);
 
-    const token = localStorage.getItem(tokenStorageKey);
+    const token = tokenStorageKey ? localStorage.getItem(tokenStorageKey) : null;
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const res = await fetch(`${API_BASE}/upload`, {
+      const res = await fetch(`${API_BASE}${uploadPath}`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
       });
       const data = await res.json();

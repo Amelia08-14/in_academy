@@ -66,7 +66,11 @@ export const ModelName = {
   Certificate: 'Certificate',
   QuoteRequest: 'QuoteRequest',
   QuoteRequestItem: 'QuoteRequestItem',
-  ContactRequest: 'ContactRequest'
+  ContactRequest: 'ContactRequest',
+  Document: 'Document',
+  Partner: 'Partner',
+  TrainerApplication: 'TrainerApplication',
+  TrainerApplicationFile: 'TrainerApplicationFile'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -108,6 +112,7 @@ export const LearnerProfileScalarFieldEnum = {
   jobTitle: 'jobTitle',
   companyName: 'companyName',
   wilaya: 'wilaya',
+  birthDate: 'birthDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -195,6 +200,7 @@ export const FormationScalarFieldEnum = {
   title: 'title',
   description: 'description',
   duration: 'duration',
+  tjm: 'tjm',
   price: 'price',
   isCertifying: 'isCertifying',
   isActive: 'isActive',
@@ -321,6 +327,61 @@ export const ContactRequestScalarFieldEnum = {
 } as const
 
 export type ContactRequestScalarFieldEnum = (typeof ContactRequestScalarFieldEnum)[keyof typeof ContactRequestScalarFieldEnum]
+
+
+export const DocumentScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName',
+  userId: 'userId',
+  enrollmentId: 'enrollmentId',
+  createdAt: 'createdAt'
+} as const
+
+export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const PartnerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  discountRate: 'discountRate',
+  contact: 'contact',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
+
+
+export const TrainerApplicationScalarFieldEnum = {
+  id: 'id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  speciality: 'speciality',
+  message: 'message',
+  cvUrl: 'cvUrl',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TrainerApplicationScalarFieldEnum = (typeof TrainerApplicationScalarFieldEnum)[keyof typeof TrainerApplicationScalarFieldEnum]
+
+
+export const TrainerApplicationFileScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName',
+  createdAt: 'createdAt'
+} as const
+
+export type TrainerApplicationFileScalarFieldEnum = (typeof TrainerApplicationFileScalarFieldEnum)[keyof typeof TrainerApplicationFileScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -527,4 +588,50 @@ export const ContactRequestOrderByRelevanceFieldEnum = {
 } as const
 
 export type ContactRequestOrderByRelevanceFieldEnum = (typeof ContactRequestOrderByRelevanceFieldEnum)[keyof typeof ContactRequestOrderByRelevanceFieldEnum]
+
+
+export const DocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName',
+  userId: 'userId',
+  enrollmentId: 'enrollmentId'
+} as const
+
+export type DocumentOrderByRelevanceFieldEnum = (typeof DocumentOrderByRelevanceFieldEnum)[keyof typeof DocumentOrderByRelevanceFieldEnum]
+
+
+export const PartnerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  discountRate: 'discountRate',
+  contact: 'contact'
+} as const
+
+export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
+
+
+export const TrainerApplicationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  speciality: 'speciality',
+  message: 'message',
+  cvUrl: 'cvUrl'
+} as const
+
+export type TrainerApplicationOrderByRelevanceFieldEnum = (typeof TrainerApplicationOrderByRelevanceFieldEnum)[keyof typeof TrainerApplicationOrderByRelevanceFieldEnum]
+
+
+export const TrainerApplicationFileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName'
+} as const
+
+export type TrainerApplicationFileOrderByRelevanceFieldEnum = (typeof TrainerApplicationFileOrderByRelevanceFieldEnum)[keyof typeof TrainerApplicationFileOrderByRelevanceFieldEnum]
 

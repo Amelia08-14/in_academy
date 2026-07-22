@@ -282,20 +282,22 @@ export default function AdminInscriptionsPage() {
                 {expanded === e.id ? "Masquer" : "Détails"}
               </button>
               {moving === e.id ? (
-                <select
-                  className="admin-move-select"
-                  defaultValue=""
-                  autoFocus
-                  onChange={(ev) => { if (ev.target.value) reassign(e.id, ev.target.value); }}
-                  onBlur={() => setMoving(null)}
-                >
-                  <option value="" disabled>Déplacer vers…</option>
-                  {sessionsList.map((s) => (
-                    <option key={s.id} value={s.id} disabled={s.id === e.session?.id}>
-                      {s.title.trim()} — {new Date(s.startDate).toLocaleDateString("fr-FR")}
-                    </option>
-                  ))}
-                </select>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <select
+                    className="admin-move-select"
+                    defaultValue=""
+                    autoFocus
+                    onChange={(ev) => { if (ev.target.value) reassign(e.id, ev.target.value); }}
+                  >
+                    <option value="" disabled>Déplacer vers…</option>
+                    {sessionsList.map((s) => (
+                      <option key={s.id} value={s.id} disabled={s.id === e.session?.id}>
+                        {s.title.trim()} — {new Date(s.startDate).toLocaleDateString("fr-FR")}
+                      </option>
+                    ))}
+                  </select>
+                  <button className="admin-btn" onClick={() => setMoving(null)}>✕</button>
+                </span>
               ) : (
                 <button className="admin-btn" onClick={() => setMoving(e.id)}>Déplacer</button>
               )}

@@ -57,35 +57,37 @@ enum ContactStatut {
 // ─── User & Profiles ─────────────────────────────────────────────────────────
 
 model User {
-  id             String    @id @default(uuid())
-  email          String    @unique
+  id             String   @id @default(uuid())
+  email          String   @unique
   hashedPassword String
-  role           Role      @default(LEARNER)
-  emailVerified  Boolean   @default(false)
-  isActive       Boolean   @default(true)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  role           Role     @default(LEARNER)
+  emailVerified  Boolean  @default(false)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   learnerProfile LearnerProfile?
   trainerProfile TrainerProfile?
   companyAdmin   CompanyProfile?
   enrollments    Enrollment[]
   certificates   Certificate[]
+  documents      Document[]
 
   @@map("users")
 }
 
 model LearnerProfile {
-  id          String   @id @default(uuid())
-  userId      String   @unique
+  id          String    @id @default(uuid())
+  userId      String    @unique
   firstName   String
   lastName    String
   phone       String?
   jobTitle    String?
   companyName String?
   wilaya      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  birthDate   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -109,18 +111,18 @@ model TrainerProfile {
 // ─── Formateurs (standalone, sans compte User) ───────────────────────────────
 
 model Trainer {
-  id              String   @id @default(uuid())
-  firstName       String
-  lastName        String
-  displayName     String
-  email           String?  @unique
-  phone           String?
-  speciality      String?
-  bio             String?  @db.Text
-  cvUrl           String?
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  displayName String
+  email       String?  @unique
+  phone       String?
+  speciality  String?
+  bio         String?  @db.Text
+  cvUrl       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   formations FormationTrainer[]
   sessions   TrainingSession[]
@@ -170,12 +172,12 @@ model CompanyProfile {
 // ─── Catalogue ───────────────────────────────────────────────────────────────
 
 model Category {
-  id          String      @id @default(uuid())
-  slug        String      @unique
+  id          String   @id @default(uuid())
+  slug        String   @unique
   name        String
-  description String?     @db.Text
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   formations      Formation[]
   sessions        TrainingSession[]
@@ -191,6 +193,7 @@ model Formation {
   title             String
   description       String?  @db.Text
   duration          String?
+  tjm               Int?
   price             Int?
   isCertifying      Boolean  @default(true)
   isActive          Boolean  @default(true)
@@ -200,11 +203,11 @@ model Formation {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  category   Category           @relation(fields: [categoryId], references: [id])
-  trainers   FormationTrainer[]
-  sessions   TrainingSession[]
+  category    Category           @relation(fields: [categoryId], references: [id])
+  trainers    FormationTrainer[]
+  sessions    TrainingSession[]
   enrollments Enrollment[]
-  quoteItems QuoteRequestItem[]
+  quoteItems  QuoteRequestItem[]
 
   @@map("formations")
 }
@@ -223,9 +226,9 @@ model FormationTrainer {
 }
 
 model TrainingSession {
-  id            String        @id @default(uuid())
+  id            String         @id @default(uuid())
   title         String
-  description   String?       @db.Text
+  description   String?        @db.Text
   coverImageUrl String?
   duration      String?
   price         Int?
@@ -235,16 +238,16 @@ model TrainingSession {
   startDate     DateTime
   endDate       DateTime?
   location      String?
-  minCapacity   Int           @default(1)
-  maxCapacity   Int           @default(20)
+  minCapacity   Int            @default(1)
+  maxCapacity   Int            @default(20)
   type          EnrollmentType @default(GROUP)
-  status        SessionStatus @default(SCHEDULED)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  status        SessionStatus  @default(SCHEDULED)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
-  category    Category       @relation(fields: [categoryId], references: [id])
-  formation   Formation?     @relation(fields: [formationId], references: [id])
-  trainer     Trainer?       @relation(fields: [trainerId], references: [id])
+  category    Category     @relation(fields: [categoryId], references: [id])
+  formation   Formation?   @relation(fields: [formationId], references: [id])
+  trainer     Trainer?     @relation(fields: [trainerId], references: [id])
   enrollments Enrollment[]
 
   @@index([categoryId, title])
@@ -266,12 +269,13 @@ model Enrollment {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  formation   Formation?       @relation(fields: [formationId], references: [id])
-  session     TrainingSession? @relation(fields: [sessionId], references: [id])
-  company     Company?         @relation(fields: [companyId], references: [id])
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  formation   Formation?           @relation(fields: [formationId], references: [id])
+  session     TrainingSession?     @relation(fields: [sessionId], references: [id])
+  company     Company?             @relation(fields: [companyId], references: [id])
   certificate Certificate?
   employees   EnrollmentEmployee[]
+  documents   Document[]
 
   @@map("enrollments")
 }
@@ -352,4 +356,80 @@ model ContactRequest {
   category Category? @relation(fields: [categoryId], references: [id])
 
   @@map("contact_requests")
+}
+
+// ─── Documents (reçu de paiement / dossier administratif) ────────────────────
+
+enum DocumentType {
+  RECU // reçu de paiement (tâche 4)
+  DOSSIER_ADMIN // dossier administratif B2C/B2B (tâche 5)
+}
+
+model Document {
+  id           String       @id @default(uuid())
+  type         DocumentType
+  fileUrl      String
+  originalName String?
+  userId       String?
+  enrollmentId String?
+  createdAt    DateTime     @default(now())
+
+  user       User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollment Enrollment? @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+}
+
+// ─── Partenaires / avantages (offre Hôtel Hydra, etc.) ───────────────────────
+
+model Partner {
+  id           String   @id @default(uuid())
+  name         String
+  description  String?  @db.Text
+  discountRate String? // ex : "-20%" ou texte libre
+  contact      String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("partners")
+}
+
+// ─── Candidatures « Devenir collaborateur » ──────────────────────────────────
+
+enum TrainerApplicationStatus {
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
+}
+
+model TrainerApplication {
+  id         String                   @id @default(uuid())
+  firstName  String
+  lastName   String
+  email      String
+  phone      String?
+  speciality String?
+  message    String?                  @db.Text
+  cvUrl      String?
+  status     TrainerApplicationStatus @default(PENDING)
+  createdAt  DateTime                 @default(now())
+  updatedAt  DateTime                 @updatedAt
+
+  files TrainerApplicationFile[]
+
+  @@map("trainer_applications")
+}
+
+model TrainerApplicationFile {
+  id            String   @id @default(uuid())
+  applicationId String
+  fileUrl       String
+  originalName  String?
+  createdAt     DateTime @default(now())
+
+  application TrainerApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("trainer_application_files")
 }

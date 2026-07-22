@@ -119,3 +119,23 @@ export type QuoteRequestItem = Prisma.QuoteRequestItemModel
  * 
  */
 export type ContactRequest = Prisma.ContactRequestModel
+/**
+ * Model Document
+ * 
+ */
+export type Document = Prisma.DocumentModel
+/**
+ * Model Partner
+ * 
+ */
+export type Partner = Prisma.PartnerModel
+/**
+ * Model TrainerApplication
+ * 
+ */
+export type TrainerApplication = Prisma.TrainerApplicationModel
+/**
+ * Model TrainerApplicationFile
+ * 
+ */
+export type TrainerApplicationFile = Prisma.TrainerApplicationFileModel

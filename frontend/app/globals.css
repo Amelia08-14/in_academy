@@ -5816,6 +5816,323 @@ button {
   gap: 20px;
 }
 
+/* Fiches techniques — candidature collaborateur (tâche 8) */
+.collab-fiches {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.collab-fiches li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--beige-light);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--navy);
+}
+
+.collab-fiches button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.collab-fiches button:hover { color: #c0392b; }
+
+/* Panier de devis B2B (tâche 7) */
+.quote-cart__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quote-cart__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+}
+
+.quote-cart__title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  flex: 1;
+  min-width: 180px;
+}
+
+.quote-cart__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quote-cart__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.quote-cart__qty {
+  width: 74px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.quote-cart__remove {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.quote-cart__remove:hover { color: #c0392b; border-color: #c0392b; }
+
+.quote-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 10px 30px rgba(196, 146, 42, 0.4);
+  transition: transform 0.2s;
+}
+
+.quote-fab:hover { transform: translateY(-3px); }
+
+.quote-fab__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--navy-deeper);
+  color: var(--gold-light);
+  font-size: 12px;
+}
+
+/* Bandeau partenaires sur les pages de formations (tâche 3) */
+.partners-strip {
+  padding: 56px 0 72px;
+  background: transparent;
+}
+
+.partners-strip__eyebrow { color: var(--gold-dark); }
+
+.partners-strip__title {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  color: var(--navy);
+  margin: 8px 0 24px;
+}
+
+.partners-strip__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.partners-strip__card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--gold);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 2px 12px rgba(15, 35, 64, 0.05);
+}
+
+.partners-strip__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.partners-strip__name {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.partners-strip__badge {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--gold);
+  padding: 5px 11px;
+  border-radius: 20px;
+}
+
+.partners-strip__desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-body);
+  margin: 0 0 8px;
+}
+
+.partners-strip__contact {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Documents utilisateur (tâches 4 & 5) */
+.dashboard-docs-uploaders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.dashboard-docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboard-doc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+}
+
+.dashboard-doc__badge {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.dashboard-doc__badge--recu { background: rgba(46, 125, 132, 0.12); color: var(--teal-dark); }
+.dashboard-doc__badge--dossier { background: rgba(196, 146, 42, 0.15); color: var(--gold-dark); }
+
+.dashboard-doc__name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard-doc__name:hover { color: var(--teal); text-decoration: underline; }
+
+.dashboard-doc__date {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .dashboard-docs-uploaders { grid-template-columns: 1fr; }
+}
+
+/* Avantages partenaires (tâche 3) */
+.dashboard-perks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.dashboard-perk {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--gold);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 10px rgba(15, 35, 64, 0.04);
+}
+
+.dashboard-perk__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.dashboard-perk__name {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.dashboard-perk__badge {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--gold);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.dashboard-perk__desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-body);
+  margin: 0 0 8px;
+}
+
+.dashboard-perk__contact {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 .dashboard-card {
   background: var(--white);
   border-radius: 16px;

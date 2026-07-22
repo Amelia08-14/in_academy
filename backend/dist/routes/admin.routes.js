@@ -8,6 +8,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const db_1 = require("../lib/db");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const mail_1 = require("../lib/mail");
+const content_schema_1 = require("../validations/content.schema");
 const router = (0, express_1.Router)();
 router.use(auth_middleware_1.authenticate, (0, auth_middleware_1.requireRole)("SUPER_ADMIN", "ADMIN", "MANAGER"));
 function slugify(text) {
@@ -180,7 +181,7 @@ router.get("/formations", async (_req, res) => {
 // POST /api/admin/formations — créer une formation
 router.post("/formations", async (req, res) => {
     try {
-        const { title, categoryId, description, duration, price, isCertifying, ficheTechniqueUrl, coverImageUrl } = req.body;
+        const { title, categoryId, description, duration, tjm, price, isCertifying, ficheTechniqueUrl, coverImageUrl } = req.body;
         if (!title || title.trim().length < 2 || !categoryId) {
             res.status(400).json({ error: "Titre et branche requis" });
             return;
@@ -192,6 +193,7 @@ router.post("/formations", async (req, res) => {
                 categoryId,
                 description: description ?? null,
                 duration: duration ?? null,
+                tjm: tjm ?? null,
                 price: price ?? null,
                 isCertifying: isCertifying ?? true,
                 ficheTechniqueUrl: ficheTechniqueUrl ?? null,
@@ -209,12 +211,13 @@ router.post("/formations", async (req, res) => {
 // PATCH /api/admin/formations/:id — mettre à jour fiche technique / infos
 router.patch("/formations/:id", async (req, res) => {
     try {
-        const { ficheTechniqueUrl, price, duration, description, isActive, coverImageUrl } = req.body;
+        const { ficheTechniqueUrl, tjm, price, duration, description, isActive, coverImageUrl } = req.body;
         const formation = await db_1.prisma.formation.update({
             where: { id: req.params["id"] },
             data: {
                 ...(ficheTechniqueUrl !== undefined && { ficheTechniqueUrl }),
                 ...(description !== undefined && { description }),
+                ...(tjm !== undefined && { tjm }),
                 ...(price !== undefined && { price }),
                 ...(duration !== undefined && { duration }),
                 ...(isActive !== undefined && { isActive }),
@@ -569,6 +572,137 @@ router.patch("/quotes/:id/status", async (req, res) => {
     }
     catch (err) {
         console.error("[admin/quotes status]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// ─── Candidatures collaborateur (tâche 8) ────────────────────────────────────
+// GET /api/admin/trainer-applications
+router.get("/trainer-applications", async (_req, res) => {
+    try {
+        const apps = await db_1.prisma.trainerApplication.findMany({
+            orderBy: { createdAt: "desc" },
+            include: { files: true },
+        });
+        res.json(apps);
+    }
+    catch (err) {
+        console.error("[admin/trainer-applications]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// PATCH /api/admin/trainer-applications/:id — changer le statut de la candidature
+router.patch("/trainer-applications/:id", async (req, res) => {
+    try {
+        const { status } = req.body;
+        const valid = ["PENDING", "REVIEWED", "ACCEPTED", "REJECTED"];
+        if (!status || !valid.includes(status)) {
+            res.status(400).json({ error: "Statut invalide" });
+            return;
+        }
+        const app = await db_1.prisma.trainerApplication.update({
+            where: { id: req.params["id"] },
+            data: { status: status },
+        });
+        res.json(app);
+    }
+    catch (err) {
+        console.error("[admin/trainer-applications patch]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// ─── Documents (reçus & dossiers — tâches 4 & 5) ─────────────────────────────
+// GET /api/admin/documents — réception de tous les documents déposés
+router.get("/documents", async (req, res) => {
+    try {
+        const { type } = req.query;
+        const documents = await db_1.prisma.document.findMany({
+            where: type === "RECU" || type === "DOSSIER_ADMIN" ? { type } : {},
+            orderBy: { createdAt: "desc" },
+            include: {
+                user: {
+                    include: { learnerProfile: true, companyAdmin: { include: { company: true } } },
+                    omit: { hashedPassword: true },
+                },
+                enrollment: { include: { session: { select: { title: true } }, formation: { select: { title: true } } } },
+            },
+        });
+        res.json(documents);
+    }
+    catch (err) {
+        console.error("[admin/documents]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// ─── Partenaires / avantages (tâche 3) ───────────────────────────────────────
+// GET /api/admin/partners
+router.get("/partners", async (_req, res) => {
+    try {
+        const partners = await db_1.prisma.partner.findMany({ orderBy: { createdAt: "desc" } });
+        res.json(partners);
+    }
+    catch (err) {
+        console.error("[admin/partners]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// POST /api/admin/partners
+router.post("/partners", async (req, res) => {
+    const parsed = content_schema_1.partnerSchema.safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    try {
+        const partner = await db_1.prisma.partner.create({
+            data: {
+                name: parsed.data.name,
+                description: parsed.data.description ?? null,
+                discountRate: parsed.data.discountRate ?? null,
+                contact: parsed.data.contact ?? null,
+                isActive: parsed.data.isActive ?? true,
+            },
+        });
+        res.status(201).json(partner);
+    }
+    catch (err) {
+        console.error("[admin/partners post]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// PATCH /api/admin/partners/:id
+router.patch("/partners/:id", async (req, res) => {
+    const parsed = content_schema_1.partnerSchema.partial().safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    try {
+        const d = parsed.data;
+        const partner = await db_1.prisma.partner.update({
+            where: { id: req.params["id"] },
+            data: {
+                ...(d.name !== undefined && { name: d.name }),
+                ...(d.description !== undefined && { description: d.description }),
+                ...(d.discountRate !== undefined && { discountRate: d.discountRate }),
+                ...(d.contact !== undefined && { contact: d.contact }),
+                ...(d.isActive !== undefined && { isActive: d.isActive }),
+            },
+        });
+        res.json(partner);
+    }
+    catch (err) {
+        console.error("[admin/partners patch]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// DELETE /api/admin/partners/:id
+router.delete("/partners/:id", async (req, res) => {
+    try {
+        await db_1.prisma.partner.delete({ where: { id: req.params["id"] } });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[admin/partners delete]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });

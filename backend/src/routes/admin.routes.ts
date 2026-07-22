@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
 import { sendEnrollmentConfirmedEmail } from "@/lib/mail";
+import { partnerSchema } from "@/validations/content.schema";
 
 const router = Router();
 
@@ -187,11 +188,12 @@ router.get("/formations", async (_req: AuthRequest, res: Response) => {
 // POST /api/admin/formations — créer une formation
 router.post("/formations", async (req: AuthRequest, res: Response) => {
   try {
-    const { title, categoryId, description, duration, price, isCertifying, ficheTechniqueUrl, coverImageUrl } = req.body as {
+    const { title, categoryId, description, duration, tjm, price, isCertifying, ficheTechniqueUrl, coverImageUrl } = req.body as {
       title: string;
       categoryId: string;
       description?: string;
       duration?: string;
+      tjm?: number;
       price?: number;
       isCertifying?: boolean;
       ficheTechniqueUrl?: string;
@@ -208,6 +210,7 @@ router.post("/formations", async (req: AuthRequest, res: Response) => {
         categoryId,
         description: description ?? null,
         duration: duration ?? null,
+        tjm: tjm ?? null,
         price: price ?? null,
         isCertifying: isCertifying ?? true,
         ficheTechniqueUrl: ficheTechniqueUrl ?? null,
@@ -225,8 +228,9 @@ router.post("/formations", async (req: AuthRequest, res: Response) => {
 // PATCH /api/admin/formations/:id — mettre à jour fiche technique / infos
 router.patch("/formations/:id", async (req: AuthRequest, res: Response) => {
   try {
-    const { ficheTechniqueUrl, price, duration, description, isActive, coverImageUrl } = req.body as {
+    const { ficheTechniqueUrl, tjm, price, duration, description, isActive, coverImageUrl } = req.body as {
       ficheTechniqueUrl?: string;
+      tjm?: number | null;
       price?: number;
       duration?: string;
       description?: string;
@@ -238,6 +242,7 @@ router.patch("/formations/:id", async (req: AuthRequest, res: Response) => {
       data: {
         ...(ficheTechniqueUrl !== undefined && { ficheTechniqueUrl }),
         ...(description !== undefined && { description }),
+        ...(tjm !== undefined && { tjm }),
         ...(price !== undefined && { price }),
         ...(duration !== undefined && { duration }),
         ...(isActive !== undefined && { isActive }),
@@ -619,6 +624,140 @@ router.patch("/quotes/:id/status", async (req: AuthRequest, res: Response) => {
     res.json(quote);
   } catch (err) {
     console.error("[admin/quotes status]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// ─── Candidatures collaborateur (tâche 8) ────────────────────────────────────
+
+// GET /api/admin/trainer-applications
+router.get("/trainer-applications", async (_req: AuthRequest, res: Response) => {
+  try {
+    const apps = await prisma.trainerApplication.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { files: true },
+    });
+    res.json(apps);
+  } catch (err) {
+    console.error("[admin/trainer-applications]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// PATCH /api/admin/trainer-applications/:id — changer le statut de la candidature
+router.patch("/trainer-applications/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const { status } = req.body as { status?: string };
+    const valid = ["PENDING", "REVIEWED", "ACCEPTED", "REJECTED"];
+    if (!status || !valid.includes(status)) {
+      res.status(400).json({ error: "Statut invalide" });
+      return;
+    }
+    const app = await prisma.trainerApplication.update({
+      where: { id: req.params["id"] as string },
+      data: { status: status as "PENDING" | "REVIEWED" | "ACCEPTED" | "REJECTED" },
+    });
+    res.json(app);
+  } catch (err) {
+    console.error("[admin/trainer-applications patch]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// ─── Documents (reçus & dossiers — tâches 4 & 5) ─────────────────────────────
+
+// GET /api/admin/documents — réception de tous les documents déposés
+router.get("/documents", async (req: AuthRequest, res: Response) => {
+  try {
+    const { type } = req.query as { type?: string };
+    const documents = await prisma.document.findMany({
+      where: type === "RECU" || type === "DOSSIER_ADMIN" ? { type } : {},
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          include: { learnerProfile: true, companyAdmin: { include: { company: true } } },
+          omit: { hashedPassword: true },
+        },
+        enrollment: { include: { session: { select: { title: true } }, formation: { select: { title: true } } } },
+      },
+    });
+    res.json(documents);
+  } catch (err) {
+    console.error("[admin/documents]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// ─── Partenaires / avantages (tâche 3) ───────────────────────────────────────
+
+// GET /api/admin/partners
+router.get("/partners", async (_req: AuthRequest, res: Response) => {
+  try {
+    const partners = await prisma.partner.findMany({ orderBy: { createdAt: "desc" } });
+    res.json(partners);
+  } catch (err) {
+    console.error("[admin/partners]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// POST /api/admin/partners
+router.post("/partners", async (req: AuthRequest, res: Response) => {
+  const parsed = partnerSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+  try {
+    const partner = await prisma.partner.create({
+      data: {
+        name: parsed.data.name,
+        description: parsed.data.description ?? null,
+        discountRate: parsed.data.discountRate ?? null,
+        contact: parsed.data.contact ?? null,
+        isActive: parsed.data.isActive ?? true,
+      },
+    });
+    res.status(201).json(partner);
+  } catch (err) {
+    console.error("[admin/partners post]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// PATCH /api/admin/partners/:id
+router.patch("/partners/:id", async (req: AuthRequest, res: Response) => {
+  const parsed = partnerSchema.partial().safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+  try {
+    const d = parsed.data;
+    const partner = await prisma.partner.update({
+      where: { id: req.params["id"] as string },
+      data: {
+        ...(d.name !== undefined && { name: d.name }),
+        ...(d.description !== undefined && { description: d.description }),
+        ...(d.discountRate !== undefined && { discountRate: d.discountRate }),
+        ...(d.contact !== undefined && { contact: d.contact }),
+        ...(d.isActive !== undefined && { isActive: d.isActive }),
+      },
+    });
+    res.json(partner);
+  } catch (err) {
+    console.error("[admin/partners patch]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/partners/:id
+router.delete("/partners/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    await prisma.partner.delete({ where: { id: req.params["id"] as string } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/partners delete]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });

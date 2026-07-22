@@ -17,6 +17,7 @@ exports.registerSchema = zod_1.z.object({
     lastName: zod_1.z.string().min(2, "Nom requis").trim(),
     phone: zod_1.z.string().optional(),
     jobTitle: zod_1.z.string().optional(),
+    birthDate: zod_1.z.string().optional(), // date d'anniversaire (ISO "YYYY-MM-DD"), tâche 2
 });
 exports.companyRegisterSchema = zod_1.z.object({
     raisonSociale: zod_1.z.string().min(2, "Raison sociale requise").trim(),

@@ -48,8 +48,8 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CertificateOrderByRelevanceFieldEnum = exports.EnrollmentEmployeeOrderByRelevanceFieldEnum = exports.EnrollmentOrderByRelevanceFieldEnum = exports.TrainingSessionOrderByRelevanceFieldEnum = exports.FormationTrainerOrderByRelevanceFieldEnum = exports.FormationOrderByRelevanceFieldEnum = exports.CategoryOrderByRelevanceFieldEnum = exports.CompanyProfileOrderByRelevanceFieldEnum = exports.CompanyOrderByRelevanceFieldEnum = exports.TrainerOrderByRelevanceFieldEnum = exports.TrainerProfileOrderByRelevanceFieldEnum = exports.LearnerProfileOrderByRelevanceFieldEnum = exports.NullsOrder = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.ContactRequestScalarFieldEnum = exports.QuoteRequestItemScalarFieldEnum = exports.QuoteRequestScalarFieldEnum = exports.CertificateScalarFieldEnum = exports.EnrollmentEmployeeScalarFieldEnum = exports.EnrollmentScalarFieldEnum = exports.TrainingSessionScalarFieldEnum = exports.FormationTrainerScalarFieldEnum = exports.FormationScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.CompanyProfileScalarFieldEnum = exports.CompanyScalarFieldEnum = exports.TrainerScalarFieldEnum = exports.TrainerProfileScalarFieldEnum = exports.LearnerProfileScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
-exports.defineExtension = exports.ContactRequestOrderByRelevanceFieldEnum = exports.QuoteRequestItemOrderByRelevanceFieldEnum = exports.QuoteRequestOrderByRelevanceFieldEnum = void 0;
+exports.FormationTrainerOrderByRelevanceFieldEnum = exports.FormationOrderByRelevanceFieldEnum = exports.CategoryOrderByRelevanceFieldEnum = exports.CompanyProfileOrderByRelevanceFieldEnum = exports.CompanyOrderByRelevanceFieldEnum = exports.TrainerOrderByRelevanceFieldEnum = exports.TrainerProfileOrderByRelevanceFieldEnum = exports.LearnerProfileOrderByRelevanceFieldEnum = exports.NullsOrder = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.TrainerApplicationFileScalarFieldEnum = exports.TrainerApplicationScalarFieldEnum = exports.PartnerScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.ContactRequestScalarFieldEnum = exports.QuoteRequestItemScalarFieldEnum = exports.QuoteRequestScalarFieldEnum = exports.CertificateScalarFieldEnum = exports.EnrollmentEmployeeScalarFieldEnum = exports.EnrollmentScalarFieldEnum = exports.TrainingSessionScalarFieldEnum = exports.FormationTrainerScalarFieldEnum = exports.FormationScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.CompanyProfileScalarFieldEnum = exports.CompanyScalarFieldEnum = exports.TrainerScalarFieldEnum = exports.TrainerProfileScalarFieldEnum = exports.LearnerProfileScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.TrainerApplicationFileOrderByRelevanceFieldEnum = exports.TrainerApplicationOrderByRelevanceFieldEnum = exports.PartnerOrderByRelevanceFieldEnum = exports.DocumentOrderByRelevanceFieldEnum = exports.ContactRequestOrderByRelevanceFieldEnum = exports.QuoteRequestItemOrderByRelevanceFieldEnum = exports.QuoteRequestOrderByRelevanceFieldEnum = exports.CertificateOrderByRelevanceFieldEnum = exports.EnrollmentEmployeeOrderByRelevanceFieldEnum = exports.EnrollmentOrderByRelevanceFieldEnum = exports.TrainingSessionOrderByRelevanceFieldEnum = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/client"));
 /**
  * Prisma Errors
@@ -119,7 +119,11 @@ exports.ModelName = {
     Certificate: 'Certificate',
     QuoteRequest: 'QuoteRequest',
     QuoteRequestItem: 'QuoteRequestItem',
-    ContactRequest: 'ContactRequest'
+    ContactRequest: 'ContactRequest',
+    Document: 'Document',
+    Partner: 'Partner',
+    TrainerApplication: 'TrainerApplication',
+    TrainerApplicationFile: 'TrainerApplicationFile'
 };
 /**
  * Enums
@@ -149,6 +153,7 @@ exports.LearnerProfileScalarFieldEnum = {
     jobTitle: 'jobTitle',
     companyName: 'companyName',
     wilaya: 'wilaya',
+    birthDate: 'birthDate',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -212,6 +217,7 @@ exports.FormationScalarFieldEnum = {
     title: 'title',
     description: 'description',
     duration: 'duration',
+    tjm: 'tjm',
     price: 'price',
     isCertifying: 'isCertifying',
     isActive: 'isActive',
@@ -302,6 +308,45 @@ exports.ContactRequestScalarFieldEnum = {
     categoryId: 'categoryId',
     formationName: 'formationName',
     message: 'message',
+    createdAt: 'createdAt'
+};
+exports.DocumentScalarFieldEnum = {
+    id: 'id',
+    type: 'type',
+    fileUrl: 'fileUrl',
+    originalName: 'originalName',
+    userId: 'userId',
+    enrollmentId: 'enrollmentId',
+    createdAt: 'createdAt'
+};
+exports.PartnerScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    discountRate: 'discountRate',
+    contact: 'contact',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.TrainerApplicationScalarFieldEnum = {
+    id: 'id',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    email: 'email',
+    phone: 'phone',
+    speciality: 'speciality',
+    message: 'message',
+    cvUrl: 'cvUrl',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.TrainerApplicationFileScalarFieldEnum = {
+    id: 'id',
+    applicationId: 'applicationId',
+    fileUrl: 'fileUrl',
+    originalName: 'originalName',
     createdAt: 'createdAt'
 };
 exports.SortOrder = {
@@ -437,5 +482,35 @@ exports.ContactRequestOrderByRelevanceFieldEnum = {
     categoryId: 'categoryId',
     formationName: 'formationName',
     message: 'message'
+};
+exports.DocumentOrderByRelevanceFieldEnum = {
+    id: 'id',
+    fileUrl: 'fileUrl',
+    originalName: 'originalName',
+    userId: 'userId',
+    enrollmentId: 'enrollmentId'
+};
+exports.PartnerOrderByRelevanceFieldEnum = {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    discountRate: 'discountRate',
+    contact: 'contact'
+};
+exports.TrainerApplicationOrderByRelevanceFieldEnum = {
+    id: 'id',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    email: 'email',
+    phone: 'phone',
+    speciality: 'speciality',
+    message: 'message',
+    cvUrl: 'cvUrl'
+};
+exports.TrainerApplicationFileOrderByRelevanceFieldEnum = {
+    id: 'id',
+    applicationId: 'applicationId',
+    fileUrl: 'fileUrl',
+    originalName: 'originalName'
 };
 exports.defineExtension = runtime.Extensions.defineExtension;

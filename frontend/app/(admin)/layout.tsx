@@ -13,6 +13,9 @@ const navItems = [
   { href: "/admin/sessions", label: "Sessions", icon: "▣" },
   { href: "/admin/devis", label: "Devis B2B", icon: "◈" },
   { href: "/admin/formateurs",   label: "Formateurs",  icon: "★" },
+  { href: "/admin/candidatures", label: "Candidatures", icon: "✦" },
+  { href: "/admin/documents",    label: "Documents",   icon: "▦" },
+  { href: "/admin/partenaires",  label: "Partenaires", icon: "◆" },
   { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "◎" },
 ];
 

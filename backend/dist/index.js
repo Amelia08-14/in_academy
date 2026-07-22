@@ -14,6 +14,8 @@ const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
 const trainers_routes_1 = __importDefault(require("./routes/trainers.routes"));
 const upload_routes_1 = __importDefault(require("./routes/upload.routes"));
 const catalog_routes_1 = __importDefault(require("./routes/catalog.routes"));
+const documents_routes_1 = __importDefault(require("./routes/documents.routes"));
+const trainer_applications_routes_1 = __importDefault(require("./routes/trainer-applications.routes"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT ?? 4000;
 // ─── Middlewares globaux ──────────────────────────────────────────────────────
@@ -41,6 +43,8 @@ app.use("/api/enrollments", enrollments_routes_1.default);
 app.use("/api/admin", admin_routes_1.default);
 app.use("/api/trainers", trainers_routes_1.default);
 app.use("/api/upload", upload_routes_1.default);
+app.use("/api/documents", documents_routes_1.default);
+app.use("/api/trainer-applications", trainer_applications_routes_1.default);
 app.use("/api", catalog_routes_1.default);
 // ─── Health check ────────────────────────────────────────────────────────────
 app.get("/health", (_req, res) => {

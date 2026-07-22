@@ -10,6 +10,8 @@ import adminRoutes from "@/routes/admin.routes";
 import trainerRoutes from "@/routes/trainers.routes";
 import uploadRoutes from "@/routes/upload.routes";
 import catalogRoutes from "@/routes/catalog.routes";
+import documentRoutes from "@/routes/documents.routes";
+import trainerApplicationRoutes from "@/routes/trainer-applications.routes";
 
 const app = express();
 const PORT = process.env.PORT ?? 4000;
@@ -39,6 +41,8 @@ app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/trainers", trainerRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/documents", documentRoutes);
+app.use("/api/trainer-applications", trainerApplicationRoutes);
 app.use("/api", catalogRoutes);
 
 // ─── Health check ────────────────────────────────────────────────────────────

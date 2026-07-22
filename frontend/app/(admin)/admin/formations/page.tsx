@@ -14,6 +14,7 @@ interface Formation {
   slug: string;
   description: string | null;
   duration: string | null;
+  tjm: number | null;
   price: number | null;
   isActive: boolean;
   isCertifying: boolean;
@@ -32,6 +33,7 @@ interface EditState {
   categoryId: string;
   ficheTechniqueUrl: string | null;
   coverImageUrl: string | null;
+  tjm: number | null;
   price: number | null;
   duration: string | null;
   isActive: boolean;
@@ -45,6 +47,7 @@ const EMPTY: EditState = {
   categoryId: "",
   ficheTechniqueUrl: null,
   coverImageUrl: null,
+  tjm: null,
   price: null,
   duration: null,
   isActive: true,
@@ -95,6 +98,7 @@ export default function AdminFormationsPage() {
       categoryId: f.categoryId,
       ficheTechniqueUrl: f.ficheTechniqueUrl,
       coverImageUrl: f.coverImageUrl,
+      tjm: f.tjm,
       price: f.price,
       duration: f.duration,
       isActive: f.isActive,
@@ -114,6 +118,7 @@ export default function AdminFormationsPage() {
           ficheTechniqueUrl: editing.ficheTechniqueUrl,
           coverImageUrl: editing.coverImageUrl,
           description: editing.description || null,
+          tjm: editing.tjm,
           price: editing.price,
           duration: editing.duration,
           isActive: editing.isActive,
@@ -124,6 +129,7 @@ export default function AdminFormationsPage() {
           categoryId: editing.categoryId,
           description: editing.description || undefined,
           duration: editing.duration || undefined,
+          tjm: editing.tjm ?? undefined,
           price: editing.price ?? undefined,
           isCertifying: editing.isCertifying,
           ficheTechniqueUrl: editing.ficheTechniqueUrl ?? undefined,
@@ -290,14 +296,25 @@ export default function AdminFormationsPage() {
                 tokenStorageKey="admin_token"
               />
 
+              <div className="auth-field">
+                <label className="auth-label">Durée</label>
+                <input
+                  type="text" className="auth-input"
+                  value={editing.duration ?? ""}
+                  onChange={(e) => setEditing((v) => v ? { ...v, duration: e.target.value } : v)}
+                  placeholder="Ex : 3 jours, 21h"
+                />
+              </div>
+
               <div className="auth-row">
                 <div className="auth-field">
-                  <label className="auth-label">Durée</label>
+                  <label className="auth-label">TJM (DA)</label>
                   <input
-                    type="text" className="auth-input"
-                    value={editing.duration ?? ""}
-                    onChange={(e) => setEditing((v) => v ? { ...v, duration: e.target.value } : v)}
-                    placeholder="Ex : 3 jours, 21h"
+                    type="number" className="auth-input"
+                    value={editing.tjm ?? ""}
+                    onChange={(e) => setEditing((v) => v ? { ...v, tjm: e.target.value ? Number(e.target.value) : null } : v)}
+                    placeholder="Ex : 30000"
+                    min={0}
                   />
                 </div>
                 <div className="auth-field">
@@ -346,6 +363,7 @@ export default function AdminFormationsPage() {
               <th>Domaine</th>
               <th>Formateur(s)</th>
               <th>Durée</th>
+              <th>TJM</th>
               <th>Tarif</th>
               <th>Fiche</th>
               <th>Statut</th>
@@ -355,7 +373,7 @@ export default function AdminFormationsPage() {
           <tbody>
             {filtered.length === 0 && !loading && (
               <tr>
-                <td colSpan={8} className="admin-table__empty">Aucune formation trouvée</td>
+                <td colSpan={9} className="admin-table__empty">Aucune formation trouvée</td>
               </tr>
             )}
             {filtered.map((f) => (
@@ -374,6 +392,12 @@ export default function AdminFormationsPage() {
                 </td>
                 <td style={{ fontSize: 13 }}>
                   {f.duration ?? <span style={{ color: "var(--border)" }}>—</span>}
+                </td>
+                <td style={{ fontSize: 13 }}>
+                  {f.tjm != null
+                    ? `${f.tjm.toLocaleString("fr-DZ")} DA`
+                    : <span style={{ color: "var(--border)" }}>—</span>
+                  }
                 </td>
                 <td style={{ fontSize: 13 }}>
                   {f.price != null

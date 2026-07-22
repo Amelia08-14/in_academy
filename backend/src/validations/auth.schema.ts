@@ -16,6 +16,7 @@ export const registerSchema = z.object({
   lastName: z.string().min(2, "Nom requis").trim(),
   phone: z.string().optional(),
   jobTitle: z.string().optional(),
+  birthDate: z.string().optional(), // date d'anniversaire (ISO "YYYY-MM-DD"), tâche 2
 });
 
 export const companyRegisterSchema = z.object({

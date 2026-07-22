@@ -399,7 +399,11 @@ export const ModelName = {
   Certificate: 'Certificate',
   QuoteRequest: 'QuoteRequest',
   QuoteRequestItem: 'QuoteRequestItem',
-  ContactRequest: 'ContactRequest'
+  ContactRequest: 'ContactRequest',
+  Document: 'Document',
+  Partner: 'Partner',
+  TrainerApplication: 'TrainerApplication',
+  TrainerApplicationFile: 'TrainerApplicationFile'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest"
+    modelProps: "user" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest" | "document" | "partner" | "trainerApplication" | "trainerApplicationFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1475,6 +1479,270 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Document: {
+      payload: Prisma.$DocumentPayload<ExtArgs>
+      fields: Prisma.DocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.DocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        findMany: {
+          args: Prisma.DocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+        }
+        create: {
+          args: Prisma.DocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        createMany: {
+          args: Prisma.DocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.DocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        update: {
+          args: Prisma.DocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.DocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.DocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.DocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDocument>
+        }
+        groupBy: {
+          args: Prisma.DocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentCountAggregateOutputType> | number
+        }
+      }
+    }
+    Partner: {
+      payload: Prisma.$PartnerPayload<ExtArgs>
+      fields: Prisma.PartnerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PartnerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PartnerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload>
+        }
+        findFirst: {
+          args: Prisma.PartnerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PartnerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload>
+        }
+        findMany: {
+          args: Prisma.PartnerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload>[]
+        }
+        create: {
+          args: Prisma.PartnerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload>
+        }
+        createMany: {
+          args: Prisma.PartnerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.PartnerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload>
+        }
+        update: {
+          args: Prisma.PartnerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload>
+        }
+        deleteMany: {
+          args: Prisma.PartnerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PartnerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.PartnerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PartnerPayload>
+        }
+        aggregate: {
+          args: Prisma.PartnerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePartner>
+        }
+        groupBy: {
+          args: Prisma.PartnerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PartnerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PartnerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PartnerCountAggregateOutputType> | number
+        }
+      }
+    }
+    TrainerApplication: {
+      payload: Prisma.$TrainerApplicationPayload<ExtArgs>
+      fields: Prisma.TrainerApplicationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TrainerApplicationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TrainerApplicationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload>
+        }
+        findFirst: {
+          args: Prisma.TrainerApplicationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TrainerApplicationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload>
+        }
+        findMany: {
+          args: Prisma.TrainerApplicationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload>[]
+        }
+        create: {
+          args: Prisma.TrainerApplicationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload>
+        }
+        createMany: {
+          args: Prisma.TrainerApplicationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TrainerApplicationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload>
+        }
+        update: {
+          args: Prisma.TrainerApplicationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload>
+        }
+        deleteMany: {
+          args: Prisma.TrainerApplicationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TrainerApplicationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TrainerApplicationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationPayload>
+        }
+        aggregate: {
+          args: Prisma.TrainerApplicationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTrainerApplication>
+        }
+        groupBy: {
+          args: Prisma.TrainerApplicationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrainerApplicationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TrainerApplicationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrainerApplicationCountAggregateOutputType> | number
+        }
+      }
+    }
+    TrainerApplicationFile: {
+      payload: Prisma.$TrainerApplicationFilePayload<ExtArgs>
+      fields: Prisma.TrainerApplicationFileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TrainerApplicationFileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TrainerApplicationFileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload>
+        }
+        findFirst: {
+          args: Prisma.TrainerApplicationFileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TrainerApplicationFileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload>
+        }
+        findMany: {
+          args: Prisma.TrainerApplicationFileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload>[]
+        }
+        create: {
+          args: Prisma.TrainerApplicationFileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload>
+        }
+        createMany: {
+          args: Prisma.TrainerApplicationFileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TrainerApplicationFileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload>
+        }
+        update: {
+          args: Prisma.TrainerApplicationFileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload>
+        }
+        deleteMany: {
+          args: Prisma.TrainerApplicationFileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TrainerApplicationFileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TrainerApplicationFileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainerApplicationFilePayload>
+        }
+        aggregate: {
+          args: Prisma.TrainerApplicationFileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTrainerApplicationFile>
+        }
+        groupBy: {
+          args: Prisma.TrainerApplicationFileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrainerApplicationFileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TrainerApplicationFileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrainerApplicationFileCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1537,6 +1805,7 @@ export const LearnerProfileScalarFieldEnum = {
   jobTitle: 'jobTitle',
   companyName: 'companyName',
   wilaya: 'wilaya',
+  birthDate: 'birthDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1624,6 +1893,7 @@ export const FormationScalarFieldEnum = {
   title: 'title',
   description: 'description',
   duration: 'duration',
+  tjm: 'tjm',
   price: 'price',
   isCertifying: 'isCertifying',
   isActive: 'isActive',
@@ -1750,6 +2020,61 @@ export const ContactRequestScalarFieldEnum = {
 } as const
 
 export type ContactRequestScalarFieldEnum = (typeof ContactRequestScalarFieldEnum)[keyof typeof ContactRequestScalarFieldEnum]
+
+
+export const DocumentScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName',
+  userId: 'userId',
+  enrollmentId: 'enrollmentId',
+  createdAt: 'createdAt'
+} as const
+
+export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const PartnerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  discountRate: 'discountRate',
+  contact: 'contact',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
+
+
+export const TrainerApplicationScalarFieldEnum = {
+  id: 'id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  speciality: 'speciality',
+  message: 'message',
+  cvUrl: 'cvUrl',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TrainerApplicationScalarFieldEnum = (typeof TrainerApplicationScalarFieldEnum)[keyof typeof TrainerApplicationScalarFieldEnum]
+
+
+export const TrainerApplicationFileScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName',
+  createdAt: 'createdAt'
+} as const
+
+export type TrainerApplicationFileScalarFieldEnum = (typeof TrainerApplicationFileScalarFieldEnum)[keyof typeof TrainerApplicationFileScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1958,6 +2283,52 @@ export const ContactRequestOrderByRelevanceFieldEnum = {
 export type ContactRequestOrderByRelevanceFieldEnum = (typeof ContactRequestOrderByRelevanceFieldEnum)[keyof typeof ContactRequestOrderByRelevanceFieldEnum]
 
 
+export const DocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName',
+  userId: 'userId',
+  enrollmentId: 'enrollmentId'
+} as const
+
+export type DocumentOrderByRelevanceFieldEnum = (typeof DocumentOrderByRelevanceFieldEnum)[keyof typeof DocumentOrderByRelevanceFieldEnum]
+
+
+export const PartnerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  discountRate: 'discountRate',
+  contact: 'contact'
+} as const
+
+export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
+
+
+export const TrainerApplicationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  speciality: 'speciality',
+  message: 'message',
+  cvUrl: 'cvUrl'
+} as const
+
+export type TrainerApplicationOrderByRelevanceFieldEnum = (typeof TrainerApplicationOrderByRelevanceFieldEnum)[keyof typeof TrainerApplicationOrderByRelevanceFieldEnum]
+
+
+export const TrainerApplicationFileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  fileUrl: 'fileUrl',
+  originalName: 'originalName'
+} as const
+
+export type TrainerApplicationFileOrderByRelevanceFieldEnum = (typeof TrainerApplicationFileOrderByRelevanceFieldEnum)[keyof typeof TrainerApplicationFileOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -2031,6 +2402,20 @@ export type EnumQuoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'ContactStatut'
  */
 export type EnumContactStatutFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactStatut'>
+    
+
+
+/**
+ * Reference to a field of type 'DocumentType'
+ */
+export type EnumDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentType'>
+    
+
+
+/**
+ * Reference to a field of type 'TrainerApplicationStatus'
+ */
+export type EnumTrainerApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TrainerApplicationStatus'>
     
 
 
@@ -2166,6 +2551,10 @@ export type GlobalOmitConfig = {
   quoteRequest?: Prisma.QuoteRequestOmit
   quoteRequestItem?: Prisma.QuoteRequestItemOmit
   contactRequest?: Prisma.ContactRequestOmit
+  document?: Prisma.DocumentOmit
+  partner?: Prisma.PartnerOmit
+  trainerApplication?: Prisma.TrainerApplicationOmit
+  trainerApplicationFile?: Prisma.TrainerApplicationFileOmit
 }
 
 /* Types for Logging */

@@ -33,6 +33,7 @@ export type LearnerProfileMinAggregateOutputType = {
   jobTitle: string | null
   companyName: string | null
   wilaya: string | null
+  birthDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +47,7 @@ export type LearnerProfileMaxAggregateOutputType = {
   jobTitle: string | null
   companyName: string | null
   wilaya: string | null
+  birthDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +61,7 @@ export type LearnerProfileCountAggregateOutputType = {
   jobTitle: number
   companyName: number
   wilaya: number
+  birthDate: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,6 +77,7 @@ export type LearnerProfileMinAggregateInputType = {
   jobTitle?: true
   companyName?: true
   wilaya?: true
+  birthDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +91,7 @@ export type LearnerProfileMaxAggregateInputType = {
   jobTitle?: true
   companyName?: true
   wilaya?: true
+  birthDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type LearnerProfileCountAggregateInputType = {
   jobTitle?: true
   companyName?: true
   wilaya?: true
+  birthDate?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -186,6 +192,7 @@ export type LearnerProfileGroupByOutputType = {
   jobTitle: string | null
   companyName: string | null
   wilaya: string | null
+  birthDate: Date | null
   createdAt: Date
   updatedAt: Date
   _count: LearnerProfileCountAggregateOutputType | null
@@ -220,6 +227,7 @@ export type LearnerProfileWhereInput = {
   jobTitle?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
   companyName?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
   wilaya?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"LearnerProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -234,6 +242,7 @@ export type LearnerProfileOrderByWithRelationInput = {
   jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   companyName?: Prisma.SortOrderInput | Prisma.SortOrder
   wilaya?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -252,6 +261,7 @@ export type LearnerProfileWhereUniqueInput = Prisma.AtLeast<{
   jobTitle?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
   companyName?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
   wilaya?: Prisma.StringNullableFilter<"LearnerProfile"> | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"LearnerProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LearnerProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -266,6 +276,7 @@ export type LearnerProfileOrderByWithAggregationInput = {
   jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   companyName?: Prisma.SortOrderInput | Prisma.SortOrder
   wilaya?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LearnerProfileCountOrderByAggregateInput
@@ -285,6 +296,7 @@ export type LearnerProfileScalarWhereWithAggregatesInput = {
   jobTitle?: Prisma.StringNullableWithAggregatesFilter<"LearnerProfile"> | string | null
   companyName?: Prisma.StringNullableWithAggregatesFilter<"LearnerProfile"> | string | null
   wilaya?: Prisma.StringNullableWithAggregatesFilter<"LearnerProfile"> | string | null
+  birthDate?: Prisma.DateTimeNullableWithAggregatesFilter<"LearnerProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LearnerProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LearnerProfile"> | Date | string
 }
@@ -297,6 +309,7 @@ export type LearnerProfileCreateInput = {
   jobTitle?: string | null
   companyName?: string | null
   wilaya?: string | null
+  birthDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutLearnerProfileInput
@@ -311,6 +324,7 @@ export type LearnerProfileUncheckedCreateInput = {
   jobTitle?: string | null
   companyName?: string | null
   wilaya?: string | null
+  birthDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -323,6 +337,7 @@ export type LearnerProfileUpdateInput = {
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wilaya?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutLearnerProfileNestedInput
@@ -337,6 +352,7 @@ export type LearnerProfileUncheckedUpdateInput = {
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wilaya?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -350,6 +366,7 @@ export type LearnerProfileCreateManyInput = {
   jobTitle?: string | null
   companyName?: string | null
   wilaya?: string | null
+  birthDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -362,6 +379,7 @@ export type LearnerProfileUpdateManyMutationInput = {
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wilaya?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -375,6 +393,7 @@ export type LearnerProfileUncheckedUpdateManyInput = {
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wilaya?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,6 +418,7 @@ export type LearnerProfileCountOrderByAggregateInput = {
   jobTitle?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   wilaya?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -412,6 +432,7 @@ export type LearnerProfileMaxOrderByAggregateInput = {
   jobTitle?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   wilaya?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -425,6 +446,7 @@ export type LearnerProfileMinOrderByAggregateInput = {
   jobTitle?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   wilaya?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -465,6 +487,10 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type LearnerProfileCreateWithoutUserInput = {
   id?: string
   firstName: string
@@ -473,6 +499,7 @@ export type LearnerProfileCreateWithoutUserInput = {
   jobTitle?: string | null
   companyName?: string | null
   wilaya?: string | null
+  birthDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -485,6 +512,7 @@ export type LearnerProfileUncheckedCreateWithoutUserInput = {
   jobTitle?: string | null
   companyName?: string | null
   wilaya?: string | null
+  birthDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -513,6 +541,7 @@ export type LearnerProfileUpdateWithoutUserInput = {
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wilaya?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -525,6 +554,7 @@ export type LearnerProfileUncheckedUpdateWithoutUserInput = {
   jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wilaya?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -540,6 +570,7 @@ export type LearnerProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
   jobTitle?: boolean
   companyName?: boolean
   wilaya?: boolean
+  birthDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -556,11 +587,12 @@ export type LearnerProfileSelectScalar = {
   jobTitle?: boolean
   companyName?: boolean
   wilaya?: boolean
+  birthDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LearnerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "phone" | "jobTitle" | "companyName" | "wilaya" | "createdAt" | "updatedAt", ExtArgs["result"]["learnerProfile"]>
+export type LearnerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "phone" | "jobTitle" | "companyName" | "wilaya" | "birthDate" | "createdAt" | "updatedAt", ExtArgs["result"]["learnerProfile"]>
 export type LearnerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -579,6 +611,7 @@ export type $LearnerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inte
     jobTitle: string | null
     companyName: string | null
     wilaya: string | null
+    birthDate: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["learnerProfile"]>
@@ -959,6 +992,7 @@ export interface LearnerProfileFieldRefs {
   readonly jobTitle: Prisma.FieldRef<"LearnerProfile", 'String'>
   readonly companyName: Prisma.FieldRef<"LearnerProfile", 'String'>
   readonly wilaya: Prisma.FieldRef<"LearnerProfile", 'String'>
+  readonly birthDate: Prisma.FieldRef<"LearnerProfile", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"LearnerProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LearnerProfile", 'DateTime'>
 }

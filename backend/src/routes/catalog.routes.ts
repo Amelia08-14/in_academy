@@ -7,6 +7,21 @@ const router = Router();
 type SessionStatusValue = "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED";
 const OPEN_SESSION_STATUS: SessionStatusValue[] = ["SCHEDULED", "ONGOING"];
 
+// GET /api/partners — public, avantages partenaires actifs (espace client, tâche 3)
+router.get("/partners", async (_req: AuthRequest, res: Response) => {
+  try {
+    const partners = await prisma.partner.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, name: true, description: true, discountRate: true, contact: true },
+    });
+    res.json(partners);
+  } catch (err) {
+    console.error("[partners]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // GET /api/categories — public, catalogue complet (branches + formations)
 router.get("/categories", async (_req: AuthRequest, res: Response) => {
   try {

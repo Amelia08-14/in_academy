@@ -40,7 +40,7 @@ router.post("/register", async (req: Request, res: Response) => {
     return;
   }
 
-  const { email, password, firstName, lastName, phone, jobTitle } = parsed.data;
+  const { email, password, firstName, lastName, phone, jobTitle, birthDate } = parsed.data;
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
@@ -56,7 +56,13 @@ router.post("/register", async (req: Request, res: Response) => {
       hashedPassword,
       role: "LEARNER",
       learnerProfile: {
-        create: { firstName, lastName, phone, jobTitle },
+        create: {
+          firstName,
+          lastName,
+          phone,
+          jobTitle,
+          birthDate: birthDate ? new Date(birthDate) : null,
+        },
       },
     },
   });
