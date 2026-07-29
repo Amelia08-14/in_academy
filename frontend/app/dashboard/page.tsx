@@ -8,7 +8,7 @@ import Footer from "@/app/components/Footer";
 import DocumentUploader from "@/app/components/DocumentUploader";
 import { useAuth } from "@/app/hooks/useAuth";
 
-interface LearnerProfile { firstName: string; lastName: string; phone: string | null; jobTitle: string | null }
+interface LearnerProfile { firstName: string; lastName: string; phone: string | null; jobTitle: string | null; birthDate: string | null; wilaya: string | null }
 interface Formation { title: string }
 interface Session { formation: Formation }
 interface Enrollment {
@@ -148,8 +148,8 @@ export default function DashboardPage() {
             <Link href="/branches" className="dashboard-nav__item">
               <span>✦</span> Catalogue
             </Link>
-            <Link href="/inscription" className="dashboard-nav__item">
-              <span>+</span> Nouvelle inscription
+            <Link href="/contact" className="dashboard-nav__item">
+              <span>+</span> Demander une formation
             </Link>
           </nav>
 
@@ -181,6 +181,26 @@ export default function DashboardPage() {
               <span className="dashboard-kpi__lbl">Historique</span>
             </div>
           </div>
+
+          {/* Mon profil (tâche 2 — vérification des infos, dont l'anniversaire) */}
+          <section className="dashboard-section">
+            <h2 className="dashboard-section__title">Mon profil</h2>
+            <div className="dashboard-profile-grid">
+              <div className="dashboard-profile-item"><span>Nom complet</span><strong>{fullName}</strong></div>
+              <div className="dashboard-profile-item"><span>Email</span><strong>{me?.email}</strong></div>
+              <div className="dashboard-profile-item"><span>Téléphone</span><strong>{me?.learnerProfile?.phone || "—"}</strong></div>
+              <div className="dashboard-profile-item"><span>Fonction</span><strong>{me?.learnerProfile?.jobTitle || "—"}</strong></div>
+              <div className="dashboard-profile-item">
+                <span>Date d&apos;anniversaire</span>
+                <strong>
+                  {me?.learnerProfile?.birthDate
+                    ? new Date(me.learnerProfile.birthDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })
+                    : "Non renseignée"}
+                </strong>
+              </div>
+              <div className="dashboard-profile-item"><span>Membre depuis</span><strong>{me ? new Date(me.createdAt).toLocaleDateString("fr-FR") : "—"}</strong></div>
+            </div>
+          </section>
 
           {/* Formations actives */}
           <section className="dashboard-section">

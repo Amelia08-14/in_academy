@@ -5849,6 +5849,12 @@ button {
 
 .collab-fiches button:hover { color: #c0392b; }
 
+.company-quote-card__respond {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
+}
+
 /* Panier de devis B2B (tâche 7) */
 .quote-cart__list {
   display: flex;
@@ -6014,6 +6020,70 @@ button {
   font-size: 12px;
   color: var(--text-muted);
   margin: 0;
+}
+
+/* Pages légales */
+.legal-page {
+  padding: 130px 0 80px;
+}
+.legal-page__title {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 28px;
+}
+.legal-page h2 {
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 28px 0 10px;
+}
+.legal-page p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-body);
+  margin-bottom: 12px;
+}
+.legal-page__note {
+  margin-top: 28px;
+  padding: 16px 18px;
+  background: var(--cream);
+  border-left: 3px solid var(--gold);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Mon profil (tâche 2) */
+.dashboard-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.dashboard-profile-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+}
+
+.dashboard-profile-item span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.dashboard-profile-item strong {
+  font-size: 14px;
+  color: var(--navy);
+  font-weight: 600;
 }
 
 /* Documents utilisateur (tâches 4 & 5) */

@@ -102,6 +102,16 @@ export default function AdminFormateursPage() {
     load();
   };
 
+  const remove = async (t: Trainer) => {
+    if (!window.confirm(`Supprimer définitivement le formateur ${t.displayName} ?`)) return;
+    try {
+      await api.delete(`/trainers/${t.id}`);
+      load();
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Suppression impossible (formateur lié à des formations).");
+    }
+  };
+
   const set = (field: keyof typeof EMPTY_FORM) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((v) => ({ ...v, [field]: e.target.value }));
@@ -302,6 +312,7 @@ export default function AdminFormateursPage() {
                     >
                       {t.isActive ? "Désactiver" : "Activer"}
                     </button>
+                    <button className="admin-btn admin-btn--cancel" onClick={() => remove(t)}>Supprimer</button>
                   </div>
                 </td>
               </tr>

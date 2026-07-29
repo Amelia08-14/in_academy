@@ -145,6 +145,16 @@ export default function AdminFormationsPage() {
     }
   };
 
+  const remove = async (f: Formation) => {
+    if (!window.confirm(`Supprimer définitivement la formation « ${f.title} » ?`)) return;
+    try {
+      await api.delete(`/admin/formations/${f.id}`);
+      load();
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Suppression impossible.");
+    }
+  };
+
   const handleCreateBranche = async (e: React.FormEvent) => {
     e.preventDefault();
     setSavingBranche(true);
@@ -430,9 +440,12 @@ export default function AdminFormationsPage() {
                     {f.isActive ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td>
+                <td style={{ display: "flex", gap: 8 }}>
                   <button className="admin-btn" onClick={() => openEdit(f)}>
                     Modifier
+                  </button>
+                  <button className="admin-btn admin-btn--cancel" onClick={() => remove(f)}>
+                    Supprimer
                   </button>
                 </td>
               </tr>

@@ -194,7 +194,7 @@ function EspaceEntrepriseContent() {
             >
               <span>◉</span> Formations programmées
             </button>
-            <Link href="/inscription-entreprise" className="dashboard-nav__item">
+            <Link href="/branches" className="dashboard-nav__item">
               <span>+</span> Nouvelle demande
             </Link>
           </nav>
@@ -233,7 +233,7 @@ function EspaceEntrepriseContent() {
               {quotes.length === 0 ? (
                 <div className="dashboard-empty">
                   <p>Aucun devis pour le moment.</p>
-                  <Link href="/inscription-entreprise" className="btn btn--primary" style={{ fontSize: 13, marginTop: 16 }}>
+                  <Link href="/branches" className="btn btn--primary" style={{ fontSize: 13, marginTop: 16 }}>
                     Faire une demande
                   </Link>
                 </div>
@@ -273,21 +273,33 @@ function EspaceEntrepriseContent() {
                           </ul>
                         )}
                         {q.status === "SENT" && (
-                          <div className="admin-actions" style={{ marginTop: 12 }}>
-                            <button
-                              className="admin-btn admin-btn--confirm"
-                              disabled={respondingId === q.id}
-                              onClick={() => respondToQuote(q.id, true)}
-                            >
-                              ✓ Accepter le devis
-                            </button>
-                            <button
-                              className="admin-btn admin-btn--cancel"
-                              disabled={respondingId === q.id}
-                              onClick={() => respondToQuote(q.id, false)}
-                            >
-                              ✕ Refuser
-                            </button>
+                          <div className="company-quote-card__respond">
+                            <p className="company-quote-card__hint">
+                              📎 Déposez d&apos;abord votre reçu de paiement, puis acceptez le devis.
+                            </p>
+                            <div style={{ maxWidth: 380, marginBottom: 12 }}>
+                              <DocumentUploader
+                                type="RECU"
+                                label="Reçu de paiement"
+                                hint="Image ou PDF — requis pour accepter le devis."
+                              />
+                            </div>
+                            <div className="admin-actions">
+                              <button
+                                className="admin-btn admin-btn--confirm"
+                                disabled={respondingId === q.id}
+                                onClick={() => respondToQuote(q.id, true)}
+                              >
+                                ✓ Accepter le devis
+                              </button>
+                              <button
+                                className="admin-btn admin-btn--cancel"
+                                disabled={respondingId === q.id}
+                                onClick={() => respondToQuote(q.id, false)}
+                              >
+                                ✕ Refuser
+                              </button>
+                            </div>
                           </div>
                         )}
                         {q.respondedAt && (

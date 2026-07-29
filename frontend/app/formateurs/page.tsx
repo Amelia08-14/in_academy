@@ -153,7 +153,7 @@ export default function FormateursPage() {
               </p>
             </div>
             <div className="cta-banner__actions">
-              <Link href="/inscription" className="btn btn--gold">S&apos;inscrire</Link>
+              <Link href="/devenir-collaborateur" className="btn btn--gold">Devenir collaborateur</Link>
               <Link href="/branches" className="btn btn--outline">Nos formations</Link>
             </div>
           </div>

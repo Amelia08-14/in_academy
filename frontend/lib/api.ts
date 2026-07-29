@@ -18,6 +18,14 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
+    // Session invalide / compte désactivé : on nettoie la session pour éviter
+    // qu'un compte désactivé garde une session "active" côté client.
+    if (res.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("email");
+      window.dispatchEvent(new Event("authchange"));
+    }
     throw new Error(body?.error ?? `Erreur ${res.status}`);
   }
 

@@ -24,6 +24,12 @@ export default function DevenirCollaborateurPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validation front-end : les champs obligatoires ne doivent pas être vides.
+    if (values.firstName.trim().length < 2) { setError("Le prénom est requis (2 caractères min)."); return; }
+    if (values.lastName.trim().length < 2) { setError("Le nom est requis (2 caractères min)."); return; }
+    if (!/\S+@\S+\.\S+/.test(values.email.trim())) { setError("Une adresse email valide est requise."); return; }
+
     setPending(true);
     setError("");
     try {
@@ -31,13 +37,23 @@ export default function DevenirCollaborateurPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...values,
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          email: values.email.trim(),
+          phone: values.phone.trim() || undefined,
+          speciality: values.speciality.trim() || undefined,
+          message: values.message.trim() || undefined,
           cvUrl: cvUrl ?? undefined,
           fileUrls: fiches.map((f) => f.url),
         }),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error ?? "Erreur lors de l'envoi."); return; }
+      if (!res.ok) {
+        // Le backend renvoie soit { error }, soit { errors: { champ: [...] } }.
+        const firstFieldError = data.errors ? Object.values(data.errors).flat()[0] : null;
+        setError(data.error ?? (firstFieldError as string) ?? "Erreur lors de l'envoi.");
+        return;
+      }
       setSuccess(true);
     } catch {
       setError("Impossible de joindre le serveur.");

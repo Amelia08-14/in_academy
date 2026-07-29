@@ -107,9 +107,9 @@ export default function Footer() {
         <div className="container footer-dark__bottom-inner">
           <p>© 2026 IN Academy — La Maison IN Groupe. Tous droits réservés.</p>
           <div className="footer-dark__legal-links">
-            <Link href="#mentions">Mentions légales</Link>
-            <Link href="#confidentialite">Politique de confidentialité</Link>
-            <Link href="/connexion" style={{ opacity: 0.4, fontSize: "11px" }}>Espace admin</Link>
+            <Link href="/mentions-legales">Mentions légales</Link>
+            <Link href="/confidentialite">Politique de confidentialité</Link>
+            <Link href="/admin" style={{ opacity: 0.4, fontSize: "11px" }}>Espace admin</Link>
           </div>
         </div>
       </div>

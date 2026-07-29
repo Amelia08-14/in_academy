@@ -84,6 +84,19 @@ export default function AdminUtilisateursPage() {
     load();
   };
 
+  const removeUser = async (u: User) => {
+    const name = u.learnerProfile
+      ? `${u.learnerProfile.firstName} ${u.learnerProfile.lastName}`
+      : u.companyAdmin?.company.raisonSociale ?? u.email;
+    if (!window.confirm(`Supprimer définitivement « ${name} » et toutes ses données ? Action irréversible.`)) return;
+    try {
+      await api.delete(`/admin/users/${u.id}`);
+      load();
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Suppression impossible.");
+    }
+  };
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -136,17 +149,22 @@ export default function AdminUtilisateursPage() {
           {u.isActive ? "Actif" : "Inactif"}
         </span>
       </td>
-      <td style={{ display: "flex", gap: 8 }}>
+      <td style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <button className="admin-btn" onClick={() => setDetailUser(u)}>
           Détails
         </button>
         {!ADMIN_ROLES.includes(u.role) && (
-          <button
-            className={`admin-btn ${u.isActive ? "admin-btn--cancel" : "admin-btn--confirm"}`}
-            onClick={() => toggleActive(u.id)}
-          >
-            {u.isActive ? "Désactiver" : "Activer"}
-          </button>
+          <>
+            <button
+              className={`admin-btn ${u.isActive ? "admin-btn--cancel" : "admin-btn--confirm"}`}
+              onClick={() => toggleActive(u.id)}
+            >
+              {u.isActive ? "Désactiver" : "Activer"}
+            </button>
+            <button className="admin-btn admin-btn--cancel" onClick={() => removeUser(u)}>
+              Supprimer
+            </button>
+          </>
         )}
       </td>
     </>

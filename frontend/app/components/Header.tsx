@@ -290,6 +290,7 @@ export default function Header() {
                       <Link
                         key={item.href}
                         href={item.href}
+                        onClick={() => setMobileOpen(false)}
                         className={`flex items-center gap-3 font-body text-base font-bold transition-colors ${
                           active ? "text-gold-dark" : "text-navy hover:text-gold-dark"
                         }`}
@@ -306,6 +307,7 @@ export default function Header() {
                     <Link
                       key={item.href}
                       href={item.href}
+                      onClick={() => setMobileOpen(false)}
                       className="font-body text-base font-bold text-navy hover:text-gold-dark"
                     >
                       {item.label}
@@ -333,10 +335,10 @@ export default function Header() {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-4">
-                    <Link href="/inscription" className="btn btn--primary">
+                    <Link href="/inscription" onClick={() => setMobileOpen(false)} className="btn btn--primary">
                       S&apos;inscrire
                     </Link>
-                    <Link href="/connexion" className="btn btn--outline">
+                    <Link href="/connexion" onClick={() => setMobileOpen(false)} className="btn btn--outline">
                       Se connecter
                     </Link>
                   </div>

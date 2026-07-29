@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, type PanInfo } from "framer-motion";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { useAuth } from "./hooks/useAuth";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
 
@@ -205,13 +206,16 @@ function BranchesFan({ branches }: { branches: BranchItem[] }) {
 }
 
 function HeroSlider() {
+  const { isAuthenticated } = useAuth();
   const [slide, setSlide] = useState(0);
-  const total = 2;
+  // Slide 2 = choix d'inscription (Particulier / Entreprise) : inutile si connecté.
+  const total = isAuthenticated ? 1 : 2;
 
   useEffect(() => {
+    if (total === 1) { setSlide(0); return; }
     const t = setInterval(() => setSlide((s) => (s + 1) % total), 8000);
     return () => clearInterval(t);
-  }, []);
+  }, [total]);
 
   return (
     <section className="hero-slider" id="accueil">
@@ -357,6 +361,7 @@ function HeroSlider() {
 }
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -536,9 +541,11 @@ export default function Home() {
               </p>
             </div>
             <div className="cta-banner__actions">
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Link href="/inscription" className="btn btn--gold">S&apos;inscrire maintenant</Link>
-              </motion.div>
+              {!isAuthenticated && (
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                  <Link href="/inscription" className="btn btn--gold">S&apos;inscrire maintenant</Link>
+                </motion.div>
+              )}
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Link href="/branches" className="btn btn--outline">Voir les formations</Link>
               </motion.div>

@@ -30,6 +30,7 @@ export default function AdminCandidaturesPage() {
   const [apps, setApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = () => {
     setLoading(true);
@@ -38,8 +39,14 @@ export default function AdminCandidaturesPage() {
   useEffect(load, []);
 
   const setStatus = async (id: string, status: Application["status"]) => {
-    await api.patch(`/admin/trainer-applications/${id}`, { status });
-    load();
+    if (busyId) return;
+    setBusyId(id);
+    try {
+      await api.patch(`/admin/trainer-applications/${id}`, { status });
+      load();
+    } finally {
+      setBusyId(null);
+    }
   };
 
   return (
@@ -75,8 +82,20 @@ export default function AdminCandidaturesPage() {
                       <button className="admin-btn" onClick={() => setExpanded(expanded === a.id ? null : a.id)}>
                         {expanded === a.id ? "Masquer" : "Détails"}
                       </button>
-                      <button className="admin-btn admin-btn--confirm" onClick={() => setStatus(a.id, "ACCEPTED")}>Accepter</button>
-                      <button className="admin-btn admin-btn--cancel" onClick={() => setStatus(a.id, "REJECTED")}>Refuser</button>
+                      <button
+                        className="admin-btn admin-btn--confirm"
+                        disabled={busyId === a.id || a.status === "ACCEPTED"}
+                        onClick={() => setStatus(a.id, "ACCEPTED")}
+                      >
+                        Accepter
+                      </button>
+                      <button
+                        className="admin-btn admin-btn--cancel"
+                        disabled={busyId === a.id || a.status === "REJECTED"}
+                        onClick={() => setStatus(a.id, "REJECTED")}
+                      >
+                        Refuser
+                      </button>
                     </div>
                   </td>
                 </tr>
