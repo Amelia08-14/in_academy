@@ -1880,6 +1880,8 @@ export const CategoryScalarFieldEnum = {
   slug: 'slug',
   name: 'name',
   description: 'description',
+  isMetier: 'isMetier',
+  coverImageUrl: 'coverImageUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2173,7 +2175,8 @@ export const CategoryOrderByRelevanceFieldEnum = {
   id: 'id',
   slug: 'slug',
   name: 'name',
-  description: 'description'
+  description: 'description',
+  coverImageUrl: 'coverImageUrl'
 } as const
 
 export type CategoryOrderByRelevanceFieldEnum = (typeof CategoryOrderByRelevanceFieldEnum)[keyof typeof CategoryOrderByRelevanceFieldEnum]

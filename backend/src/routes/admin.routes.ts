@@ -175,13 +175,13 @@ router.get("/categories", async (_req: AuthRequest, res: Response) => {
 // POST /api/admin/categories — créer une branche
 router.post("/categories", async (req: AuthRequest, res: Response) => {
   try {
-    const { name, description } = req.body as { name: string; description?: string };
+    const { name, description, isMetier } = req.body as { name: string; description?: string; isMetier?: boolean };
     if (!name || name.trim().length < 2) {
       res.status(400).json({ error: "Nom de la branche requis" });
       return;
     }
     const category = await prisma.category.create({
-      data: { name: name.trim(), slug: slugify(name), description: description ?? null },
+      data: { name: name.trim(), slug: slugify(name), description: description ?? null, isMetier: isMetier === true },
     });
     res.status(201).json(category);
   } catch (err) {

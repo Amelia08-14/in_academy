@@ -176,6 +176,10 @@ model Category {
   slug        String   @unique
   name        String
   description String?  @db.Text
+  // Une catégorie "métier" (coiffure, esthétique, barber, onglerie…) : ses sessions
+  // apparaissent dans "Formations Métiers", ouvertes aux particuliers ET aux entreprises.
+  isMetier    Boolean  @default(false)
+  coverImageUrl String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
