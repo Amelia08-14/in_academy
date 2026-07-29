@@ -2,7 +2,7 @@ import { Router, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
-import { sendEnrollmentConfirmedEmail } from "@/lib/mail";
+import { sendEnrollmentConfirmedEmail, sendQuoteSentEmail } from "@/lib/mail";
 import { partnerSchema } from "@/validations/content.schema";
 
 const router = Router();
@@ -135,6 +135,29 @@ router.patch("/users/:id/toggle-active", async (req: AuthRequest, res: Response)
   }
 });
 
+// DELETE /api/admin/users/:id — supprime un utilisateur (cascade profils/inscriptions)
+router.delete("/users/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    const target = await prisma.user.findUnique({ where: { id } });
+    if (!target) { res.status(404).json({ error: "Utilisateur introuvable" }); return; }
+    // On protège les comptes administration et l'auto-suppression.
+    if (["SUPER_ADMIN", "ADMIN", "MANAGER"].includes(target.role)) {
+      res.status(403).json({ error: "Impossible de supprimer un compte administration ici." });
+      return;
+    }
+    if (target.id === req.user!.userId) {
+      res.status(403).json({ error: "Vous ne pouvez pas supprimer votre propre compte." });
+      return;
+    }
+    await prisma.user.delete({ where: { id } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/users delete]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // GET /api/admin/categories — branches (avec compteur de formations)
 router.get("/categories", async (_req: AuthRequest, res: Response) => {
   try {
@@ -252,6 +275,30 @@ router.patch("/formations/:id", async (req: AuthRequest, res: Response) => {
     res.json(formation);
   } catch (err) {
     console.error("[admin/formations patch]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/formations/:id — supprime une formation si elle n'est pas référencée
+router.delete("/formations/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    const [sessions, enrollments, quoteItems] = await Promise.all([
+      prisma.trainingSession.count({ where: { formationId: id } }),
+      prisma.enrollment.count({ where: { formationId: id } }),
+      prisma.quoteRequestItem.count({ where: { formationId: id } }),
+    ]);
+    if (sessions + enrollments + quoteItems > 0) {
+      res.status(409).json({
+        error: "Formation utilisée (sessions, inscriptions ou devis). Désactivez-la plutôt que de la supprimer.",
+      });
+      return;
+    }
+    await prisma.formationTrainer.deleteMany({ where: { formationId: id } });
+    await prisma.formation.delete({ where: { id } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/formations delete]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
@@ -620,7 +667,24 @@ router.patch("/quotes/:id/status", async (req: AuthRequest, res: Response) => {
     const quote = await prisma.quoteRequest.update({
       where: { id: (req.params["id"] as string) },
       data: { status, respondedAt: new Date() },
+      include: {
+        company: { include: { profiles: { include: { user: { select: { email: true } } } } } },
+        items: { include: { formation: { select: { title: true } } } },
+      },
     });
+
+    // Email au client entreprise quand le devis lui est envoyé (tâche 7).
+    if (status === "SENT") {
+      const to = quote.company.profiles[0]?.user.email;
+      if (to) {
+        void sendQuoteSentEmail({
+          to,
+          company: quote.company.raisonSociale,
+          formations: quote.items.map((i) => i.formation.title),
+        }).catch((err) => console.error("[mail quote sent]", err));
+      }
+    }
+
     res.json(quote);
   } catch (err) {
     console.error("[admin/quotes status]", err);

@@ -105,6 +105,19 @@ router.patch("/quotes/:id/respond", authenticate, async (req: AuthRequest, res: 
       return;
     }
 
+    // Pour accepter un devis, un reçu de paiement doit avoir été déposé (tâche 7).
+    if (accept) {
+      const receiptCount = await prisma.document.count({
+        where: { userId: req.user!.userId, type: "RECU" },
+      });
+      if (receiptCount === 0) {
+        res.status(409).json({
+          error: "Veuillez d'abord déposer votre reçu de paiement avant d'accepter le devis.",
+        });
+        return;
+      }
+    }
+
     const updated = await prisma.quoteRequest.update({
       where: { id: quoteId },
       data: { status: accept ? "ACCEPTED" : "REJECTED", respondedAt: new Date() },

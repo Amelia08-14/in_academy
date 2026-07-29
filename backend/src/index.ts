@@ -31,8 +31,13 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// ─── Fichiers statiques (CV, fiches techniques) ──────────────────────────────
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+// ─── Fichiers statiques (CV, fiches techniques, reçus, dossiers) ─────────────
+// Servis à la fois sur /uploads et /api/files : en prod Nginx route /api vers le
+// backend, donc les liens front en /api/files/... doivent être servis ici aussi
+// (sinon → 404 "Route introuvable"). En dev, le proxy Next gère /api/files.
+const uploadsDir = path.join(process.cwd(), "uploads");
+app.use("/uploads", express.static(uploadsDir));
+app.use("/api/files", express.static(uploadsDir));
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);

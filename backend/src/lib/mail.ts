@@ -105,6 +105,27 @@ export async function sendEnrollmentConfirmedEmail(data: EnrollmentMailData) {
   );
 }
 
+// Email au client entreprise quand l'admin lui envoie un devis (tâche 7).
+export async function sendQuoteSentEmail(data: { to: string; company: string; formations: string[] }) {
+  const subject = "Votre devis IN ACADEMY est disponible";
+  const list = data.formations.map((f) => `<li>${escapeHtml(f)}</li>`).join("");
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f2340;max-width:620px;margin:0 auto;padding:24px">
+      <h1 style="font-size:20px;margin:0 0 16px;color:#0b2545">Votre devis est prêt</h1>
+      <p>Bonjour ${escapeHtml(data.company)},</p>
+      <p>Votre devis pour les formations suivantes a été préparé par notre équipe :</p>
+      <ul>${list}</ul>
+      <p>Connectez-vous à votre espace entreprise pour le consulter, l'accepter ou le refuser (après dépôt du reçu de paiement).</p>
+      <p style="margin-top:20px">Équipe IN ACADEMY</p>
+    </div>`;
+  await sendMail(
+    data.to,
+    subject,
+    html,
+    `Bonjour ${data.company}, votre devis IN ACADEMY est disponible dans votre espace entreprise. Formations : ${data.formations.join(", ")}.`
+  );
+}
+
 // Notification générique à l'administration (dépôt de reçu, nouvelle candidature, etc.)
 const adminEmail = process.env.ADMIN_EMAIL ?? smtpUser;
 
