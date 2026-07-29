@@ -230,39 +230,46 @@ function HeroSlider() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="hero-slide__text">
-              <span className="hero-slide__eyebrow">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                Agréé par l&apos;état
-              </span>
-
               <h1 className="hero-slide__title">
-                Là où l&apos;expertise
-                <em>construit l&apos;excellence</em>
+                Là où on croit <span className="hero-slide__title-accent">au</span> potentiel de chacun
               </h1>
 
               <p className="hero-slide__subtitle">
                 Centre de formation professionnelle certifiante dédié à l&apos;excellence.
-                Nous formons les talents de demain à travers des programmes
+                Nous formons les leaders de demain à travers des programmes
                 rigoureux et adaptés aux exigences du marché.
               </p>
 
               <div className="hero-slide__actions">
-                <Link href="/branches" className="btn btn--primary">Découvrir les formations</Link>
+                <Link href="/branches" className="btn btn--primary">
+                  Découvrir les formations
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </Link>
                 <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
               </div>
             </div>
 
             <div className="hero-slide__media">
-              <div className="hero-slide__blob" aria-hidden="true" />
-              <div className="hero-slide__img-frame frame-marks">
-                <Image src="/banner2.png" alt="Formation IN Academy" fill style={{ objectFit: "contain" }} priority />
-                <span className="frame-marks__mark frame-marks__mark--tr" aria-hidden="true" />
-                <span className="frame-marks__mark frame-marks__mark--bl" aria-hidden="true" />
-                <span className="frame-marks__mark frame-marks__mark--br" aria-hidden="true" />
+              <div className="hero-slide__img-frame">
+                <Image src="/banner2.png" alt="Formation IN Academy" fill style={{ objectFit: "cover" }} priority />
               </div>
-              <span className="hero-slide__tag">excellence &amp; rigueur</span>
+              <div className="hero-slide__features">
+                <span className="hero-slide__feature">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 21h18M6 21V7a1 1 0 0 1 1-1h4v15M13 21V3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v18" />
+                  </svg>
+                  Programmes de formation ciblés
+                </span>
+                <span className="hero-slide__feature-sep" aria-hidden="true" />
+                <span className="hero-slide__feature">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  Accompagnement personnalisé
+                </span>
+              </div>
             </div>
           </motion.div>
         ) : (
@@ -495,17 +502,12 @@ export default function Home() {
       {/* ===== BRANCHES ===== */}
       <section className="branches" id="branches">
         <div className="container">
-          <div className="branches__header">
-            <div>
-              <span className="section-eyebrow">Domaines de formation</span>
-              <h2 className="branches__title">Nos Formations</h2>
-            </div>
-            <Link href="/branches" className="branches__link">
-              Voir tout le catalogue
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
+          <div className="branches__header branches__header--center">
+            <span className="section-eyebrow">Domaines de formation</span>
+            <h2 className="branches__title">Nos Formations</h2>
+            <p className="branches__sub">
+              Chaque espace est pensé comme un sanctuaire alliant design élégant et expertise métier.
+            </p>
           </div>
 
           {allBranches.length === 0 ? (
@@ -517,6 +519,10 @@ export default function Home() {
           ) : (
             <BranchesFan branches={allBranches} />
           )}
+
+          <div className="branches__more">
+            <Link href="/branches" className="btn btn--primary">Voir Tout</Link>
+          </div>
         </div>
       </section>
 
@@ -549,6 +555,29 @@ export default function Home() {
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Link href="/branches" className="btn btn--outline">Voir les formations</Link>
               </motion.div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="cta-banner__gallery"
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+          >
+            <div className="cta-banner__shot cta-banner__shot--wide">
+              <Image src="/mission.jpg" alt="Formation IN Academy" fill sizes="(max-width: 900px) 100vw, 1100px" style={{ objectFit: "cover" }} />
+            </div>
+            <div className="cta-banner__shot-row">
+              <div className="cta-banner__shot">
+                <Image src={branchImage("rh-management")!} alt="" fill sizes="360px" style={{ objectFit: "cover" }} />
+              </div>
+              <div className="cta-banner__shot">
+                <Image src={branchImage("commerce-ventes")!} alt="" fill sizes="360px" style={{ objectFit: "cover" }} />
+              </div>
+              <div className="cta-banner__shot">
+                <Image src={branchImage("finance-comptabilite")!} alt="" fill sizes="360px" style={{ objectFit: "cover" }} />
+              </div>
             </div>
           </motion.div>
         </div>

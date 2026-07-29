@@ -440,13 +440,15 @@ export default function AdminFormationsPage() {
                     {f.isActive ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td style={{ display: "flex", gap: 8 }}>
-                  <button className="admin-btn" onClick={() => openEdit(f)}>
-                    Modifier
-                  </button>
-                  <button className="admin-btn admin-btn--cancel" onClick={() => remove(f)}>
-                    Supprimer
-                  </button>
+                <td>
+                  <div className="admin-cell-actions">
+                    <button className="admin-btn" onClick={() => openEdit(f)}>
+                      Modifier
+                    </button>
+                    <button className="admin-btn admin-btn--cancel" onClick={() => remove(f)}>
+                      Supprimer
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

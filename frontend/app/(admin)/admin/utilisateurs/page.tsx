@@ -149,23 +149,25 @@ export default function AdminUtilisateursPage() {
           {u.isActive ? "Actif" : "Inactif"}
         </span>
       </td>
-      <td style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <button className="admin-btn" onClick={() => setDetailUser(u)}>
-          Détails
-        </button>
-        {!ADMIN_ROLES.includes(u.role) && (
-          <>
-            <button
-              className={`admin-btn ${u.isActive ? "admin-btn--cancel" : "admin-btn--confirm"}`}
-              onClick={() => toggleActive(u.id)}
-            >
-              {u.isActive ? "Désactiver" : "Activer"}
-            </button>
-            <button className="admin-btn admin-btn--cancel" onClick={() => removeUser(u)}>
-              Supprimer
-            </button>
-          </>
-        )}
+      <td>
+        <div className="admin-cell-actions">
+          <button className="admin-btn" onClick={() => setDetailUser(u)}>
+            Détails
+          </button>
+          {!ADMIN_ROLES.includes(u.role) && (
+            <>
+              <button
+                className={`admin-btn ${u.isActive ? "admin-btn--cancel" : "admin-btn--confirm"}`}
+                onClick={() => toggleActive(u.id)}
+              >
+                {u.isActive ? "Désactiver" : "Activer"}
+              </button>
+              <button className="admin-btn admin-btn--cancel" onClick={() => removeUser(u)}>
+                Supprimer
+              </button>
+            </>
+          )}
+        </div>
       </td>
     </>
   );

@@ -145,8 +145,8 @@ export default function DashboardPage() {
             <span className="dashboard-nav__item dashboard-nav__item--active">
               <span>◉</span> Mes formations
             </span>
-            <Link href="/branches" className="dashboard-nav__item">
-              <span>✦</span> Catalogue
+            <Link href="/formations/particulier" className="dashboard-nav__item">
+              <span>✦</span> Sessions disponibles
             </Link>
             <Link href="/contact" className="dashboard-nav__item">
               <span>+</span> Demander une formation
@@ -208,8 +208,8 @@ export default function DashboardPage() {
             {active.length === 0 ? (
               <div className="dashboard-empty">
                 <p>Aucune formation active.</p>
-                <Link href="/branches" className="btn btn--primary" style={{ fontSize: 13, marginTop: 16 }}>
-                  Découvrir les formations
+                <Link href="/formations/particulier" className="btn btn--primary" style={{ fontSize: 13, marginTop: 16 }}>
+                  Découvrir les sessions
                 </Link>
               </div>
             ) : (

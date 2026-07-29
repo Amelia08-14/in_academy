@@ -5,7 +5,8 @@ import { adminApi as api } from "@/lib/adminApi";
 import FileUpload from "@/app/components/FileUpload";
 import { formatDa } from "@/lib/format";
 
-interface Category { id: string; name: string }
+interface Category { id: string; name: string; isMetier?: boolean }
+type Tab = "particulier" | "metier";
 interface Session {
   id: string;
   title: string;
@@ -69,6 +70,7 @@ export default function AdminSessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<Tab>("particulier");
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<EditState | null>(null);
   const [saving, setSaving] = useState(false);
@@ -100,13 +102,19 @@ export default function AdminSessionsPage() {
     void Promise.resolve().then(load);
   }, []);
 
-  const filtered = sessions.filter((s) =>
-    s.title.toLowerCase().includes(search.toLowerCase()) ||
-    s.category.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const tabCats = categories.filter((c) => (tab === "metier" ? c.isMetier : !c.isMetier));
+
+  const filtered = sessions.filter((s) => {
+    const sessionIsMetier = !!s.category.isMetier;
+    if (tab === "metier" ? !sessionIsMetier : sessionIsMetier) return false;
+    return (
+      s.title.toLowerCase().includes(search.toLowerCase()) ||
+      s.category.name.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
   const openCreate = () => {
-    setEditing({ ...EMPTY, categoryId: categories[0]?.id ?? "" });
+    setEditing({ ...EMPTY, categoryId: tabCats[0]?.id ?? "" });
     setSaveError("");
   };
 
@@ -180,12 +188,40 @@ export default function AdminSessionsPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Sessions de formation</h1>
+        <h1 className="admin-page__title">
+          {tab === "metier" ? "Sessions métiers" : "Sessions particulier"}
+        </h1>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <span className="admin-kpi admin-kpi--inline">{sessions.length} sessions</span>
-          <button className="btn btn--primary" onClick={openCreate}>+ Nouvelle session</button>
+          <span className="admin-kpi admin-kpi--inline">{filtered.length} sessions</span>
+          <button className="btn btn--primary" onClick={openCreate} disabled={tabCats.length === 0}>
+            {tab === "metier" ? "+ Nouvelle session métier" : "+ Nouvelle session"}
+          </button>
         </div>
       </div>
+
+      <div className="admin-tabs" role="tablist">
+        <button
+          role="tab"
+          className={`admin-tab ${tab === "particulier" ? "admin-tab--active" : ""}`}
+          onClick={() => setTab("particulier")}
+        >
+          Particulier
+        </button>
+        <button
+          role="tab"
+          className={`admin-tab ${tab === "metier" ? "admin-tab--active" : ""}`}
+          onClick={() => setTab("metier")}
+        >
+          Métiers
+        </button>
+      </div>
+
+      {tab === "metier" && tabCats.length === 0 && (
+        <p className="admin-loading">
+          Aucune catégorie métier configurée (coiffure, esthétique, barber, onglerie…).
+          Contactez l&apos;administrateur technique pour en ajouter.
+        </p>
+      )}
 
       <div className="admin-search">
         <input
@@ -241,14 +277,14 @@ export default function AdminSessionsPage() {
 
               <div className="auth-row">
                 <div className="auth-field">
-                  <label className="auth-label">Branche</label>
+                  <label className="auth-label">{tab === "metier" ? "Catégorie métier" : "Branche"}</label>
                   <select
                     className="auth-input" required
                     value={editing.categoryId}
                     onChange={(e) => setEditing((v) => v ? { ...v, categoryId: e.target.value } : v)}
                   >
                     <option value="" disabled>Choisir…</option>
-                    {categories.map((c) => (
+                    {tabCats.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
                   </select>
@@ -400,12 +436,14 @@ export default function AdminSessionsPage() {
                     {STATUS_LABELS[s.status]}
                   </span>
                 </td>
-                <td style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <button className="admin-btn" onClick={() => openEdit(s)}>Modifier</button>
-                  <button className="admin-btn" onClick={() => copyLink(s.id)} title="Copier le lien d'inscription directe">
-                    {copiedId === s.id ? "Copié ✓" : "Copier le lien"}
-                  </button>
-                  <button className="admin-btn admin-btn--cancel" onClick={() => remove(s)}>Supprimer</button>
+                <td>
+                  <div className="admin-cell-actions">
+                    <button className="admin-btn" onClick={() => openEdit(s)}>Modifier</button>
+                    <button className="admin-btn" onClick={() => copyLink(s.id)} title="Copier le lien d'inscription directe">
+                      {copiedId === s.id ? "Copié ✓" : "Copier le lien"}
+                    </button>
+                    <button className="admin-btn admin-btn--cancel" onClick={() => remove(s)}>Supprimer</button>
+                  </div>
                 </td>
               </tr>
             ))}

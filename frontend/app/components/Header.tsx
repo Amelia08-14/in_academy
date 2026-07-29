@@ -20,9 +20,25 @@ function initials(text: string): string {
   return text.slice(0, 2).toUpperCase();
 }
 
-const NAV_LINKS = [
+interface NavLink {
+  href: string;
+  label: string;
+  icon: string;
+  children?: { href: string; label: string }[];
+}
+
+const NAV_LINKS: NavLink[] = [
   { href: "/", label: "ACCUEIL", icon: "M3 12l9-9 9 9M5 10v10h14V10" },
-  { href: "/branches", label: "NOS FORMATIONS", icon: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15Z" },
+  {
+    href: "/branches",
+    label: "NOS FORMATIONS",
+    icon: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15Z",
+    children: [
+      { href: "/branches", label: "Formations Entreprises" },
+      { href: "/formations/particulier", label: "Formations Particulier" },
+      { href: "/formations/metiers", label: "Formations Métiers" },
+    ],
+  },
   { href: "/formateurs", label: "FORMATEURS", icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" },
   { href: "/devenir-collaborateur", label: "COLLABORER", icon: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM19 8v6M22 11h-6" },
   { href: "/contact", label: "CONTACT", icon: "M4 4h16v16H4zM22 6l-10 7L2 6" },
@@ -88,7 +104,7 @@ export default function Header() {
         ]
       : [
           { label: "Mes formations", href: "/dashboard" },
-          { label: "Sessions disponibles", href: "/branches" },
+          { label: "Sessions disponibles", href: "/formations/particulier" },
         ];
 
   return (
@@ -104,7 +120,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="header__logo">
           <Image
-            src="/images/logo_in_academy_white.png"
+            src="/images/logo_in_academy.png"
             alt="IN Academy"
             width={56}
             height={56}
@@ -119,7 +135,32 @@ export default function Header() {
             {NAV_LINKS.map((item) => {
               const active = item.href === "/"
                 ? pathname === "/"
-                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                : pathname === item.href || pathname.startsWith(`${item.href}/`)
+                  || (item.children?.some((c) => pathname === c.href || pathname.startsWith(`${c.href}/`)) ?? false);
+
+              if (item.children) {
+                return (
+                  <div key={item.href} className="header__nav-group">
+                    <Link
+                      href={item.href}
+                      className={`header__nav-link header__nav-link--has-sub${active ? " header__nav-link--active" : ""}`}
+                    >
+                      {item.label}
+                      <svg className="header__nav-caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </Link>
+                    <div className="header__nav-dropdown" role="menu">
+                      {item.children.map((c) => (
+                        <Link key={c.href} href={c.href} className="header__nav-dropdown-item" role="menuitem">
+                          {c.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={item.href}
@@ -285,7 +326,37 @@ export default function Header() {
                   {NAV_LINKS.map((item) => {
                     const active = item.href === "/"
                       ? pathname === "/"
-                      : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                      : pathname === item.href || pathname.startsWith(`${item.href}/`)
+                        || (item.children?.some((c) => pathname === c.href || pathname.startsWith(`${c.href}/`)) ?? false);
+
+                    if (item.children) {
+                      return (
+                        <div key={item.href} className="flex flex-col items-center gap-3">
+                          <span className={`flex items-center gap-3 font-body text-base font-bold ${active ? "text-gold-dark" : "text-navy"}`}>
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                              <path d={item.icon} />
+                            </svg>
+                            {item.label}
+                          </span>
+                          <div className="flex flex-col items-center gap-3 pt-1">
+                            {item.children.map((c) => {
+                              const cActive = pathname === c.href || pathname.startsWith(`${c.href}/`);
+                              return (
+                                <Link
+                                  key={c.href}
+                                  href={c.href}
+                                  onClick={() => setMobileOpen(false)}
+                                  className={`font-body text-sm font-semibold transition-colors ${cActive ? "text-gold-dark" : "text-navy/70 hover:text-gold-dark"}`}
+                                >
+                                  {c.label}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    }
+
                     return (
                       <Link
                         key={item.href}

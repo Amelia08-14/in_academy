@@ -183,9 +183,11 @@ export default function AdminPartenairesPage() {
                     {p.isActive ? "Visible" : "Masqué"}
                   </span>
                 </td>
-                <td style={{ display: "flex", gap: 8 }}>
-                  <button className="admin-btn" onClick={() => openEdit(p)}>Modifier</button>
-                  <button className="admin-btn admin-btn--cancel" onClick={() => remove(p.id)}>Supprimer</button>
+                <td>
+                  <div className="admin-cell-actions">
+                    <button className="admin-btn" onClick={() => openEdit(p)}>Modifier</button>
+                    <button className="admin-btn admin-btn--cancel" onClick={() => remove(p.id)}>Supprimer</button>
+                  </div>
                 </td>
               </tr>
             ))}
