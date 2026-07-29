@@ -163,6 +163,20 @@ export default function AdminSessionsPage() {
     }
   };
 
+  const remove = async (s: Session) => {
+    const n = s._count.enrollments;
+    const warn = n > 0
+      ? `Cette session a ${n} inscrit${n > 1 ? "s" : ""}. Les supprimer aussi ? Cette action est irréversible.`
+      : "Supprimer définitivement cette session ?";
+    if (!window.confirm(warn)) return;
+    try {
+      await api.delete(`/admin/sessions/${s.id}`);
+      load();
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Erreur lors de la suppression");
+    }
+  };
+
   return (
     <div className="admin-page">
       <div className="admin-page__header">
@@ -386,11 +400,12 @@ export default function AdminSessionsPage() {
                     {STATUS_LABELS[s.status]}
                   </span>
                 </td>
-                <td style={{ display: "flex", gap: 8 }}>
+                <td style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   <button className="admin-btn" onClick={() => openEdit(s)}>Modifier</button>
                   <button className="admin-btn" onClick={() => copyLink(s.id)} title="Copier le lien d'inscription directe">
                     {copiedId === s.id ? "Copié ✓" : "Copier le lien"}
                   </button>
+                  <button className="admin-btn admin-btn--cancel" onClick={() => remove(s)}>Supprimer</button>
                 </td>
               </tr>
             ))}
