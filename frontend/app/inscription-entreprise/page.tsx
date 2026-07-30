@@ -46,7 +46,7 @@ export default function InscriptionEntreprisePage() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    api.get<Category[]>("/categories").then(setCategories).catch(() => setCategories([]));
+    api.get<Category[]>("/categories?metier=false").then(setCategories).catch(() => setCategories([]));
   }, []);
 
   const set = (field: keyof Values) =>

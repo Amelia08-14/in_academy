@@ -229,46 +229,48 @@ function HeroSlider() {
             exit={{ opacity: 0, x: -24 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="hero-slide__text">
-              <h1 className="hero-slide__title">
-                Là où on croit <span className="hero-slide__title-accent">au</span> potentiel de chacun
-              </h1>
-
-              <p className="hero-slide__subtitle">
-                Centre de formation professionnelle certifiante dédié à l&apos;excellence.
-                Nous formons les leaders de demain à travers des programmes
-                rigoureux et adaptés aux exigences du marché.
-              </p>
-
-              <div className="hero-slide__actions">
-                <Link href="/branches" className="btn btn--primary">
-                  Découvrir les formations
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </Link>
-                <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
-              </div>
+            <div className="hero-slide__bg">
+              <Image src="/banner.png" alt="" fill style={{ objectFit: "cover", objectPosition: "75% center" }} priority />
+              <div className="hero-slide__bg-scrim" />
             </div>
 
-            <div className="hero-slide__media">
-              <div className="hero-slide__img-frame">
-                <Image src="/banner2.png" alt="Formation IN Academy" fill style={{ objectFit: "cover" }} priority />
-              </div>
-              <div className="hero-slide__features">
-                <span className="hero-slide__feature">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 21h18M6 21V7a1 1 0 0 1 1-1h4v15M13 21V3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v18" />
-                  </svg>
-                  Programmes de formation ciblés
-                </span>
-                <span className="hero-slide__feature-sep" aria-hidden="true" />
-                <span className="hero-slide__feature">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                  Accompagnement personnalisé
-                </span>
+            <div className="hero-slide__inner">
+              <div className="hero-slide__text">
+                <h1 className="hero-slide__title">
+                  Là où on croit <span className="hero-slide__title-accent">au</span> potentiel de chacun
+                </h1>
+
+                <p className="hero-slide__subtitle">
+                  Centre de formation professionnelle certifiante dédié à l&apos;excellence.
+                  Nous formons les leaders de demain à travers des programmes
+                  rigoureux et adaptés aux exigences du marché.
+                </p>
+
+                <div className="hero-slide__actions">
+                  <Link href="/branches" className="btn btn--primary">
+                    Découvrir les formations
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                  <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
+                </div>
+
+                <div className="hero-slide__features">
+                  <span className="hero-slide__feature">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 21h18M6 21V7a1 1 0 0 1 1-1h4v15M13 21V3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v18" />
+                    </svg>
+                    Programmes de formation ciblés
+                  </span>
+                  <span className="hero-slide__feature-sep" aria-hidden="true" />
+                  <span className="hero-slide__feature">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    Accompagnement personnalisé
+                  </span>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -281,70 +283,66 @@ function HeroSlider() {
             exit={{ opacity: 0, x: -24 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="hero-slide__text">
-              <span className="hero-slide__eyebrow">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
-                </svg>
-                Commencer maintenant
-              </span>
-
-              <h1 className="hero-slide__title">
-                Vous êtes particulier
-                <em>ou entreprise ?</em>
-              </h1>
-
-              <p className="hero-slide__subtitle">
-                Choisissez votre profil pour accéder directement au formulaire
-                d&apos;inscription qui vous correspond.
-              </p>
-
-              <div className="hero-slide__choices">
-                <Link href="/inscription" className="hero-slide__choice">
-                  <span className="hero-slide__choice-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-                    </svg>
-                  </span>
-                  <span className="hero-slide__choice-text">
-                    <strong>Particulier</strong>
-                    <span>Je m&apos;inscris à une formation</span>
-                  </span>
-                  <span className="hero-slide__choice-arrow">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </span>
-                </Link>
-
-                <Link href="/inscription-entreprise" className="hero-slide__choice">
-                  <span className="hero-slide__choice-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 21h18M6 21V7l6-4 6 4v14M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1" />
-                    </svg>
-                  </span>
-                  <span className="hero-slide__choice-text">
-                    <strong>Entreprise</strong>
-                    <span>Je forme mes équipes / je demande un devis</span>
-                  </span>
-                  <span className="hero-slide__choice-arrow">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </span>
-                </Link>
-              </div>
+            <div className="hero-slide__bg">
+              <Image src="/banner2.png" alt="" fill style={{ objectFit: "cover", objectPosition: "80% center" }} priority />
+              <div className="hero-slide__bg-scrim" />
             </div>
 
-            <div className="hero-slide__media">
-              <div className="hero-slide__blob" aria-hidden="true" />
-              <div className="hero-slide__img-frame frame-marks">
-                <Image src="/banner.png" alt="IN Academy" fill style={{ objectFit: "contain" }} priority />
-                <span className="frame-marks__mark frame-marks__mark--tr" aria-hidden="true" />
-                <span className="frame-marks__mark frame-marks__mark--bl" aria-hidden="true" />
-                <span className="frame-marks__mark frame-marks__mark--br" aria-hidden="true" />
+            <div className="hero-slide__inner">
+              <div className="hero-slide__text">
+                <span className="hero-slide__eyebrow">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+                  </svg>
+                  Commencer maintenant
+                </span>
+
+                <h1 className="hero-slide__title">
+                  Vous êtes particulier
+                  <em>ou entreprise ?</em>
+                </h1>
+
+                <p className="hero-slide__subtitle">
+                  Choisissez votre profil pour accéder directement au formulaire
+                  d&apos;inscription qui vous correspond.
+                </p>
+
+                <div className="hero-slide__choices">
+                  <Link href="/inscription" className="hero-slide__choice">
+                    <span className="hero-slide__choice-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </span>
+                    <span className="hero-slide__choice-text">
+                      <strong>Particulier</strong>
+                      <span>Je m&apos;inscris à une formation</span>
+                    </span>
+                    <span className="hero-slide__choice-arrow">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </Link>
+
+                  <Link href="/inscription-entreprise" className="hero-slide__choice">
+                    <span className="hero-slide__choice-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 21h18M6 21V7l6-4 6 4v14M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1" />
+                      </svg>
+                    </span>
+                    <span className="hero-slide__choice-text">
+                      <strong>Entreprise</strong>
+                      <span>Je forme mes équipes / je demande un devis</span>
+                    </span>
+                    <span className="hero-slide__choice-arrow">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </Link>
+                </div>
               </div>
-              <span className="hero-slide__tag">à vous de choisir</span>
             </div>
           </motion.div>
         )}
@@ -372,7 +370,8 @@ export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    api.get<Category[]>("/categories").then(setCategories).catch(() => setCategories([]));
+    // Uniquement les branches Entreprises (jamais les métiers) dans le carrousel d'accueil.
+    api.get<Category[]>("/categories?metier=false").then(setCategories).catch(() => setCategories([]));
   }, []);
 
   const allBranches: BranchItem[] = categories.map((c, i) => ({
@@ -407,6 +406,16 @@ export default function Home() {
       {/* ===== MISSION ===== */}
       <section className="mission" id="mission">
         <div className="container">
+          <div className="mission__header">
+            <h2 className="mission__title">
+              Notre <span className="mission__title-accent">Missions</span>
+            </h2>
+            <p className="mission__description">
+              Offrir un accompagnement personnalisé et des formations alignées
+              sur les besoins métiers réels du marché algérien et international.
+            </p>
+          </div>
+
           <div className="mission__layout">
             {/* Left: photo + floating caption */}
             <motion.div
@@ -417,7 +426,7 @@ export default function Home() {
               transition={{ duration: 0.7 }}
             >
               <div className="mission__media-frame">
-                <Image src="/mission.jpg" alt="Équipe IN ACADEMY" fill style={{ objectFit: "cover" }} />
+                <Image src="/home_notre_mission.png" alt="Équipe IN ACADEMY" fill style={{ objectFit: "cover" }} />
                 <div className="mission__media-overlay" />
               </div>
               <div className="mission__media-caption">
@@ -432,49 +441,29 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right: mission content */}
-            <div className="mission__content">
-              <span className="section-eyebrow">Ce que nous faisons</span>
-              <h2 className="section-title">Notre Mission</h2>
-              <span className="section-divider" />
-              <p className="mission__description">
-                Offrir un accompagnement personnalisé et des formations alignées
-                sur les besoins métiers réels du marché algérien et international.
-              </p>
-
-              <motion.div
-                className="mission__points-grid"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } }}
-              >
-                {missionPoints.map((point, i) => (
-                  <motion.div
-                    key={i}
-                    variants={{ hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0 } }}
-                    className="mission__point-card"
-                  >
-                    <span className="mission__point-icon">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d={point.icon} />
-                      </svg>
-                    </span>
-                    <p className="mission__point-text">{point.text}</p>
-                  </motion.div>
-                ))}
-              </motion.div>
-
-              <div className="mission__cta-strip">
-                <span className="mission__cta-check">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 6L9 17l-5-5" />
-                  </svg>
-                </span>
-                <p>Rejoignez une formation certifiante et donnez un nouvel élan à votre carrière.</p>
-                <Link href="/branches" className="btn btn--gold">Découvrir nos formations</Link>
-              </div>
-            </div>
+            {/* Right: points grid */}
+            <motion.div
+              className="mission__points-grid"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } }}
+            >
+              {missionPoints.map((point, i) => (
+                <motion.div
+                  key={i}
+                  variants={{ hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0 } }}
+                  className="mission__point-card"
+                >
+                  <span className="mission__point-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d={point.icon} />
+                    </svg>
+                  </span>
+                  <p className="mission__point-text">{point.text}</p>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
 
           {/* Stats row */}
@@ -503,8 +492,9 @@ export default function Home() {
       <section className="branches" id="branches">
         <div className="container">
           <div className="branches__header branches__header--center">
-            <span className="section-eyebrow">Domaines de formation</span>
-            <h2 className="branches__title">Nos Formations</h2>
+            <h2 className="branches__title">
+              Notre <span className="branches__title-accent">Formations</span>
+            </h2>
             <p className="branches__sub">
               Chaque espace est pensé comme un sanctuaire alliant design élégant et expertise métier.
             </p>
@@ -537,7 +527,6 @@ export default function Home() {
             transition={{ duration: 0.7 }}
           >
             <div className="cta-banner__content">
-              <span className="section-eyebrow cta-banner__eyebrow">Commencez maintenant</span>
               <h2 className="cta-banner__title">
                 Prêt à propulser<br />votre carrière ?
               </h2>
@@ -547,14 +536,20 @@ export default function Home() {
               </p>
             </div>
             <div className="cta-banner__actions">
-              {!isAuthenticated && (
+              {isAuthenticated ? (
                 <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                  <Link href="/inscription" className="btn btn--gold">S&apos;inscrire maintenant</Link>
+                  <Link href="/branches" className="btn btn--outline">Voir les formations</Link>
                 </motion.div>
+              ) : (
+                <>
+                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                    <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                    <Link href="/inscription" className="btn btn--gold">S&apos;inscrire</Link>
+                  </motion.div>
+                </>
               )}
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Link href="/branches" className="btn btn--outline">Voir les formations</Link>
-              </motion.div>
             </div>
           </motion.div>
 
@@ -566,20 +561,26 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.1 }}
           >
             <div className="cta-banner__shot cta-banner__shot--wide">
-              <Image src="/mission.jpg" alt="Formation IN Academy" fill sizes="(max-width: 900px) 100vw, 1100px" style={{ objectFit: "cover" }} />
-            </div>
-            <div className="cta-banner__shot-row">
-              <div className="cta-banner__shot">
-                <Image src={branchImage("rh-management")!} alt="" fill sizes="360px" style={{ objectFit: "cover" }} />
-              </div>
-              <div className="cta-banner__shot">
-                <Image src={branchImage("commerce-ventes")!} alt="" fill sizes="360px" style={{ objectFit: "cover" }} />
-              </div>
-              <div className="cta-banner__shot">
-                <Image src={branchImage("finance-comptabilite")!} alt="" fill sizes="360px" style={{ objectFit: "cover" }} />
-              </div>
+              <Image src="/home_pic/home_pic_landscape.png" alt="Formation IN Academy" fill sizes="(max-width: 900px) 100vw, 1100px" style={{ objectFit: "cover" }} />
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ===== PHOTO STRIP ===== */}
+      <section className="photo-strip">
+        <div className="container">
+          <div className="photo-strip__row">
+            <div className="photo-strip__shot">
+              <Image src="/home_pic/home_pic_1.png" alt="" fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+            </div>
+            <div className="photo-strip__shot">
+              <Image src="/home_pic/home_pic_2.png" alt="" fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+            </div>
+            <div className="photo-strip__shot">
+              <Image src="/home_pic/home_pic_3.png" alt="" fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+            </div>
+          </div>
         </div>
       </section>
 

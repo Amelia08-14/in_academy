@@ -178,7 +178,7 @@ export default function DomainDetailPage() {
   const [categories, setCategories] = useState<Category[] | null>(null);
 
   useEffect(() => {
-    api.get<Category[]>("/categories").then(setCategories).catch(() => setCategories([]));
+    api.get<Category[]>("/categories?metier=false").then(setCategories).catch(() => setCategories([]));
   }, []);
 
   if (categories === null) {

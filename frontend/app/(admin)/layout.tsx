@@ -9,6 +9,7 @@ import { ADMIN_ROLES, setAdminAuthState, type Role } from "@/lib/auth";
 const navItems = [
   { href: "/admin", label: "Vue d'ensemble", icon: "▤" },
   { href: "/admin/inscriptions", label: "Inscriptions", icon: "✎" },
+  { href: "/admin/branches", label: "Branches", icon: "❖" },
   { href: "/admin/formations", label: "Formations", icon: "◉" },
   { href: "/admin/sessions", label: "Sessions", icon: "▣" },
   { href: "/admin/devis", label: "Devis B2B", icon: "◈" },
