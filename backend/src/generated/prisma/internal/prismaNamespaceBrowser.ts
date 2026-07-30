@@ -61,6 +61,7 @@ export const ModelName = {
   Formation: 'Formation',
   FormationTrainer: 'FormationTrainer',
   TrainingSession: 'TrainingSession',
+  SessionMaterial: 'SessionMaterial',
   Enrollment: 'Enrollment',
   EnrollmentEmployee: 'EnrollmentEmployee',
   Certificate: 'Certificate',
@@ -247,6 +248,17 @@ export const TrainingSessionScalarFieldEnum = {
 } as const
 
 export type TrainingSessionScalarFieldEnum = (typeof TrainingSessionScalarFieldEnum)[keyof typeof TrainingSessionScalarFieldEnum]
+
+
+export const SessionMaterialScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  title: 'title',
+  fileUrl: 'fileUrl',
+  createdAt: 'createdAt'
+} as const
+
+export type SessionMaterialScalarFieldEnum = (typeof SessionMaterialScalarFieldEnum)[keyof typeof SessionMaterialScalarFieldEnum]
 
 
 export const EnrollmentScalarFieldEnum = {
@@ -524,6 +536,16 @@ export const TrainingSessionOrderByRelevanceFieldEnum = {
 } as const
 
 export type TrainingSessionOrderByRelevanceFieldEnum = (typeof TrainingSessionOrderByRelevanceFieldEnum)[keyof typeof TrainingSessionOrderByRelevanceFieldEnum]
+
+
+export const SessionMaterialOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  title: 'title',
+  fileUrl: 'fileUrl'
+} as const
+
+export type SessionMaterialOrderByRelevanceFieldEnum = (typeof SessionMaterialOrderByRelevanceFieldEnum)[keyof typeof SessionMaterialOrderByRelevanceFieldEnum]
 
 
 export const EnrollmentOrderByRelevanceFieldEnum = {

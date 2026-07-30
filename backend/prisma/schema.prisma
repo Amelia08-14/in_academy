@@ -253,9 +253,24 @@ model TrainingSession {
   formation   Formation?   @relation(fields: [formationId], references: [id])
   trainer     Trainer?     @relation(fields: [trainerId], references: [id])
   enrollments Enrollment[]
+  materials   SessionMaterial[]
 
   @@index([categoryId, title])
   @@map("training_sessions")
+}
+
+// Support de cours (PDF, doc…) déposé par l'admin sur une session, visible par les
+// apprenants dont l'inscription à cette session est confirmée.
+model SessionMaterial {
+  id        String   @id @default(uuid())
+  sessionId String
+  title     String
+  fileUrl   String
+  createdAt DateTime @default(now())
+
+  session TrainingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("session_materials")
 }
 
 // ─── Inscription & Suivi ─────────────────────────────────────────────────────

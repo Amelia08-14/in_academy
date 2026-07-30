@@ -27,6 +27,30 @@ router.get("/", authenticate, async (req: AuthRequest, res: Response) => {
   }
 });
 
+// GET /api/enrollments/materials — supports de cours des sessions confirmées de l'apprenant connecté
+router.get("/materials", authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const enrollments = await prisma.enrollment.findMany({
+      where: { userId: req.user!.userId, status: "CONFIRMED", sessionId: { not: null } },
+      include: { session: { include: { materials: { orderBy: { createdAt: "desc" } } } } },
+    });
+
+    const sessions = enrollments
+      .filter((e) => e.session)
+      .map((e) => ({
+        sessionId: e.session!.id,
+        sessionTitle: e.session!.title,
+        startDate: e.session!.startDate,
+        materials: e.session!.materials,
+      }));
+
+    res.json(sessions);
+  } catch (err) {
+    console.error("[enrollments materials]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // POST /api/enrollments — inscription à une session ou à une formation directe
 router.post("/", authenticate, async (req: AuthRequest, res: Response) => {
   try {

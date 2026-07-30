@@ -23,7 +23,15 @@ router.get("/", async (_req, res) => {
         orderBy: { lastName: "asc" },
         include: {
             formations: {
-                include: { formation: { select: { id: true, title: true, slug: true } } },
+                orderBy: { isPrimary: "desc" },
+                include: {
+                    formation: {
+                        select: {
+                            id: true, title: true, slug: true,
+                            category: { select: { id: true, name: true, slug: true } },
+                        },
+                    },
+                },
             },
         },
     });

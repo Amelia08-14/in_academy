@@ -41,6 +41,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const db_1 = require("../lib/db");
 const jwt_1 = require("../lib/jwt");
 const auth_schema_1 = require("../validations/auth.schema");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
 const router = (0, express_1.Router)();
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
@@ -119,6 +120,67 @@ router.get("/me", async (req, res) => {
     }
     catch {
         res.status(401).json({ error: "Token invalide" });
+    }
+});
+// PATCH /api/auth/profile — l'apprenant connecté modifie ses propres informations
+router.patch("/profile", auth_middleware_1.authenticate, async (req, res) => {
+    try {
+        const { firstName, lastName, phone, jobTitle, birthDate } = req.body;
+        if (firstName !== undefined && firstName.trim().length < 2) {
+            res.status(400).json({ error: "Prénom invalide" });
+            return;
+        }
+        if (lastName !== undefined && lastName.trim().length < 2) {
+            res.status(400).json({ error: "Nom invalide" });
+            return;
+        }
+        const existing = await db_1.prisma.learnerProfile.findUnique({ where: { userId: req.user.userId } });
+        if (!existing) {
+            res.status(404).json({ error: "Profil apprenant introuvable" });
+            return;
+        }
+        const profile = await db_1.prisma.learnerProfile.update({
+            where: { userId: req.user.userId },
+            data: {
+                ...(firstName !== undefined ? { firstName: firstName.trim() } : {}),
+                ...(lastName !== undefined ? { lastName: lastName.trim() } : {}),
+                ...(phone !== undefined ? { phone: phone || null } : {}),
+                ...(jobTitle !== undefined ? { jobTitle: jobTitle || null } : {}),
+                ...(birthDate !== undefined ? { birthDate: birthDate ? new Date(birthDate) : null } : {}),
+            },
+        });
+        res.json(profile);
+    }
+    catch (err) {
+        console.error("[auth profile]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// PATCH /api/auth/password — l'utilisateur connecté change son propre mot de passe
+router.patch("/password", auth_middleware_1.authenticate, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        if (!currentPassword || !newPassword || newPassword.length < 8) {
+            res.status(400).json({ error: "Mot de passe actuel requis et nouveau mot de passe d'au moins 8 caractères" });
+            return;
+        }
+        const user = await db_1.prisma.user.findUnique({ where: { id: req.user.userId } });
+        if (!user) {
+            res.status(404).json({ error: "Utilisateur introuvable" });
+            return;
+        }
+        const match = await bcryptjs_1.default.compare(currentPassword, user.hashedPassword);
+        if (!match) {
+            res.status(401).json({ error: "Mot de passe actuel incorrect" });
+            return;
+        }
+        const hashedPassword = await bcryptjs_1.default.hash(newPassword, 12);
+        await db_1.prisma.user.update({ where: { id: user.id }, data: { hashedPassword } });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[auth password]", err);
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 exports.default = router;

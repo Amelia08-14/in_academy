@@ -135,6 +135,27 @@ router.patch("/users/:id/toggle-active", async (req: AuthRequest, res: Response)
   }
 });
 
+// PATCH /api/admin/users/:id/password — réinitialise le mot de passe d'un apprenant/utilisateur
+router.patch("/users/:id/password", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    const { password } = req.body as { password?: string };
+    if (!password || password.length < 8) {
+      res.status(400).json({ error: "Le mot de passe doit contenir au moins 8 caractères" });
+      return;
+    }
+    const target = await prisma.user.findUnique({ where: { id } });
+    if (!target) { res.status(404).json({ error: "Utilisateur introuvable" }); return; }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await prisma.user.update({ where: { id }, data: { hashedPassword } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/users password]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // DELETE /api/admin/users/:id — supprime un utilisateur (cascade profils/inscriptions)
 router.delete("/users/:id", async (req: AuthRequest, res: Response) => {
   try {
@@ -722,6 +743,55 @@ router.delete("/sessions/:id", async (req: AuthRequest, res: Response) => {
     res.json({ ok: true });
   } catch (err) {
     console.error("[admin/sessions delete]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// GET /api/admin/sessions/:id/materials — supports de cours d'une session
+router.get("/sessions/:id/materials", async (req: AuthRequest, res: Response) => {
+  try {
+    const sessionId = req.params["id"] as string;
+    const materials = await prisma.sessionMaterial.findMany({
+      where: { sessionId },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json(materials);
+  } catch (err) {
+    console.error("[admin/sessions materials get]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// POST /api/admin/sessions/:id/materials — ajouter un support de cours
+router.post("/sessions/:id/materials", async (req: AuthRequest, res: Response) => {
+  try {
+    const sessionId = req.params["id"] as string;
+    const { title, fileUrl } = req.body as { title?: string; fileUrl?: string };
+    if (!title || !fileUrl) {
+      res.status(400).json({ error: "Titre et fichier requis" });
+      return;
+    }
+    const session = await prisma.trainingSession.findUnique({ where: { id: sessionId } });
+    if (!session) { res.status(404).json({ error: "Session introuvable" }); return; }
+
+    const material = await prisma.sessionMaterial.create({
+      data: { sessionId, title: title.trim(), fileUrl },
+    });
+    res.status(201).json(material);
+  } catch (err) {
+    console.error("[admin/sessions materials post]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/materials/:id — retirer un support de cours
+router.delete("/materials/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    await prisma.sessionMaterial.delete({ where: { id } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/materials delete]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });

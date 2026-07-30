@@ -68,6 +68,11 @@ export type FormationTrainer = Prisma.FormationTrainerModel
  */
 export type TrainingSession = Prisma.TrainingSessionModel
 /**
+ * Model SessionMaterial
+ * 
+ */
+export type SessionMaterial = Prisma.SessionMaterialModel
+/**
  * Model Enrollment
  * 
  */

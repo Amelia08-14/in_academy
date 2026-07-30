@@ -25,6 +25,28 @@ router.get("/", auth_middleware_1.authenticate, async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
+// GET /api/enrollments/materials — supports de cours des sessions confirmées de l'apprenant connecté
+router.get("/materials", auth_middleware_1.authenticate, async (req, res) => {
+    try {
+        const enrollments = await db_1.prisma.enrollment.findMany({
+            where: { userId: req.user.userId, status: "CONFIRMED", sessionId: { not: null } },
+            include: { session: { include: { materials: { orderBy: { createdAt: "desc" } } } } },
+        });
+        const sessions = enrollments
+            .filter((e) => e.session)
+            .map((e) => ({
+            sessionId: e.session.id,
+            sessionTitle: e.session.title,
+            startDate: e.session.startDate,
+            materials: e.session.materials,
+        }));
+        res.json(sessions);
+    }
+    catch (err) {
+        console.error("[enrollments materials]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 // POST /api/enrollments — inscription à une session ou à une formation directe
 router.post("/", auth_middleware_1.authenticate, async (req, res) => {
     try {

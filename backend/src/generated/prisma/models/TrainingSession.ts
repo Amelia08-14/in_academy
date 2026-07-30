@@ -332,6 +332,7 @@ export type TrainingSessionWhereInput = {
   formation?: Prisma.XOR<Prisma.FormationNullableScalarRelationFilter, Prisma.FormationWhereInput> | null
   trainer?: Prisma.XOR<Prisma.TrainerNullableScalarRelationFilter, Prisma.TrainerWhereInput> | null
   enrollments?: Prisma.EnrollmentListRelationFilter
+  materials?: Prisma.SessionMaterialListRelationFilter
 }
 
 export type TrainingSessionOrderByWithRelationInput = {
@@ -357,6 +358,7 @@ export type TrainingSessionOrderByWithRelationInput = {
   formation?: Prisma.FormationOrderByWithRelationInput
   trainer?: Prisma.TrainerOrderByWithRelationInput
   enrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
+  materials?: Prisma.SessionMaterialOrderByRelationAggregateInput
   _relevance?: Prisma.TrainingSessionOrderByRelevanceInput
 }
 
@@ -386,6 +388,7 @@ export type TrainingSessionWhereUniqueInput = Prisma.AtLeast<{
   formation?: Prisma.XOR<Prisma.FormationNullableScalarRelationFilter, Prisma.FormationWhereInput> | null
   trainer?: Prisma.XOR<Prisma.TrainerNullableScalarRelationFilter, Prisma.TrainerWhereInput> | null
   enrollments?: Prisma.EnrollmentListRelationFilter
+  materials?: Prisma.SessionMaterialListRelationFilter
 }, "id">
 
 export type TrainingSessionOrderByWithAggregationInput = {
@@ -458,6 +461,7 @@ export type TrainingSessionCreateInput = {
   formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateInput = {
@@ -480,6 +484,7 @@ export type TrainingSessionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUpdateInput = {
@@ -502,6 +507,7 @@ export type TrainingSessionUpdateInput = {
   formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateInput = {
@@ -524,6 +530,7 @@ export type TrainingSessionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionCreateManyInput = {
@@ -677,6 +684,11 @@ export type TrainingSessionSumOrderByAggregateInput = {
   maxCapacity?: Prisma.SortOrder
 }
 
+export type TrainingSessionScalarRelationFilter = {
+  is?: Prisma.TrainingSessionWhereInput
+  isNot?: Prisma.TrainingSessionWhereInput
+}
+
 export type TrainingSessionNullableScalarRelationFilter = {
   is?: Prisma.TrainingSessionWhereInput | null
   isNot?: Prisma.TrainingSessionWhereInput | null
@@ -824,6 +836,20 @@ export type EnumSessionStatusFieldUpdateOperationsInput = {
   set?: $Enums.SessionStatus
 }
 
+export type TrainingSessionCreateNestedOneWithoutMaterialsInput = {
+  create?: Prisma.XOR<Prisma.TrainingSessionCreateWithoutMaterialsInput, Prisma.TrainingSessionUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.TrainingSessionCreateOrConnectWithoutMaterialsInput
+  connect?: Prisma.TrainingSessionWhereUniqueInput
+}
+
+export type TrainingSessionUpdateOneRequiredWithoutMaterialsNestedInput = {
+  create?: Prisma.XOR<Prisma.TrainingSessionCreateWithoutMaterialsInput, Prisma.TrainingSessionUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.TrainingSessionCreateOrConnectWithoutMaterialsInput
+  upsert?: Prisma.TrainingSessionUpsertWithoutMaterialsInput
+  connect?: Prisma.TrainingSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TrainingSessionUpdateToOneWithWhereWithoutMaterialsInput, Prisma.TrainingSessionUpdateWithoutMaterialsInput>, Prisma.TrainingSessionUncheckedUpdateWithoutMaterialsInput>
+}
+
 export type TrainingSessionCreateNestedOneWithoutEnrollmentsInput = {
   create?: Prisma.XOR<Prisma.TrainingSessionCreateWithoutEnrollmentsInput, Prisma.TrainingSessionUncheckedCreateWithoutEnrollmentsInput>
   connectOrCreate?: Prisma.TrainingSessionCreateOrConnectWithoutEnrollmentsInput
@@ -859,6 +885,7 @@ export type TrainingSessionCreateWithoutTrainerInput = {
   category: Prisma.CategoryCreateNestedOneWithoutSessionsInput
   formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutTrainerInput = {
@@ -880,6 +907,7 @@ export type TrainingSessionUncheckedCreateWithoutTrainerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutTrainerInput = {
@@ -951,6 +979,7 @@ export type TrainingSessionCreateWithoutCategoryInput = {
   formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutCategoryInput = {
@@ -972,6 +1001,7 @@ export type TrainingSessionUncheckedCreateWithoutCategoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutCategoryInput = {
@@ -1019,6 +1049,7 @@ export type TrainingSessionCreateWithoutFormationInput = {
   category: Prisma.CategoryCreateNestedOneWithoutSessionsInput
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutFormationInput = {
@@ -1040,6 +1071,7 @@ export type TrainingSessionUncheckedCreateWithoutFormationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutFormationInput = {
@@ -1068,6 +1100,110 @@ export type TrainingSessionUpdateManyWithWhereWithoutFormationInput = {
   data: Prisma.XOR<Prisma.TrainingSessionUpdateManyMutationInput, Prisma.TrainingSessionUncheckedUpdateManyWithoutFormationInput>
 }
 
+export type TrainingSessionCreateWithoutMaterialsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  coverImageUrl?: string | null
+  duration?: string | null
+  price?: number | null
+  startDate: Date | string
+  endDate?: Date | string | null
+  location?: string | null
+  minCapacity?: number
+  maxCapacity?: number
+  type?: $Enums.EnrollmentType
+  status?: $Enums.SessionStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category: Prisma.CategoryCreateNestedOneWithoutSessionsInput
+  formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
+  trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
+}
+
+export type TrainingSessionUncheckedCreateWithoutMaterialsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  coverImageUrl?: string | null
+  duration?: string | null
+  price?: number | null
+  categoryId: string
+  formationId?: string | null
+  trainerId?: string | null
+  startDate: Date | string
+  endDate?: Date | string | null
+  location?: string | null
+  minCapacity?: number
+  maxCapacity?: number
+  type?: $Enums.EnrollmentType
+  status?: $Enums.SessionStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
+}
+
+export type TrainingSessionCreateOrConnectWithoutMaterialsInput = {
+  where: Prisma.TrainingSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.TrainingSessionCreateWithoutMaterialsInput, Prisma.TrainingSessionUncheckedCreateWithoutMaterialsInput>
+}
+
+export type TrainingSessionUpsertWithoutMaterialsInput = {
+  update: Prisma.XOR<Prisma.TrainingSessionUpdateWithoutMaterialsInput, Prisma.TrainingSessionUncheckedUpdateWithoutMaterialsInput>
+  create: Prisma.XOR<Prisma.TrainingSessionCreateWithoutMaterialsInput, Prisma.TrainingSessionUncheckedCreateWithoutMaterialsInput>
+  where?: Prisma.TrainingSessionWhereInput
+}
+
+export type TrainingSessionUpdateToOneWithWhereWithoutMaterialsInput = {
+  where?: Prisma.TrainingSessionWhereInput
+  data: Prisma.XOR<Prisma.TrainingSessionUpdateWithoutMaterialsInput, Prisma.TrainingSessionUncheckedUpdateWithoutMaterialsInput>
+}
+
+export type TrainingSessionUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  maxCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumEnrollmentTypeFieldUpdateOperationsInput | $Enums.EnrollmentType
+  status?: Prisma.EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.CategoryUpdateOneRequiredWithoutSessionsNestedInput
+  formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
+  trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
+}
+
+export type TrainingSessionUncheckedUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  maxCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumEnrollmentTypeFieldUpdateOperationsInput | $Enums.EnrollmentType
+  status?: Prisma.EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
+}
+
 export type TrainingSessionCreateWithoutEnrollmentsInput = {
   id?: string
   title: string
@@ -1087,6 +1223,7 @@ export type TrainingSessionCreateWithoutEnrollmentsInput = {
   category: Prisma.CategoryCreateNestedOneWithoutSessionsInput
   formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
+  materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutEnrollmentsInput = {
@@ -1108,6 +1245,7 @@ export type TrainingSessionUncheckedCreateWithoutEnrollmentsInput = {
   status?: $Enums.SessionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutEnrollmentsInput = {
@@ -1145,6 +1283,7 @@ export type TrainingSessionUpdateWithoutEnrollmentsInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutSessionsNestedInput
   formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
+  materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutEnrollmentsInput = {
@@ -1166,6 +1305,7 @@ export type TrainingSessionUncheckedUpdateWithoutEnrollmentsInput = {
   status?: Prisma.EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionCreateManyTrainerInput = {
@@ -1207,6 +1347,7 @@ export type TrainingSessionUpdateWithoutTrainerInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutSessionsNestedInput
   formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutTrainerInput = {
@@ -1228,6 +1369,7 @@ export type TrainingSessionUncheckedUpdateWithoutTrainerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateManyWithoutTrainerInput = {
@@ -1289,6 +1431,7 @@ export type TrainingSessionUpdateWithoutCategoryInput = {
   formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutCategoryInput = {
@@ -1310,6 +1453,7 @@ export type TrainingSessionUncheckedUpdateWithoutCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateManyWithoutCategoryInput = {
@@ -1371,6 +1515,7 @@ export type TrainingSessionUpdateWithoutFormationInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutSessionsNestedInput
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutFormationInput = {
@@ -1392,6 +1537,7 @@ export type TrainingSessionUncheckedUpdateWithoutFormationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateManyWithoutFormationInput = {
@@ -1421,10 +1567,12 @@ export type TrainingSessionUncheckedUpdateManyWithoutFormationInput = {
 
 export type TrainingSessionCountOutputType = {
   enrollments: number
+  materials: number
 }
 
 export type TrainingSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   enrollments?: boolean | TrainingSessionCountOutputTypeCountEnrollmentsArgs
+  materials?: boolean | TrainingSessionCountOutputTypeCountMaterialsArgs
 }
 
 /**
@@ -1442,6 +1590,13 @@ export type TrainingSessionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Ty
  */
 export type TrainingSessionCountOutputTypeCountEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EnrollmentWhereInput
+}
+
+/**
+ * TrainingSessionCountOutputType without action
+ */
+export type TrainingSessionCountOutputTypeCountMaterialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SessionMaterialWhereInput
 }
 
 
@@ -1468,6 +1623,7 @@ export type TrainingSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   formation?: boolean | Prisma.TrainingSession$formationArgs<ExtArgs>
   trainer?: boolean | Prisma.TrainingSession$trainerArgs<ExtArgs>
   enrollments?: boolean | Prisma.TrainingSession$enrollmentsArgs<ExtArgs>
+  materials?: boolean | Prisma.TrainingSession$materialsArgs<ExtArgs>
   _count?: boolean | Prisma.TrainingSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trainingSession"]>
 
@@ -1500,6 +1656,7 @@ export type TrainingSessionInclude<ExtArgs extends runtime.Types.Extensions.Inte
   formation?: boolean | Prisma.TrainingSession$formationArgs<ExtArgs>
   trainer?: boolean | Prisma.TrainingSession$trainerArgs<ExtArgs>
   enrollments?: boolean | Prisma.TrainingSession$enrollmentsArgs<ExtArgs>
+  materials?: boolean | Prisma.TrainingSession$materialsArgs<ExtArgs>
   _count?: boolean | Prisma.TrainingSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1510,6 +1667,7 @@ export type $TrainingSessionPayload<ExtArgs extends runtime.Types.Extensions.Int
     formation: Prisma.$FormationPayload<ExtArgs> | null
     trainer: Prisma.$TrainerPayload<ExtArgs> | null
     enrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
+    materials: Prisma.$SessionMaterialPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1874,6 +2032,7 @@ export interface Prisma__TrainingSessionClient<T, Null = never, ExtArgs extends 
   formation<T extends Prisma.TrainingSession$formationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$formationArgs<ExtArgs>>): Prisma.Prisma__FormationClient<runtime.Types.Result.GetResult<Prisma.$FormationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   trainer<T extends Prisma.TrainingSession$trainerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$trainerArgs<ExtArgs>>): Prisma.Prisma__TrainerClient<runtime.Types.Result.GetResult<Prisma.$TrainerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   enrollments<T extends Prisma.TrainingSession$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  materials<T extends Prisma.TrainingSession$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionMaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2328,6 +2487,30 @@ export type TrainingSession$enrollmentsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.EnrollmentScalarFieldEnum | Prisma.EnrollmentScalarFieldEnum[]
+}
+
+/**
+ * TrainingSession.materials
+ */
+export type TrainingSession$materialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SessionMaterial
+   */
+  select?: Prisma.SessionMaterialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SessionMaterial
+   */
+  omit?: Prisma.SessionMaterialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionMaterialInclude<ExtArgs> | null
+  where?: Prisma.SessionMaterialWhereInput
+  orderBy?: Prisma.SessionMaterialOrderByWithRelationInput | Prisma.SessionMaterialOrderByWithRelationInput[]
+  cursor?: Prisma.SessionMaterialWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SessionMaterialScalarFieldEnum | Prisma.SessionMaterialScalarFieldEnum[]
 }
 
 /**
