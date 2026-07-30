@@ -20,9 +20,14 @@ router.get("/partners", async (_req, res) => {
     }
 });
 // GET /api/categories — public, catalogue complet (branches + formations)
-router.get("/categories", async (_req, res) => {
+router.get("/categories", async (req, res) => {
     try {
+        const { metier } = req.query;
+        const metierFilter = metier === "true" ? { isMetier: true }
+            : metier === "false" ? { isMetier: false }
+                : {};
         const categories = await db_1.prisma.category.findMany({
+            where: metierFilter,
             orderBy: { name: "asc" },
             include: {
                 formations: {
@@ -43,10 +48,15 @@ router.get("/categories", async (_req, res) => {
 // session de même titre + même branche si elle existe.
 router.get("/sessions", async (req, res) => {
     try {
-        const { categoryId } = req.query;
+        const { categoryId, metier } = req.query;
+        // metier=true → uniquement les sessions "Formations Métiers" ; metier=false → les autres.
+        const metierFilter = metier === "true" ? { category: { isMetier: true } }
+            : metier === "false" ? { category: { isMetier: false } }
+                : {};
         const sessions = await db_1.prisma.trainingSession.findMany({
             where: {
                 ...(categoryId ? { categoryId } : {}),
+                ...metierFilter,
             },
             orderBy: { startDate: "asc" },
             include: {

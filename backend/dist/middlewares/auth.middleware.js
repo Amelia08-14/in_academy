@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticate = authenticate;
 exports.requireRole = requireRole;
 const jwt_1 = require("../lib/jwt");
-function authenticate(req, res, next) {
+const db_1 = require("../lib/db");
+async function authenticate(req, res, next) {
     const header = req.headers.authorization;
     if (!header?.startsWith("Bearer ")) {
         res.status(401).json({ error: "Token manquant" });
@@ -11,7 +12,18 @@ function authenticate(req, res, next) {
     }
     try {
         const token = header.slice(7);
-        req.user = (0, jwt_1.verifyToken)(token);
+        const payload = (0, jwt_1.verifyToken)(token);
+        // Vérifie que le compte existe toujours et n'a pas été désactivé :
+        // sinon un utilisateur désactivé garderait sa session valide jusqu'à expiration du token.
+        const user = await db_1.prisma.user.findUnique({
+            where: { id: payload.userId },
+            select: { isActive: true },
+        });
+        if (!user || !user.isActive) {
+            res.status(401).json({ error: "Compte désactivé ou introuvable. Veuillez vous reconnecter." });
+            return;
+        }
+        req.user = payload;
         next();
     }
     catch {

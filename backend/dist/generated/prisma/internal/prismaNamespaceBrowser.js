@@ -179,6 +179,8 @@ exports.CategoryScalarFieldEnum = {
     slug: 'slug',
     name: 'name',
     description: 'description',
+    isMetier: 'isMetier',
+    coverImageUrl: 'coverImageUrl',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -384,7 +386,8 @@ exports.CategoryOrderByRelevanceFieldEnum = {
     id: 'id',
     slug: 'slug',
     name: 'name',
-    description: 'description'
+    description: 'description',
+    coverImageUrl: 'coverImageUrl'
 };
 exports.FormationOrderByRelevanceFieldEnum = {
     id: 'id',

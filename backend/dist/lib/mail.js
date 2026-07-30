@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEnrollmentPendingEmail = sendEnrollmentPendingEmail;
 exports.sendEnrollmentConfirmedEmail = sendEnrollmentConfirmedEmail;
+exports.sendQuoteSentEmail = sendQuoteSentEmail;
 exports.sendAdminNotificationEmail = sendAdminNotificationEmail;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const smtpHost = process.env.SMTP_HOST;
@@ -81,6 +82,21 @@ async function sendEnrollmentConfirmedEmail(data) {
     const intro = "Votre inscription a ete confirmee par notre administration. Merci de vous presenter le jour de la formation a 09h00.";
     const details = `${data.formationTitle}${data.startDate ? ` - ${formatDate(data.startDate)}` : ""}`;
     await sendMail(data.to, subject, enrollmentHtml("Inscription confirmee", intro, data, "09h00"), `Bonjour ${data.learnerName}, votre inscription a ete confirmee. Merci de vous presenter le jour de la formation a 09h00. Formation: ${details}.`);
+}
+// Email au client entreprise quand l'admin lui envoie un devis (tâche 7).
+async function sendQuoteSentEmail(data) {
+    const subject = "Votre devis IN ACADEMY est disponible";
+    const list = data.formations.map((f) => `<li>${escapeHtml(f)}</li>`).join("");
+    const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f2340;max-width:620px;margin:0 auto;padding:24px">
+      <h1 style="font-size:20px;margin:0 0 16px;color:#0b2545">Votre devis est prêt</h1>
+      <p>Bonjour ${escapeHtml(data.company)},</p>
+      <p>Votre devis pour les formations suivantes a été préparé par notre équipe :</p>
+      <ul>${list}</ul>
+      <p>Connectez-vous à votre espace entreprise pour le consulter, l'accepter ou le refuser (après dépôt du reçu de paiement).</p>
+      <p style="margin-top:20px">Équipe IN ACADEMY</p>
+    </div>`;
+    await sendMail(data.to, subject, html, `Bonjour ${data.company}, votre devis IN ACADEMY est disponible dans votre espace entreprise. Formations : ${data.formations.join(", ")}.`);
 }
 // Notification générique à l'administration (dépôt de reçu, nouvelle candidature, etc.)
 const adminEmail = process.env.ADMIN_EMAIL ?? smtpUser;

@@ -128,12 +128,38 @@ router.patch("/users/:id/toggle-active", async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
+// DELETE /api/admin/users/:id — supprime un utilisateur (cascade profils/inscriptions)
+router.delete("/users/:id", async (req, res) => {
+    try {
+        const id = req.params["id"];
+        const target = await db_1.prisma.user.findUnique({ where: { id } });
+        if (!target) {
+            res.status(404).json({ error: "Utilisateur introuvable" });
+            return;
+        }
+        // On protège les comptes administration et l'auto-suppression.
+        if (["SUPER_ADMIN", "ADMIN", "MANAGER"].includes(target.role)) {
+            res.status(403).json({ error: "Impossible de supprimer un compte administration ici." });
+            return;
+        }
+        if (target.id === req.user.userId) {
+            res.status(403).json({ error: "Vous ne pouvez pas supprimer votre propre compte." });
+            return;
+        }
+        await db_1.prisma.user.delete({ where: { id } });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[admin/users delete]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 // GET /api/admin/categories — branches (avec compteur de formations)
 router.get("/categories", async (_req, res) => {
     try {
         const categories = await db_1.prisma.category.findMany({
             orderBy: { name: "asc" },
-            include: { _count: { select: { formations: true } } },
+            include: { _count: { select: { formations: true, sessions: true } } },
         });
         res.json(categories);
     }
@@ -145,18 +171,82 @@ router.get("/categories", async (_req, res) => {
 // POST /api/admin/categories — créer une branche
 router.post("/categories", async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, isMetier } = req.body;
         if (!name || name.trim().length < 2) {
             res.status(400).json({ error: "Nom de la branche requis" });
             return;
         }
         const category = await db_1.prisma.category.create({
-            data: { name: name.trim(), slug: slugify(name), description: description ?? null },
+            data: { name: name.trim(), slug: slugify(name), description: description ?? null, isMetier: isMetier === true },
         });
         res.status(201).json(category);
     }
     catch (err) {
+        if (err instanceof Error && "code" in err && err.code === "P2002") {
+            res.status(409).json({ error: "Une branche avec ce nom existe déjà." });
+            return;
+        }
         console.error("[admin/categories post]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// PATCH /api/admin/categories/:id — modifier une branche (nom, description, type Entreprise/Métier)
+router.patch("/categories/:id", async (req, res) => {
+    try {
+        const id = req.params["id"];
+        const { name, description, isMetier, coverImageUrl } = req.body;
+        const existing = await db_1.prisma.category.findUnique({ where: { id } });
+        if (!existing) {
+            res.status(404).json({ error: "Branche introuvable" });
+            return;
+        }
+        if (name !== undefined && name.trim().length < 2) {
+            res.status(400).json({ error: "Nom de la branche requis" });
+            return;
+        }
+        const category = await db_1.prisma.category.update({
+            where: { id },
+            data: {
+                ...(name !== undefined ? { name: name.trim(), slug: slugify(name) } : {}),
+                ...(description !== undefined ? { description: description || null } : {}),
+                ...(isMetier !== undefined ? { isMetier: isMetier === true } : {}),
+                ...(coverImageUrl !== undefined ? { coverImageUrl: coverImageUrl || null } : {}),
+            },
+        });
+        res.json(category);
+    }
+    catch (err) {
+        if (err instanceof Error && "code" in err && err.code === "P2002") {
+            res.status(409).json({ error: "Une branche avec ce nom existe déjà." });
+            return;
+        }
+        console.error("[admin/categories patch]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// DELETE /api/admin/categories/:id — supprimer une branche (refuse si elle a des formations ou sessions)
+router.delete("/categories/:id", async (req, res) => {
+    try {
+        const id = req.params["id"];
+        const category = await db_1.prisma.category.findUnique({
+            where: { id },
+            include: { _count: { select: { formations: true, sessions: true } } },
+        });
+        if (!category) {
+            res.status(404).json({ error: "Branche introuvable" });
+            return;
+        }
+        if (category._count.formations > 0 || category._count.sessions > 0) {
+            res.status(409).json({
+                error: `Cette branche contient ${category._count.formations} formation(s) et ${category._count.sessions} session(s). Déplacez-les ou supprimez-les d'abord.`,
+            });
+            return;
+        }
+        await db_1.prisma.category.delete({ where: { id } });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[admin/categories delete]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
@@ -228,6 +318,30 @@ router.patch("/formations/:id", async (req, res) => {
     }
     catch (err) {
         console.error("[admin/formations patch]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// DELETE /api/admin/formations/:id — supprime une formation si elle n'est pas référencée
+router.delete("/formations/:id", async (req, res) => {
+    try {
+        const id = req.params["id"];
+        const [sessions, enrollments, quoteItems] = await Promise.all([
+            db_1.prisma.trainingSession.count({ where: { formationId: id } }),
+            db_1.prisma.enrollment.count({ where: { formationId: id } }),
+            db_1.prisma.quoteRequestItem.count({ where: { formationId: id } }),
+        ]);
+        if (sessions + enrollments + quoteItems > 0) {
+            res.status(409).json({
+                error: "Formation utilisée (sessions, inscriptions ou devis). Désactivez-la plutôt que de la supprimer.",
+            });
+            return;
+        }
+        await db_1.prisma.formationTrainer.deleteMany({ where: { formationId: id } });
+        await db_1.prisma.formation.delete({ where: { id } });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[admin/formations delete]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
@@ -567,7 +681,22 @@ router.patch("/quotes/:id/status", async (req, res) => {
         const quote = await db_1.prisma.quoteRequest.update({
             where: { id: req.params["id"] },
             data: { status, respondedAt: new Date() },
+            include: {
+                company: { include: { profiles: { include: { user: { select: { email: true } } } } } },
+                items: { include: { formation: { select: { title: true } } } },
+            },
         });
+        // Email au client entreprise quand le devis lui est envoyé (tâche 7).
+        if (status === "SENT") {
+            const to = quote.company.profiles[0]?.user.email;
+            if (to) {
+                void (0, mail_1.sendQuoteSentEmail)({
+                    to,
+                    company: quote.company.raisonSociale,
+                    formations: quote.items.map((i) => i.formation.title),
+                }).catch((err) => console.error("[mail quote sent]", err));
+            }
+        }
         res.json(quote);
     }
     catch (err) {

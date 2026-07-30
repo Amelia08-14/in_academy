@@ -163,7 +163,7 @@ router.get("/categories", async (_req: AuthRequest, res: Response) => {
   try {
     const categories = await prisma.category.findMany({
       orderBy: { name: "asc" },
-      include: { _count: { select: { formations: true } } },
+      include: { _count: { select: { formations: true, sessions: true } } },
     });
     res.json(categories);
   } catch (err) {
@@ -185,7 +185,75 @@ router.post("/categories", async (req: AuthRequest, res: Response) => {
     });
     res.status(201).json(category);
   } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "P2002") {
+      res.status(409).json({ error: "Une branche avec ce nom existe déjà." });
+      return;
+    }
     console.error("[admin/categories post]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// PATCH /api/admin/categories/:id — modifier une branche (nom, description, type Entreprise/Métier)
+router.patch("/categories/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    const { name, description, isMetier, coverImageUrl } = req.body as {
+      name?: string; description?: string | null; isMetier?: boolean; coverImageUrl?: string | null;
+    };
+
+    const existing = await prisma.category.findUnique({ where: { id } });
+    if (!existing) {
+      res.status(404).json({ error: "Branche introuvable" });
+      return;
+    }
+    if (name !== undefined && name.trim().length < 2) {
+      res.status(400).json({ error: "Nom de la branche requis" });
+      return;
+    }
+
+    const category = await prisma.category.update({
+      where: { id },
+      data: {
+        ...(name !== undefined ? { name: name.trim(), slug: slugify(name) } : {}),
+        ...(description !== undefined ? { description: description || null } : {}),
+        ...(isMetier !== undefined ? { isMetier: isMetier === true } : {}),
+        ...(coverImageUrl !== undefined ? { coverImageUrl: coverImageUrl || null } : {}),
+      },
+    });
+    res.json(category);
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "P2002") {
+      res.status(409).json({ error: "Une branche avec ce nom existe déjà." });
+      return;
+    }
+    console.error("[admin/categories patch]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/categories/:id — supprimer une branche (refuse si elle a des formations ou sessions)
+router.delete("/categories/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    const category = await prisma.category.findUnique({
+      where: { id },
+      include: { _count: { select: { formations: true, sessions: true } } },
+    });
+    if (!category) {
+      res.status(404).json({ error: "Branche introuvable" });
+      return;
+    }
+    if (category._count.formations > 0 || category._count.sessions > 0) {
+      res.status(409).json({
+        error: `Cette branche contient ${category._count.formations} formation(s) et ${category._count.sessions} session(s). Déplacez-les ou supprimez-les d'abord.`,
+      });
+      return;
+    }
+    await prisma.category.delete({ where: { id } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/categories delete]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
