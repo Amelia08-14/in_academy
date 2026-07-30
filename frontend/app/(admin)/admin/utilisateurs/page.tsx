@@ -70,6 +70,11 @@ export default function AdminUtilisateursPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
+  const [passwordUser, setPasswordUser] = useState<User | null>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   const load = () => {
     api.get<User[]>("/admin/users")
@@ -94,6 +99,29 @@ export default function AdminUtilisateursPage() {
       load();
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : "Suppression impossible.");
+    }
+  };
+
+  const openPasswordModal = (u: User) => {
+    setPasswordUser(u);
+    setNewPassword("");
+    setPasswordError("");
+    setPasswordSuccess(false);
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passwordUser) return;
+    setPasswordSaving(true);
+    setPasswordError("");
+    try {
+      await api.patch(`/admin/users/${passwordUser.id}/password`, { password: newPassword });
+      setPasswordSuccess(true);
+      setNewPassword("");
+    } catch (err: unknown) {
+      setPasswordError(err instanceof Error ? err.message : "Erreur");
+    } finally {
+      setPasswordSaving(false);
     }
   };
 
@@ -156,6 +184,9 @@ export default function AdminUtilisateursPage() {
           </button>
           {!ADMIN_ROLES.includes(u.role) && (
             <>
+              <button className="admin-btn" onClick={() => openPasswordModal(u)}>
+                Mot de passe
+              </button>
               <button
                 className={`admin-btn ${u.isActive ? "admin-btn--cancel" : "admin-btn--confirm"}`}
                 onClick={() => toggleActive(u.id)}
@@ -445,6 +476,50 @@ export default function AdminUtilisateursPage() {
             <div className="auth-form-actions" style={{ marginTop: 20 }}>
               <button type="button" className="btn btn--outline" onClick={() => setDetailUser(null)}>Fermer</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {passwordUser && (
+        <div className="admin-modal-overlay" onClick={() => setPasswordUser(null)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal__header">
+              <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
+                Modifier le mot de passe
+              </h2>
+              <button className="admin-modal__close" onClick={() => setPasswordUser(null)}>✕</button>
+            </div>
+
+            <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>
+              Compte : <strong>{passwordUser.email}</strong>
+            </p>
+
+            {passwordError && <div className="auth-error">{passwordError}</div>}
+            {passwordSuccess && (
+              <div className="auth-success" style={{ marginBottom: 16 }}>
+                Mot de passe mis à jour avec succès.
+              </div>
+            )}
+
+            <form onSubmit={handleChangePassword} className="auth-form">
+              <div className="auth-field">
+                <label className="auth-label">Nouveau mot de passe</label>
+                <input
+                  type="password" className="auth-input" required minLength={8}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="8 caractères minimum"
+                />
+              </div>
+              <div className="auth-form-actions">
+                <button type="button" className="btn btn--outline" onClick={() => setPasswordUser(null)}>
+                  Fermer
+                </button>
+                <button type="submit" className="btn btn--primary" disabled={passwordSaving}>
+                  {passwordSaving ? "Enregistrement…" : "Enregistrer"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

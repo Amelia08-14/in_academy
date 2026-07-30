@@ -1707,28 +1707,6 @@ button {
   align-items: center;
 }
 
-.branches-fan__caption {
-  text-align: center;
-  margin-bottom: 28px;
-  min-height: 58px;
-}
-
-.branches-fan__caption-title {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--navy);
-  margin: 0 0 4px;
-}
-
-.branches-fan__caption-sub {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--text-light);
-}
-
 .branches-fan {
   position: relative;
   width: 1040px;
@@ -1798,8 +1776,11 @@ button {
   height: 480px;
   border-radius: 22px;
   overflow: hidden;
+  background: var(--white);
   box-shadow: 0 20px 40px rgba(1, 30, 65, 0.22);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
 .branches-fan__card--center {
@@ -1825,6 +1806,12 @@ button {
   margin-left: -80px;
 }
 
+.branches-fan__photo {
+  position: relative;
+  flex: 0 0 62%;
+  background: var(--cream-dark);
+}
+
 .branches-fan__gradient {
   position: absolute;
   inset: 0;
@@ -1841,6 +1828,52 @@ button {
   object-fit: cover;
   object-position: center 30%;
 }
+
+.branches-fan__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px 20px 20px;
+  min-width: 0;
+}
+
+.branches-fan__name {
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+}
+
+.branches-fan__cta-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.branches-fan__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 10px 16px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold) 55%, var(--gold-dark));
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.branches-fan__card--compact .branches-fan__content {
+  padding: 10px 12px 12px;
+  gap: 3px;
+}
+.branches-fan__card--compact .branches-fan__name { font-size: 13px; }
+.branches-fan__card--compact .branches-fan__cta-label,
+.branches-fan__card--compact .branches-fan__cta-btn { display: none; }
 
 .branches-list__skeleton {
   display: flex;
@@ -2407,98 +2440,113 @@ button {
   background: rgba(255,255,255,0.12);
 }
 
-/* ===== FORMATIONS PARTICULIER / MÉTIERS — hero compact ===== */
-.formations-hero {
+/* ===== PAGE HERO PARTAGÉ (Formations, Formateurs, Contact…) — image en arrière-plan,
+   avec un espace visible sous le menu (pas collée) et une hauteur modérée pour ne pas
+   étirer la photo au-delà de sa résolution native. ===== */
+.page-hero-v2 {
   position: relative;
-  background: var(--navy-deeper);
-  overflow: hidden;
-  border-top: 5px solid var(--gold);
-}
-.formations-hero__bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(120% 90% at 85% 0%, rgba(196,146,42,0.18) 0%, transparent 55%),
-    linear-gradient(160deg, rgba(1,21,48,0.96) 0%, rgba(1,21,48,0.82) 100%);
-  z-index: 1;
-}
-.formations-hero--metiers .formations-hero__bg {
-  background:
-    radial-gradient(120% 90% at 85% 0%, rgba(45,122,122,0.28) 0%, transparent 55%),
-    linear-gradient(160deg, rgba(1,21,48,0.96) 0%, rgba(1,21,48,0.82) 100%);
-}
-.formations-hero__inner {
-  position: relative;
-  z-index: 2;
-  padding-top: 150px;
-  padding-bottom: 56px;
-}
-.formations-hero__eyebrow { color: var(--gold-light); }
-.formations-hero--metiers .formations-hero__eyebrow { color: var(--teal); }
-.formations-hero__title {
-  font-family: var(--font-heading);
-  font-size: clamp(38px, 5.5vw, 72px);
-  font-weight: 800;
-  color: var(--white);
-  line-height: 1;
-  letter-spacing: -2px;
-  margin: 12px 0 20px;
-}
-.formations-hero__sub {
-  font-size: 16px;
-  line-height: 1.75;
-  color: rgba(255,255,255,0.72);
-  max-width: 620px;
-  font-weight: 300;
-  margin-bottom: 28px;
-}
-.formations-hero__sub strong { color: #fff; font-weight: 600; }
-.formations-hero__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 32px;
-}
-.formations-hero__chip {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 50px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.16);
-}
-.formations-hero__stats {
+  min-height: 560px;
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding-top: 28px;
-  border-top: 1px solid rgba(255,255,255,0.15);
+  background: var(--beige-light);
+  overflow: hidden;
 }
-.formations-hero__stat { display: flex; flex-direction: column; gap: 4px; }
-.formations-hero__stat-num {
+.page-hero-v2__bg {
+  position: absolute;
+  /* Démarre sous le bandeau du menu (≈ hauteur du header) pour laisser un espace
+     crème visible en haut — l'image n'est jamais collée derrière la nav. */
+  top: 96px;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1700px;
+  z-index: 0;
+}
+.page-hero-v2__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    var(--beige-light) 0%,
+    var(--beige-light) 30%,
+    rgba(248, 245, 240, 0.78) 48%,
+    rgba(248, 245, 240, 0.18) 68%,
+    transparent 82%
+  );
+}
+.page-hero-v2__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 172px 0 96px;
+}
+.page-hero-v2__text { max-width: 560px; }
+.page-hero-v2__title {
+  font-family: var(--font-heading);
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  margin-bottom: 20px;
+}
+.page-hero-v2__subtitle {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-body);
+  max-width: 480px;
+  margin-bottom: 32px;
+  font-weight: 300;
+}
+.page-hero-v2__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .page-hero-v2 { min-height: 480px; }
+  .page-hero-v2__bg { top: 80px; bottom: 40px; }
+  .page-hero-v2__inner { padding: 130px 0 60px; }
+  .page-hero-v2__scrim {
+    background: linear-gradient(180deg,
+      var(--beige-light) 0%,
+      var(--beige-light) 40%,
+      rgba(248, 245, 240, 0.82) 60%,
+      rgba(248, 245, 240, 0.35) 100%
+    );
+  }
+  .page-hero-v2__text { max-width: 100%; }
+}
+
+/* ===== Bandeau stats (sous le hero partagé, page Branches) ===== */
+.branches-stats-strip {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-light);
+}
+.branches-stats-strip__inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 24px 0;
+}
+.branches-stats-strip__stat { display: flex; flex-direction: column; gap: 4px; }
+.branches-stats-strip__num {
   font-family: var(--font-mono);
-  font-size: 26px;
-  font-weight: 600;
-  color: var(--white);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--navy);
   line-height: 1;
 }
-.formations-hero__stat-lbl {
+.branches-stats-strip__lbl {
   font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 2px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: var(--text-muted);
 }
-.formations-hero__stat-sep { width: 1px; height: 36px; background: rgba(255,255,255,0.12); }
-
-@media (max-width: 640px) {
-  .formations-hero__inner { padding-top: 120px; padding-bottom: 40px; }
-  .formations-hero__stats { gap: 18px; }
-}
+.branches-stats-strip__sep { width: 1px; height: 30px; background: var(--border-light); }
 
 /* ===== BRANCHES LISTING PAGE ===== */
 .branches-listing {
@@ -4702,6 +4750,15 @@ button {
   margin-bottom: 4px;
 }
 
+.auth-success {
+  background: rgba(46, 125, 132, 0.08);
+  border: 1px solid rgba(46, 125, 132, 0.3);
+  color: var(--teal-dark);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
 .auth-form-actions {
   display: flex;
   gap: 12px;
@@ -4946,7 +5003,7 @@ button {
 }
 
 /* ── Page header ── */
-.admin-page { max-width: 1140px; }
+.admin-page { width: 100%; }
 
 .admin-page__header {
   display: flex;
@@ -5702,6 +5759,41 @@ button {
   color: var(--gold-dark);
 }
 
+/* ===== SUPPORTS DE COURS (admin sessions) ===== */
+.session-materials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.session-materials-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--beige-light);
+  border: 1px solid var(--border-light);
+  border-radius: 9px;
+}
+.session-materials-list__item a {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.session-materials-list__item a:hover { color: var(--teal); }
+.session-materials-add {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--beige-light);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+
 /* ===== COMPOSANT FILE UPLOAD ===== */
 .file-upload {
   display: flex;
@@ -5908,6 +6000,41 @@ button {
   padding: 80px 20px;
   color: var(--text-muted);
   font-size: 15px;
+}
+
+/* Regroupement par domaine */
+.trainers-domain-group {
+  margin-bottom: 48px;
+}
+.trainers-domain-group:last-child { margin-bottom: 0; }
+.trainers-domain-group__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+.trainers-domain-group__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.trainers-domain-group__title {
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.trainers-domain-group__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--beige-light);
+  border-radius: 20px;
+  padding: 2px 10px;
 }
 
 /* Trainer card */
@@ -6201,6 +6328,21 @@ button {
   margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 2px solid var(--beige-dark);
+}
+
+.dashboard-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--beige-dark);
+}
+.dashboard-section__head .dashboard-section__title {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .dashboard-empty {
@@ -6550,9 +6692,71 @@ button {
   color: var(--text-muted);
 }
 
+.dashboard-doc__remove {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.dashboard-doc__remove:hover {
+  background: rgba(231, 76, 60, 0.08);
+  border-color: rgba(231, 76, 60, 0.3);
+  color: #c0392b;
+}
+
 @media (max-width: 640px) {
   .dashboard-docs-uploaders { grid-template-columns: 1fr; }
 }
+
+/* ===== Supports de cours ===== */
+.dashboard-materials {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.dashboard-materials__group {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+}
+.dashboard-materials__session {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.dashboard-materials__empty {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.dashboard-materials__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dashboard-materials__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dashboard-materials__item a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+}
+.dashboard-materials__item a:hover { color: var(--teal); text-decoration: underline; }
 
 /* Avantages partenaires (tâche 3) */
 .dashboard-perks {

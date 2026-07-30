@@ -98,11 +98,23 @@ function FanCard({ branch, offset, onSelect, compact }: FanCardProps) {
       tabIndex={0}
       aria-label={branch.name}
     >
-      {img ? (
-        <Image src={img} alt={branch.name} fill sizes="320px" className="branches-fan__img" />
-      ) : (
-        <div className={`branches-fan__gradient branches-fan__gradient--${offset < 0 ? -offset % 4 : offset % 4}`} />
-      )}
+      <div className="branches-fan__photo">
+        {img ? (
+          <Image src={img} alt={branch.name} fill sizes="320px" className="branches-fan__img" />
+        ) : (
+          <div className={`branches-fan__gradient branches-fan__gradient--${offset < 0 ? -offset % 4 : offset % 4}`} />
+        )}
+      </div>
+      <div className="branches-fan__content">
+        <h3 className="branches-fan__name">{branch.name}</h3>
+        <span className="branches-fan__cta-label">Voir le Programme</span>
+        <span className="branches-fan__cta-btn">
+          Découvrir La Formations
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </span>
+      </div>
     </motion.div>
   );
 }
@@ -134,25 +146,9 @@ function BranchesFan({ branches }: { branches: BranchItem[] }) {
   };
 
   const visibleOffsets = [-2, -1, 0, 1, 2];
-  const center = branches[centerIdx];
 
   return (
     <div className="branches-fan-wrap">
-      <div className="branches-fan__caption">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={center?.slug}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-          >
-            <h3 className="branches-fan__caption-title">{center?.name}</h3>
-            <span className="branches-fan__caption-sub">{center?.tag}</span>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
       <div className={`branches-fan${compact ? " branches-fan--compact" : ""}`}>
         <motion.div
           className="branches-fan__track"
@@ -230,7 +226,7 @@ function HeroSlider() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="hero-slide__bg">
-              <Image src="/banner.png" alt="" fill style={{ objectFit: "cover", objectPosition: "75% center" }} priority />
+              <Image src="/banner.png" alt="" fill sizes="100vw" quality={95} style={{ objectFit: "cover", objectPosition: "75% center" }} priority />
               <div className="hero-slide__bg-scrim" />
             </div>
 
@@ -284,7 +280,7 @@ function HeroSlider() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="hero-slide__bg">
-              <Image src="/banner2.png" alt="" fill style={{ objectFit: "cover", objectPosition: "80% center" }} priority />
+              <Image src="/banner2.png" alt="" fill sizes="100vw" quality={95} style={{ objectFit: "cover", objectPosition: "80% center" }} priority />
               <div className="hero-slide__bg-scrim" />
             </div>
 

@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import PageHero from "../components/PageHero";
 
+interface Category { id: string; name: string; slug: string }
+interface Formation { id: string; title: string; slug: string; category: Category | null }
+interface TrainerFormation { formation: Formation }
 interface Trainer {
   id: string;
   firstName: string;
@@ -13,6 +17,7 @@ interface Trainer {
   speciality: string | null;
   bio: string | null;
   isActive: boolean;
+  formations: TrainerFormation[];
 }
 
 function getInitials(name: string): string {
@@ -24,14 +29,21 @@ function getInitials(name: string): string {
     .join("");
 }
 
-const AVATAR_COLORS = [
-  ["#c4922a", "#f0deb0"],
-  ["#0f2340", "#d4e4f7"],
-  ["#2e7d84", "#c8edf0"],
-  ["#a07520", "#f5e6c5"],
-  ["#1f5f65", "#d0ecee"],
-  ["#8b5a2b", "#f0ddd0"],
+// Palette de la charte — une couleur par domaine, attribuée de façon stable (hash du nom).
+const DOMAIN_PALETTE: { bg: string; text: string; pill: string; pillText: string }[] = [
+  { bg: "linear-gradient(135deg, #0f2340, #1c3a63)", text: "#fff", pill: "rgba(15,35,64,0.10)", pillText: "#0f2340" },
+  { bg: "linear-gradient(135deg, #c4922a, #a07520)", text: "#fff", pill: "rgba(196,146,42,0.14)", pillText: "#a07520" },
+  { bg: "linear-gradient(135deg, #2e7d84, #1f5f65)", text: "#fff", pill: "rgba(46,125,132,0.14)", pillText: "#1f5f65" },
+  { bg: "linear-gradient(135deg, #03469f, #011939)", text: "#fff", pill: "rgba(3,70,159,0.12)", pillText: "#03469f" },
+  { bg: "linear-gradient(135deg, #8b5a2b, #6b4420)", text: "#fff", pill: "rgba(139,90,43,0.14)", pillText: "#8b5a2b" },
+  { bg: "linear-gradient(135deg, #3d9aa2, #1f5f65)", text: "#fff", pill: "rgba(61,154,162,0.14)", pillText: "#1f5f65" },
 ];
+
+function domainColor(key: string) {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  return DOMAIN_PALETTE[hash % DOMAIN_PALETTE.length];
+}
 
 export default function FormateursPage() {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
@@ -54,25 +66,38 @@ export default function FormateursPage() {
     const q = search.toLowerCase();
     return (
       t.displayName.toLowerCase().includes(q) ||
-      (t.speciality ?? "").toLowerCase().includes(q)
+      (t.speciality ?? "").toLowerCase().includes(q) ||
+      (t.formations[0]?.formation.category?.name ?? "").toLowerCase().includes(q)
     );
   });
+
+  // Regroupe les formateurs par domaine (branche de leur formation principale).
+  const groups = useMemo(() => {
+    const map = new Map<string, { name: string; trainers: Trainer[] }>();
+    for (const t of filtered) {
+      const domain = t.formations[0]?.formation.category;
+      const key = domain?.id ?? "__autres";
+      const name = domain?.name ?? "Autres domaines";
+      if (!map.has(key)) map.set(key, { name, trainers: [] });
+      map.get(key)!.trainers.push(t);
+    }
+    return Array.from(map.entries())
+      .sort(([a], [b]) => (a === "__autres" ? 1 : b === "__autres" ? -1 : 0))
+      .map(([key, v]) => ({ key, ...v }));
+  }, [filtered]);
 
   return (
     <>
       <Header />
 
-      {/* Page Hero */}
-      <section className="page-hero">
-        <div className="container">
-          <span className="page-hero__label">Notre équipe pédagogique</span>
-          <h1 className="page-hero__title">Nos Formateurs</h1>
-          <p className="page-hero__subtitle">
-            Des experts métier et des pédagogues expérimentés pour vous
-            accompagner vers l&apos;excellence professionnelle.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        title="Nos Formateurs"
+        subtitle="Des experts métier et des pédagogues expérimentés pour vous accompagner vers l'excellence professionnelle."
+        primaryLabel="Explorer Le Catalogue"
+        primaryHref="/branches"
+        secondaryLabel="Nous contacter"
+        secondaryHref="/contact"
+      />
 
       {/* Trainers grid */}
       <section className="trainers-section">
@@ -85,7 +110,7 @@ export default function FormateursPage() {
               </svg>
               <input
                 type="text"
-                placeholder="Rechercher par nom ou spécialité…"
+                placeholder="Rechercher par nom, spécialité ou domaine…"
                 className="trainers-search__input"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -114,27 +139,40 @@ export default function FormateursPage() {
             </div>
           )}
 
-          <div className="trainers-grid">
-            {filtered.map((trainer, i) => {
-              const [bg, text] = AVATAR_COLORS[i % AVATAR_COLORS.length];
-              return (
-                <div key={trainer.id} className="trainer-card">
-                  <div className="trainer-card__avatar" style={{ background: bg, color: text }}>
-                    {getInitials(trainer.displayName)}
-                  </div>
-                  <div className="trainer-card__body">
-                    <h3 className="trainer-card__name">{trainer.displayName}</h3>
-                    {trainer.speciality && (
-                      <span className="trainer-card__speciality">{trainer.speciality}</span>
-                    )}
-                    {trainer.bio && (
-                      <p className="trainer-card__bio">{trainer.bio}</p>
-                    )}
-                  </div>
+          {!loading && !error && groups.map((group) => {
+            const color = domainColor(group.key);
+            return (
+              <div className="trainers-domain-group" key={group.key}>
+                <div className="trainers-domain-group__head">
+                  <span className="trainers-domain-group__dot" style={{ background: color.pillText }} />
+                  <h2 className="trainers-domain-group__title">{group.name}</h2>
+                  <span className="trainers-domain-group__count">{group.trainers.length}</span>
                 </div>
-              );
-            })}
-          </div>
+
+                <div className="trainers-grid">
+                  {group.trainers.map((trainer) => (
+                    <div key={trainer.id} className="trainer-card">
+                      <div className="trainer-card__avatar" style={{ background: color.bg, color: color.text }}>
+                        {getInitials(trainer.displayName)}
+                      </div>
+                      <div className="trainer-card__body">
+                        <h3 className="trainer-card__name">{trainer.displayName}</h3>
+                        <span
+                          className="trainer-card__speciality"
+                          style={{ background: color.pill, borderColor: color.pill, color: color.pillText }}
+                        >
+                          {group.name}
+                        </span>
+                        {trainer.speciality && trainer.speciality !== group.name && (
+                          <p className="trainer-card__bio">{trainer.speciality}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -143,7 +181,6 @@ export default function FormateursPage() {
         <div className="container">
           <div className="cta-banner__inner">
             <div className="cta-banner__content">
-              <span className="section-eyebrow cta-banner__eyebrow">Rejoignez-nous</span>
               <h2 className="cta-banner__title">
                 Vous êtes formateur ?<br />Rejoignez notre équipe.
               </h2>

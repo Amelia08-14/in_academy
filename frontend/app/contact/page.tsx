@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import PageHero from "../components/PageHero";
 import { api } from "@/lib/api";
 
 interface Formation { id: string; title: string }
@@ -66,17 +67,10 @@ export default function ContactPage() {
     <>
       <Header />
 
-      {/* Page Hero */}
-      <section className="page-hero">
-        <div className="container">
-          <span className="page-hero__label">Contact</span>
-          <h1 className="page-hero__title">Demander une formation</h1>
-          <p className="page-hero__subtitle">
-            Vous ne trouvez pas la formation qu&apos;il vous faut ? Décrivez votre
-            besoin ci-dessous, notre équipe vous recontactera rapidement.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        title="Contact"
+        subtitle="Une question, un besoin de formation sur mesure ? Décrivez-le ci-dessous, notre équipe vous recontacte rapidement."
+      />
 
       {/* Inscription Content */}
       <section className="inscription">

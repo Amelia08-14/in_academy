@@ -6,6 +6,7 @@ import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PartnersStrip from "../components/PartnersStrip";
+import PageHero from "../components/PageHero";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
 
@@ -82,49 +83,33 @@ export default function BranchesPage() {
     <>
       <Header />
 
-      <section className="branches-page-hero">
-        <div className="branches-page-hero__topbar" />
-        <div className="branches-page-hero__mosaic" aria-hidden="true">
-          {categories.slice(0, 12).map((c) => {
-            const img = branchImage(c.slug);
-            return img ? (
-              <div className="branches-page-hero__tile" key={c.id}>
-                <Image src={img} alt="" fill sizes="16vw" />
-              </div>
-            ) : (
-              <div className="branches-page-hero__tile" key={c.id} />
-            );
-          })}
-        </div>
-        <div className="branches-page-hero__bg" />
-        <div className="container branches-page-hero__inner">
-          <span className="section-eyebrow branches-page-hero__eyebrow">Formations Entreprises</span>
-          <h1 className="branches-page-hero__title">Nos Formations</h1>
-          <p className="branches-page-hero__sub">
-            {categories.length || "12"} domaines de compétences stratégiques pour construire les parcours de vos équipes.
-          </p>
-          <div className="branches-page-hero__actions">
-            <a href="#catalogue" className="btn btn--primary">Explorer le catalogue</a>
-            <Link href="/contact" className="btn btn--outline">Nous contacter</Link>
+      <PageHero
+        title="Nos Formations"
+        subtitle={`${categories.length || "12"} domaines de compétences stratégiques pour construire les parcours de vos équipes.`}
+        primaryLabel="Explorer Le Catalogue"
+        primaryHref="#catalogue"
+        secondaryLabel="Nous contacter"
+        secondaryHref="/contact"
+      />
+
+      <div className="branches-stats-strip">
+        <div className="container branches-stats-strip__inner">
+          <div className="branches-stats-strip__stat">
+            <span className="branches-stats-strip__num">{loading ? "-" : categories.length}</span>
+            <span className="branches-stats-strip__lbl">Domaines</span>
           </div>
-          <div className="branches-page-hero__stats">
-            <div className="branches-page-hero__stat">
-              <span className="branches-page-hero__stat-num">{loading ? "-" : categories.length}</span>
-              <span className="branches-page-hero__stat-lbl">Domaines</span>
-            </div>
-            <div className="branches-page-hero__stat-sep" />
-            <div className="branches-page-hero__stat">
-              <span className="branches-page-hero__stat-num">{loading ? "-" : totalFormations}</span>
-              <span className="branches-page-hero__stat-lbl">Formations</span>
-            </div>
-            <div className="branches-page-hero__stat-sep" />
-            <div className="branches-page-hero__stat">
-              <span className="branches-page-hero__stat-num">{loading ? "-" : `${pctCertifying}%`}</span>
-              <span className="branches-page-hero__stat-lbl">Certifiantes</span>
-            </div>
+          <div className="branches-stats-strip__sep" />
+          <div className="branches-stats-strip__stat">
+            <span className="branches-stats-strip__num">{loading ? "-" : totalFormations}</span>
+            <span className="branches-stats-strip__lbl">Formations</span>
+          </div>
+          <div className="branches-stats-strip__sep" />
+          <div className="branches-stats-strip__stat">
+            <span className="branches-stats-strip__num">{loading ? "-" : `${pctCertifying}%`}</span>
+            <span className="branches-stats-strip__lbl">Certifiantes</span>
           </div>
         </div>
-      </section>
+      </div>
 
       <div id="catalogue">
         <DomainGrid categories={categories} />

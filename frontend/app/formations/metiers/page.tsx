@@ -6,6 +6,7 @@ import Image from "next/image";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import PartnersStrip from "../../components/PartnersStrip";
+import PageHero from "../../components/PageHero";
 import { api } from "@/lib/api";
 import { branchImage } from "@/lib/branchImages";
 
@@ -27,25 +28,18 @@ export default function FormationsMetiersPage() {
     <>
       <Header />
 
-      <section className="formations-hero formations-hero--metiers">
-        <div className="formations-hero__bg" />
-        <div className="container formations-hero__inner">
-          <span className="section-eyebrow formations-hero__eyebrow">Formations Métiers</span>
-          <h1 className="formations-hero__title">Métiers de la beauté &amp; du bien-être</h1>
-          <p className="formations-hero__sub">
-            Coiffure, esthétique, barber, onglerie… Des branches métiers ouvertes aussi bien aux
-            <strong> particuliers</strong> qu&apos;aux <strong>entreprises</strong>.
-          </p>
-          <div className="formations-hero__stats">
-            <div className="formations-hero__stat">
-              <span className="formations-hero__stat-num">{loading ? "-" : categories.length}</span>
-              <span className="formations-hero__stat-lbl">Branches métiers</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Formations Métiers"
+        subtitle="Coiffure, esthétique, barber, onglerie… Des branches métiers ouvertes aussi bien aux particuliers qu'aux entreprises."
+        primaryLabel="Explorer Le Catalogue"
+        primaryHref="#catalogue"
+        secondaryLabel="Nous contacter"
+        secondaryHref="/contact"
+        image="/home_pic/home_pic_1.png"
+        imagePosition="center 30%"
+      />
 
-      <section className="branches-listing">
+      <section className="branches-listing" id="catalogue">
         <div className="container">
           {categories.length === 0 && !loading ? (
             <div className="catalogue__empty">

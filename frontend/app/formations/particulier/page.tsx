@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import PartnersStrip from "../../components/PartnersStrip";
+import PageHero from "../../components/PageHero";
 import SessionGrid, { type Session } from "../../components/SessionGrid";
 import { api } from "@/lib/api";
 
@@ -23,38 +23,24 @@ export default function FormationsParticulierPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const openCount = sessions.filter((s) => s.isOpen).length;
-
   return (
     <>
       <Header />
 
-      <section className="formations-hero">
-        <div className="formations-hero__bg" />
-        <div className="container formations-hero__inner">
-          <span className="section-eyebrow formations-hero__eyebrow">Formations Particulier</span>
-          <h1 className="formations-hero__title">Sessions pour les particuliers</h1>
-          <p className="formations-hero__sub">
-            Des sessions ouvertes aux inscriptions individuelles : durée, tarif et détails pratiques.
-            Choisissez votre session et inscrivez-vous directement.
-          </p>
-          <div className="formations-hero__stats">
-            <div className="formations-hero__stat">
-              <span className="formations-hero__stat-num">{loading ? "-" : sessions.length}</span>
-              <span className="formations-hero__stat-lbl">Sessions</span>
-            </div>
-            <div className="formations-hero__stat-sep" />
-            <div className="formations-hero__stat">
-              <span className="formations-hero__stat-num">{loading ? "-" : openCount}</span>
-              <span className="formations-hero__stat-lbl">Ouvertes</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        title="Formation"
+        subtitle="Sessions ouvertes aux inscriptions, avec durée, tarif et détails pratiques avant validation."
+        primaryLabel="Explorer Le Catalogue"
+        primaryHref="#catalogue"
+        secondaryLabel="Nous contacter"
+        secondaryHref="/contact"
+      />
 
-      <SessionGrid sessions={sessions} emptyLabel="Aucune session particulier pour le moment." />
+      <div id="catalogue">
+        <SessionGrid sessions={sessions} emptyLabel="Aucune session particulier pour le moment." />
+      </div>
 
-      <PartnersStrip />
+      {!loading && <PartnersStrip />}
 
       <Footer />
     </>

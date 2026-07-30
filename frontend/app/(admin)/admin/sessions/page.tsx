@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { adminApi as api } from "@/lib/adminApi";
 import FileUpload from "@/app/components/FileUpload";
 import { formatDa } from "@/lib/format";
+import { fileUrl } from "@/lib/fileUrl";
 
 interface Category { id: string; name: string; isMetier?: boolean }
 type Tab = "particulier" | "metier";
@@ -66,6 +67,102 @@ const STATUS_LABELS: Record<Session["status"], string> = {
   CANCELLED: "Annulée",
 };
 
+interface Material { id: string; title: string; fileUrl: string; createdAt: string }
+
+function SessionMaterials({ sessionId }: { sessionId: string }) {
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [title, setTitle] = useState("");
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [error, setError] = useState("");
+  const [uploadKey, setUploadKey] = useState(0);
+
+  const load = () => {
+    setLoading(true);
+    api.get<Material[]>(`/admin/sessions/${sessionId}/materials`)
+      .then(setMaterials)
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    void Promise.resolve().then(load);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]);
+
+  const add = async () => {
+    if (!title.trim() || !pendingUrl) return;
+    setAdding(true);
+    setError("");
+    try {
+      await api.post(`/admin/sessions/${sessionId}/materials`, { title: title.trim(), fileUrl: pendingUrl });
+      setTitle("");
+      setPendingUrl(null);
+      setUploadKey((k) => k + 1);
+      load();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erreur");
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const remove = async (id: string) => {
+    if (!window.confirm("Retirer ce support de cours ?")) return;
+    await api.delete(`/admin/materials/${id}`);
+    load();
+  };
+
+  return (
+    <div className="auth-field">
+      <label className="auth-label">Supports de cours (visibles par les inscrits confirmés)</label>
+
+      {loading ? (
+        <p className="admin-loading">Chargement…</p>
+      ) : materials.length === 0 ? (
+        <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 12 }}>Aucun support ajouté pour l&apos;instant.</p>
+      ) : (
+        <ul className="session-materials-list">
+          {materials.map((m) => (
+            <li key={m.id} className="session-materials-list__item">
+              <a href={fileUrl(m.fileUrl)} target="_blank" rel="noopener noreferrer">
+                {m.title}
+              </a>
+              <button type="button" className="admin-btn admin-btn--cancel" onClick={() => remove(m.id)}>
+                Retirer
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {error && <div className="auth-error">{error}</div>}
+
+      <div className="session-materials-add">
+        <input
+          type="text" className="auth-input" placeholder="Titre du support (ex : Support PDF - Jour 1)"
+          value={title} onChange={(e) => setTitle(e.target.value)}
+        />
+        <FileUpload
+          key={uploadKey}
+          label="Fichier"
+          accept=".pdf,.doc,.docx"
+          hint="PDF ou Word — max 15 Mo"
+          onUploaded={(url) => setPendingUrl(url)}
+          tokenStorageKey="admin_token"
+        />
+        <button
+          type="button" className="btn btn--outline"
+          disabled={!title.trim() || !pendingUrl || adding}
+          onClick={add}
+        >
+          {adding ? "Ajout…" : "+ Ajouter le support"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminSessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -76,6 +173,7 @@ export default function AdminSessionsPage() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [materialsSession, setMaterialsSession] = useState<Session | null>(null);
 
   const copyLink = async (id: string) => {
     const url = `${window.location.origin}/session/${id}`;
@@ -375,6 +473,8 @@ export default function AdminSessionsPage() {
                 </div>
               </div>
 
+              {editing.id && <SessionMaterials sessionId={editing.id} />}
+
               {editing.id && (
                 <div className="auth-field">
                   <label className="auth-label">Statut</label>
@@ -399,6 +499,27 @@ export default function AdminSessionsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {materialsSession && (
+        <div className="admin-modal-overlay" onClick={() => setMaterialsSession(null)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal__header">
+              <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
+                Supports de cours — {materialsSession.title}
+              </h2>
+              <button className="admin-modal__close" onClick={() => setMaterialsSession(null)}>✕</button>
+            </div>
+
+            <SessionMaterials sessionId={materialsSession.id} />
+
+            <div className="auth-form-actions">
+              <button type="button" className="btn btn--outline" onClick={() => setMaterialsSession(null)}>
+                Fermer
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -439,6 +560,7 @@ export default function AdminSessionsPage() {
                 <td>
                   <div className="admin-cell-actions">
                     <button className="admin-btn" onClick={() => openEdit(s)}>Modifier</button>
+                    <button className="admin-btn" onClick={() => setMaterialsSession(s)}>Supports de cours</button>
                     <button className="admin-btn" onClick={() => copyLink(s.id)} title="Copier le lien d'inscription directe">
                       {copiedId === s.id ? "Copié ✓" : "Copier le lien"}
                     </button>

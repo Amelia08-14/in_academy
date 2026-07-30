@@ -103,8 +103,8 @@ export default function Header() {
           { label: "Mes formations", href: "/espace-entreprise?tab=formations" },
         ]
       : [
-          { label: "Mes formations", href: "/dashboard" },
-          { label: "Sessions disponibles", href: "/formations/particulier" },
+          { label: "Mon profil", href: "/dashboard?tab=profil" },
+          { label: "Mes formations", href: "/dashboard?tab=formations" },
         ];
 
   return (
@@ -231,7 +231,7 @@ export default function Header() {
                       role="menuitem"
                       onClick={handleLogout}
                     >
-                      Se déconnecter
+                      Déconnexion
                     </button>
                   </motion.div>
                 )}
