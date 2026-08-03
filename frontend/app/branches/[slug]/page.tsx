@@ -27,6 +27,7 @@ interface Category {
   slug: string;
   name: string;
   description: string | null;
+  isMetier?: boolean;
   formations: Formation[];
 }
 interface Session {
@@ -178,7 +179,9 @@ export default function DomainDetailPage() {
   const [categories, setCategories] = useState<Category[] | null>(null);
 
   useEffect(() => {
-    api.get<Category[]>("/categories?metier=false").then(setCategories).catch(() => setCategories([]));
+    // Pas de filtre metier ici : cette page sert aussi bien les branches Entreprises
+    // que les branches Métiers (coiffure, esthétique…), sinon leur slug ferait un 404.
+    api.get<Category[]>("/categories").then(setCategories).catch(() => setCategories([]));
   }, []);
 
   if (categories === null) {
@@ -234,9 +237,9 @@ export default function DomainDetailPage() {
               <div className="bd-formations__head">
                 <div>
                   <h2 className="bd-formations__title">
-                    {isLearner ? "Sessions ouvertes du domaine" : "Formations du domaine"}
+                    {domaine.isMetier || isLearner ? "Sessions ouvertes du domaine" : "Formations du domaine"}
                   </h2>
-                  {!isLearner && (
+                  {!domaine.isMetier && !isLearner && (
                     <p className="bd-formations__count">
                       {domaine.formations.length} formation{domaine.formations.length > 1 ? "s" : ""}
                       {certifiantesCount > 0 ? ` - ${certifiantesCount} certifiante${certifiantesCount > 1 ? "s" : ""}` : ""}
@@ -245,7 +248,11 @@ export default function DomainDetailPage() {
                 </div>
               </div>
 
-              {isLearner ? (
+              {domaine.isMetier ? (
+                // Les branches métiers (coiffure, esthétique…) n'ont que des sessions,
+                // ouvertes aux particuliers ET aux entreprises — donc pour tout le monde ici.
+                <SessionsForLearner categoryId={domaine.id} fallbackImage={branchImage(domaine.slug)} />
+              ) : isLearner ? (
                 <SessionsForLearner categoryId={domaine.id} fallbackImage={branchImage(domaine.slug)} />
               ) : isCompany ? (
                 <FormationsForCompany formations={domaine.formations} fallbackImage={branchImage(domaine.slug)} />
