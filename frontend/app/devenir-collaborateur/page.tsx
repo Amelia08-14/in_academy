@@ -29,6 +29,7 @@ export default function DevenirCollaborateurPage() {
     if (values.firstName.trim().length < 2) { setError("Le prénom est requis (2 caractères min)."); return; }
     if (values.lastName.trim().length < 2) { setError("Le nom est requis (2 caractères min)."); return; }
     if (!/\S+@\S+\.\S+/.test(values.email.trim())) { setError("Une adresse email valide est requise."); return; }
+    if (!cvUrl) { setError("Merci de joindre votre CV avant d'envoyer la candidature."); return; }
 
     setPending(true);
     setError("");
@@ -127,10 +128,10 @@ export default function DevenirCollaborateurPage() {
             </div>
 
             <FileUpload
-              label="CV (1 fichier)"
+              label="CV (1 fichier) *"
               accept=".pdf,.doc,.docx"
               currentUrl={cvUrl}
-              hint="Votre CV au format PDF de préférence."
+              hint="Requis — votre CV au format PDF de préférence."
               onUploaded={(url) => setCvUrl(url)}
               tokenStorageKey={null}
               uploadPath="/upload/trainer-application"

@@ -17,7 +17,7 @@ export const trainerApplicationSchema = z.object({
   phone: z.string().optional(),
   speciality: z.string().optional(),
   message: z.string().optional(),
-  cvUrl: z.string().optional(),
+  cvUrl: z.string().min(1, "CV requis"),
   // fichiers additionnels (fiches techniques) : URLs déjà uploadées via FileUpload
   fileUrls: z.array(z.string()).optional(),
 });

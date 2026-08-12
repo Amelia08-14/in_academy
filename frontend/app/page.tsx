@@ -202,7 +202,7 @@ function BranchesFan({ branches }: { branches: BranchItem[] }) {
 }
 
 function HeroSlider() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, homeRoute, roleLabel } = useAuth();
   const [slide, setSlide] = useState(0);
   // Slide 2 = choix d'inscription (Particulier / Entreprise) : inutile si connecté.
   const total = isAuthenticated ? 1 : 2;
@@ -249,7 +249,12 @@ function HeroSlider() {
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>
-                  <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
+                  {!isAuthenticated && (
+                    <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
+                  )}
+                  {isAuthenticated && (
+                    <Link href={homeRoute} className="btn btn--outline">{roleLabel}</Link>
+                  )}
                 </div>
 
                 <div className="hero-slide__features">
