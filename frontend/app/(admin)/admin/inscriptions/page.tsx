@@ -323,7 +323,7 @@ export default function AdminInscriptionsPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Inscriptions</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Inscriptions</h1><p className="admin-page__subtitle">Validez et organisez les demandes par session.</p></div>
         {pending.length > 0 && (
           <span className="admin-kpi admin-kpi--inline">{pending.length} en attente</span>
         )}

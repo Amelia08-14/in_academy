@@ -134,7 +134,7 @@ export default function AdminFormateursPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Formateurs</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Formateurs</h1><p className="admin-page__subtitle">Gérez l’équipe pédagogique et ses affectations.</p></div>
         <button className="btn btn--primary" onClick={openCreate} style={{ fontSize: 13 }}>
           + Ajouter un formateur
         </button>

@@ -83,7 +83,7 @@ export default function AdminPartenairesPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Partenaires & avantages</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Partenaires & avantages</h1><p className="admin-page__subtitle">Pilotez les offres réservées à la communauté Academy.</p></div>
         <button className="btn btn--primary" style={{ fontSize: 13 }} onClick={() => { setEditing({ ...EMPTY }); setSaveError(""); }}>
           + Nouveau partenaire
         </button>

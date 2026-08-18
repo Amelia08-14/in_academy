@@ -259,7 +259,7 @@ export default function AdminUtilisateursPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Utilisateurs</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Utilisateurs</h1><p className="admin-page__subtitle">Gérez les membres, entreprises et accès administratifs.</p></div>
         <button className="btn btn--primary" onClick={() => { setShowForm(true); setFormError(""); setForm(EMPTY_FORM); }} style={{ fontSize: 13 }}>
           + Ajouter un utilisateur
         </button>

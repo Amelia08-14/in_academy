@@ -1,5 +1,7 @@
 // Client API dédié au back-office admin — utilise le token admin_token,
 // totalement séparé de lib/api.ts (session du site, token/role/email).
+import { apiErrorMessage } from "@/lib/apiError";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 function getAdminToken(): string | null {
@@ -20,7 +22,7 @@ async function adminApiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body?.error ?? `Erreur ${res.status}`);
+    throw new Error(apiErrorMessage(body, `Erreur ${res.status}`));
   }
 
   return res.json() as Promise<T>;

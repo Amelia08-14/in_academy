@@ -46,7 +46,7 @@ export default function AdminDocumentsPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Documents reçus</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Documents reçus</h1><p className="admin-page__subtitle">Retrouvez les reçus et dossiers administratifs au même endroit.</p></div>
         <span className="admin-kpi admin-kpi--inline">{docs.length} document{docs.length > 1 ? "s" : ""}</span>
       </div>
 

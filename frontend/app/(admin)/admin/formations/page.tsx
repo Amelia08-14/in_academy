@@ -175,7 +175,7 @@ export default function AdminFormationsPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Formations</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Formations</h1><p className="admin-page__subtitle">Créez et maintenez le catalogue IN Academy.</p></div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <span className="admin-kpi admin-kpi--inline">{formations.length} formations</span>
           <button className="btn btn--outline" style={{ fontSize: 13 }} onClick={() => setShowNewBranche(true)}>

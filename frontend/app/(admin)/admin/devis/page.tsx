@@ -46,7 +46,7 @@ export default function AdminDevisPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Devis B2B</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Devis B2B</h1><p className="admin-page__subtitle">Centralisez et suivez les demandes des entreprises.</p></div>
         {pending.length > 0 && (
           <span className="admin-kpi admin-kpi--inline">{pending.length} en attente</span>
         )}

@@ -286,9 +286,10 @@ export default function AdminSessionsPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">
-          {tab === "metier" ? "Sessions métiers" : "Sessions particulier"}
-        </h1>
+        <div className="admin-page__heading">
+          <h1 className="admin-page__title">{tab === "metier" ? "Sessions métiers" : "Sessions particulier"}</h1>
+          <p className="admin-page__subtitle">Planifiez les dates, capacités et supports de formation.</p>
+        </div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <span className="admin-kpi admin-kpi--inline">{filtered.length} sessions</span>
           <button className="btn btn--primary" onClick={openCreate} disabled={tabCats.length === 0}>

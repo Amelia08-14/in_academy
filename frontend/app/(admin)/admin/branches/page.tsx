@@ -99,7 +99,7 @@ export default function AdminBranchesPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Branches</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Branches</h1><p className="admin-page__subtitle">Organisez le catalogue par univers de formation.</p></div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <span className="admin-kpi admin-kpi--inline">
             {counts.entreprise} entreprises · {counts.metier} métiers

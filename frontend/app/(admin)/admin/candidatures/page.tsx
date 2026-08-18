@@ -52,7 +52,7 @@ export default function AdminCandidaturesPage() {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">Candidatures collaborateur</h1>
+        <div className="admin-page__heading"><h1 className="admin-page__title">Candidatures collaborateur</h1><p className="admin-page__subtitle">Étudiez et traitez les demandes pour rejoindre l’équipe.</p></div>
         <span className="admin-kpi admin-kpi--inline">{apps.length} candidature{apps.length > 1 ? "s" : ""}</span>
       </div>
 
