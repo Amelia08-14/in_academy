@@ -1,9 +1,14 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { signToken } from "@/lib/jwt";
-import { loginSchema, registerSchema } from "@/validations/auth.schema";
+import { loginSchema, registerSchema, forgotPasswordSchema, resetPasswordSchema } from "@/validations/auth.schema";
 import { authenticate, AuthRequest } from "@/middlewares/auth.middleware";
+import { sendPasswordResetEmail } from "@/lib/mail";
+
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1h — "expiration raisonnable"
+const hashResetToken = (token: string) => crypto.createHash("sha256").update(token).digest("hex");
 
 const router = Router();
 
@@ -70,6 +75,81 @@ router.post("/register", async (req: Request, res: Response) => {
 
   const token = signToken({ userId: user.id, email: user.email, role: user.role });
   res.status(201).json({ token, role: user.role });
+});
+
+// POST /api/auth/forgot-password — envoie un lien de réinitialisation par email.
+// Réponse générique dans tous les cas (compte trouvé ou non) pour ne pas laisser
+// deviner quels emails sont enregistrés.
+router.post("/forgot-password", async (req: Request, res: Response) => {
+  const parsed = forgotPasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+
+  const genericResponse = {
+    ok: true,
+    message: "Si un compte existe avec cet email, un lien de réinitialisation vient de lui être envoyé.",
+  };
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
+    if (user && user.isActive) {
+      const rawToken = crypto.randomBytes(32).toString("hex");
+      await prisma.passwordResetToken.create({
+        data: {
+          userId: user.id,
+          tokenHash: hashResetToken(rawToken),
+          expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MS),
+        },
+      });
+
+      const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
+      const resetUrl = `${frontendUrl}/reinitialiser-mot-de-passe?token=${rawToken}`;
+      void sendPasswordResetEmail({ to: user.email, resetUrl }).catch((err) =>
+        console.error("[mail password-reset]", err)
+      );
+    }
+    res.json(genericResponse);
+  } catch (err) {
+    console.error("[auth forgot-password]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// POST /api/auth/reset-password — consomme le token reçu par email.
+router.post("/reset-password", async (req: Request, res: Response) => {
+  const parsed = resetPasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+
+  try {
+    const tokenHash = hashResetToken(parsed.data.token);
+    const resetToken = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
+
+    if (!resetToken || resetToken.usedAt || resetToken.expiresAt < new Date()) {
+      res.status(400).json({ error: "Ce lien de réinitialisation est invalide ou a expiré." });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(parsed.data.newPassword, 12);
+    await prisma.$transaction([
+      prisma.user.update({ where: { id: resetToken.userId }, data: { hashedPassword } }),
+      prisma.passwordResetToken.update({ where: { id: resetToken.id }, data: { usedAt: new Date() } }),
+      // Les autres liens en attente pour ce compte sont invalidés — le nouveau mot de
+      // passe rend caducs les liens précédemment envoyés.
+      prisma.passwordResetToken.deleteMany({
+        where: { userId: resetToken.userId, id: { not: resetToken.id }, usedAt: null },
+      }),
+    ]);
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[auth reset-password]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
 });
 
 // GET /api/auth/me

@@ -14,8 +14,11 @@ export default function MentionsLegalesPage() {
           <h2>Éditeur du site</h2>
           <p>
             Le présent site est édité par <strong>IN ACADEMY</strong>, membre du groupe La Maison IN Groupe.
-            <br />Siège : Hydra, Alger, Algérie.
-            <br />Email : contact@imig-dz.com — Tél. : +213 (0) 20 07 17 00.
+            <br />Siège :{" "}
+            <a href="https://maps.app.goo.gl/mGufMtpzVU2Rgazo9" target="_blank" rel="noopener noreferrer">
+              N8 Parc Paradou, Hydra, Alger, Algérie.
+            </a>
+            <br />Email : formation.in.academy@gmail.com — Tél. : 0560 06 74 85.
           </p>
 
           <h2>Hébergement</h2>
@@ -34,7 +37,7 @@ export default function MentionsLegalesPage() {
           </p>
 
           <p className="legal-page__note">
-            Pour toute question relative à ces mentions, contactez-nous à contact@imig-dz.com.
+            Pour toute question relative à ces mentions, contactez-nous à formation.in.academy@gmail.com.
           </p>
         </div>
       </section>

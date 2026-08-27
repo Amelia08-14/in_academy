@@ -30,7 +30,7 @@ export default function ConfidentialitePage() {
           <h2>Vos droits</h2>
           <p>
             Vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour l&apos;exercer,
-            contactez-nous à contact@imig-dz.com.
+            contactez-nous à formation.in.academy@gmail.com.
           </p>
 
           <p className="legal-page__note">

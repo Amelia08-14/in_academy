@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  PasswordResetToken: 'PasswordResetToken',
   LearnerProfile: 'LearnerProfile',
   TrainerProfile: 'TrainerProfile',
   Trainer: 'Trainer',
@@ -70,6 +71,8 @@ export const ModelName = {
   ContactRequest: 'ContactRequest',
   Document: 'Document',
   Partner: 'Partner',
+  Event: 'Event',
+  EventPhoto: 'EventPhoto',
   TrainerApplication: 'TrainerApplication',
   TrainerApplicationFile: 'TrainerApplicationFile'
 } as const
@@ -102,6 +105,18 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
 export const LearnerProfileScalarFieldEnum = {
@@ -370,6 +385,30 @@ export const PartnerScalarFieldEnum = {
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
 
 
+export const EventScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  eventDate: 'eventDate',
+  location: 'location',
+  summary: 'summary',
+  isPublished: 'isPublished',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+export const EventPhotoScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  photoUrl: 'photoUrl',
+  createdAt: 'createdAt'
+} as const
+
+export type EventPhotoScalarFieldEnum = (typeof EventPhotoScalarFieldEnum)[keyof typeof EventPhotoScalarFieldEnum]
+
+
 export const TrainerApplicationScalarFieldEnum = {
   id: 'id',
   firstName: 'firstName',
@@ -421,6 +460,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const PasswordResetTokenOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash'
+} as const
+
+export type PasswordResetTokenOrderByRelevanceFieldEnum = (typeof PasswordResetTokenOrderByRelevanceFieldEnum)[keyof typeof PasswordResetTokenOrderByRelevanceFieldEnum]
 
 
 export const LearnerProfileOrderByRelevanceFieldEnum = {
@@ -635,6 +683,25 @@ export const PartnerOrderByRelevanceFieldEnum = {
 } as const
 
 export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
+
+
+export const EventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  location: 'location',
+  summary: 'summary'
+} as const
+
+export type EventOrderByRelevanceFieldEnum = (typeof EventOrderByRelevanceFieldEnum)[keyof typeof EventOrderByRelevanceFieldEnum]
+
+
+export const EventPhotoOrderByRelevanceFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  photoUrl: 'photoUrl'
+} as const
+
+export type EventPhotoOrderByRelevanceFieldEnum = (typeof EventPhotoOrderByRelevanceFieldEnum)[keyof typeof EventPhotoOrderByRelevanceFieldEnum]
 
 
 export const TrainerApplicationOrderByRelevanceFieldEnum = {

@@ -72,8 +72,24 @@ model User {
   enrollments    Enrollment[]
   certificates   Certificate[]
   documents      Document[]
+  resetTokens    PasswordResetToken[]
 
   @@map("users")
+}
+
+// Réinitialisation de mot de passe ("mot de passe oublié") — le lien envoyé par email
+// contient le token en clair ; seul son hash est stocké, comme pour un mot de passe.
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
 }
 
 model LearnerProfile {
@@ -412,6 +428,33 @@ model Partner {
   updatedAt    DateTime @updatedAt
 
   @@map("partners")
+}
+
+// ─── Événements ("Nos Events") ────────────────────────────────────────────────
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  eventDate   DateTime
+  location    String?
+  summary     String?  @db.Text // retour d'expérience / recap de l'événement
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  photos EventPhoto[]
+
+  @@map("events")
+}
+
+model EventPhoto {
+  id        String   @id @default(uuid())
+  eventId   String
+  photoUrl  String
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("event_photos")
 }
 
 // ─── Candidatures « Devenir collaborateur » ──────────────────────────────────

@@ -22,6 +22,21 @@ router.get("/partners", async (_req: AuthRequest, res: Response) => {
   }
 });
 
+// GET /api/events — public, événements publiés ("Nos Events")
+router.get("/events", async (_req: AuthRequest, res: Response) => {
+  try {
+    const events = await prisma.event.findMany({
+      where: { isPublished: true },
+      orderBy: { eventDate: "desc" },
+      include: { photos: true },
+    });
+    res.json(events);
+  } catch (err) {
+    console.error("[events]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
 // GET /api/categories — public, catalogue complet (branches + formations)
 router.get("/categories", async (req: AuthRequest, res: Response) => {
   try {

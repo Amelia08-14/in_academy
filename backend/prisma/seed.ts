@@ -27,7 +27,7 @@ const CATEGORIES = [
   { slug: "commerce-ventes",           name: "Commerce & Ventes" },
   { slug: "hse-securite",             name: "HSE & Sécurité" },
   { slug: "finance-comptabilite",      name: "Finance & Comptabilité" },
-  { slug: "achats-international",      name: "Achats & International" },
+  { slug: "achats-international",      name: "Achats & Commerce International" },
   { slug: "it-digital",               name: "IT & Digital" },
   { slug: "rh-management",            name: "RH & Management" },
   { slug: "juridique-conformite",      name: "Juridique & Conformité" },

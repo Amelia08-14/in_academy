@@ -19,6 +19,19 @@ export const registerSchema = z.object({
   birthDate: z.string().optional(), // date d'anniversaire (ISO "YYYY-MM-DD"), tâche 2
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Email invalide").trim().toLowerCase(),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Token requis"),
+  newPassword: z
+    .string()
+    .min(8, "Minimum 8 caractères")
+    .regex(/[A-Z]/, "Au moins une majuscule")
+    .regex(/[0-9]/, "Au moins un chiffre"),
+});
+
 export const companyRegisterSchema = z.object({
   raisonSociale: z.string().min(2, "Raison sociale requise").trim(),
   nif: z.string().optional(),

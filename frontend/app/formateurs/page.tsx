@@ -185,8 +185,8 @@ export default function FormateursPage() {
                 Vous êtes formateur ?<br />Rejoignez notre équipe.
               </h2>
               <p className="cta-banner__sub">
-                IN ACADEMY recrute des experts métier pour enrichir son catalogue
-                de formations certifiantes.
+                IN Academy recrute des experts métier souhaitant contribuer à des formations
+                certifiantes et transmettre leur expertise au sein d&apos;un établissement de référence.
               </p>
             </div>
             <div className="cta-banner__actions">

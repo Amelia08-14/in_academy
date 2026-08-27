@@ -109,7 +109,7 @@ function FanCard({ branch, offset, onSelect, compact }: FanCardProps) {
         <h3 className="branches-fan__name">{branch.name}</h3>
         <span className="branches-fan__cta-label">Voir le Programme</span>
         <span className="branches-fan__cta-btn">
-          Découvrir La Formations
+          Découvrir les Formations
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
@@ -409,7 +409,7 @@ export default function Home() {
         <div className="container">
           <div className="mission__header">
             <h2 className="mission__title">
-              Notre <span className="mission__title-accent">Missions</span>
+              Nos <span className="mission__title-accent">Missions</span>
             </h2>
             <p className="mission__description">
               Offrir un accompagnement personnalisé et des formations alignées
@@ -494,7 +494,7 @@ export default function Home() {
         <div className="container">
           <div className="branches__header branches__header--center">
             <h2 className="branches__title">
-              Notre <span className="branches__title-accent">Formations</span>
+              Nos <span className="branches__title-accent">Formations</span>
             </h2>
             <p className="branches__sub">
               Chaque espace est pensé comme un sanctuaire alliant design élégant et expertise métier.

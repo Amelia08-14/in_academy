@@ -45,6 +45,11 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model PasswordResetToken
+ * 
+ */
+export type PasswordResetToken = Prisma.PasswordResetTokenModel
+/**
  * Model LearnerProfile
  * 
  */
@@ -134,6 +139,16 @@ export type Document = Prisma.DocumentModel
  * 
  */
 export type Partner = Prisma.PartnerModel
+/**
+ * Model Event
+ * 
+ */
+export type Event = Prisma.EventModel
+/**
+ * Model EventPhoto
+ * 
+ */
+export type EventPhoto = Prisma.EventPhotoModel
 /**
  * Model TrainerApplication
  * 

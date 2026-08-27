@@ -40,6 +40,7 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   { href: "/formateurs", label: "FORMATEURS", icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" },
+  { href: "/evenements", label: "NOS EVENTS", icon: "M4 5h16v16H4zM3 9h18M8 3v4M16 3v4" },
   { href: "/devenir-collaborateur", label: "COLLABORER", icon: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM19 8v6M22 11h-6" },
   { href: "/contact", label: "CONTACT", icon: "M4 4h16v16H4zM22 6l-10 7L2 6" },
 ];

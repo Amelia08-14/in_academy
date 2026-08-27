@@ -1,6 +1,6 @@
 // Photos réelles par domaine de formation, déposées dans public/branches/.
 const FILES: Record<string, string> = {
-  "transport-logistique": "Transport_&_logistique.png",
+  "transport-logistique": "Transport_&_logistique.jpg",
   "commerce-ventes": "Commerce_&_vente.png",
   "hse-securite": "Hse_&_hygiene.png",
   "finance-comptabilite": "Finance_&_comptabilite.png",
@@ -9,8 +9,8 @@ const FILES: Record<string, string> = {
   "rh-management": "RH_&_management.png",
   "juridique-conformite": "Juridique_&_conformité.png",
   "maritime-import-export": "Maritime_&_import_export.png",
-  "qualite-production": "Qualite_&_prodution.png",
-  langues: "Langues.png",
+  "qualite-production": "Qualite_&_prodution.jpg",
+  langues: "Langues.jpg",
   audit: "Audit.png",
 };
 

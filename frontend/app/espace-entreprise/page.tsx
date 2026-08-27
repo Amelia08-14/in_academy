@@ -75,12 +75,14 @@ function EspaceEntrepriseContent() {
 
   const loadData = () => {
     if (!token) return;
-    const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
-    const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
+    // Passe par `api` (et non fetch() direct) : un token expiré renvoie un 401 qu'`api`
+    // détecte pour nettoyer la session et déclencher "authchange" — sinon ces appels
+    // échouaient silencieusement en boucle et l'espace entreprise restait figé jusqu'à
+    // une reconnexion manuelle.
     return Promise.all([
-      fetch(`${BASE}/companies/my-quotes`, { headers }).then((r) => r.json()),
-      fetch(`${BASE}/companies/my-enrollments`, { headers }).then((r) => r.json()),
+      api.get<CompanyData>("/companies/my-quotes"),
+      api.get<Enrollment[]>("/companies/my-enrollments"),
     ])
       .then(([companyData, enrData]) => {
         setData(companyData);

@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/PasswordResetToken'
 export type * from './models/LearnerProfile'
 export type * from './models/TrainerProfile'
 export type * from './models/Trainer'
@@ -27,6 +28,8 @@ export type * from './models/QuoteRequestItem'
 export type * from './models/ContactRequest'
 export type * from './models/Document'
 export type * from './models/Partner'
+export type * from './models/Event'
+export type * from './models/EventPhoto'
 export type * from './models/TrainerApplication'
 export type * from './models/TrainerApplicationFile'
 export type * from './commonInputTypes'

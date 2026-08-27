@@ -16,6 +16,7 @@ const navItems = [
   { href: "/admin/sessions", label: "Sessions", icon: "calendar" },
   { href: "/admin/devis", label: "Devis B2B", icon: "document" },
   { href: "/admin/formateurs", label: "Formateurs", icon: "users" },
+  { href: "/admin/evenements", label: "Nos Events", icon: "calendar" },
   { href: "/admin/candidatures", label: "Candidatures", icon: "inbox" },
   { href: "/admin/documents", label: "Documents", icon: "folder" },
   { href: "/admin/partenaires", label: "Partenaires", icon: "handshake" },

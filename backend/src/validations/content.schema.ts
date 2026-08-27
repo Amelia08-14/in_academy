@@ -9,6 +9,16 @@ export const partnerSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+// ─── Événements ("Nos Events") ────────────────────────────────────────────────
+export const eventSchema = z.object({
+  title: z.string().min(2, "Titre requis").trim(),
+  eventDate: z.string().min(1, "Date requise"),
+  location: z.string().optional(),
+  summary: z.string().optional(),
+  isPublished: z.boolean().optional(),
+  photoUrls: z.array(z.string()).optional(),
+});
+
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 export const trainerApplicationSchema = z.object({
   firstName: z.string().min(2, "Prénom requis").trim(),

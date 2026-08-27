@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
 import { sendEnrollmentConfirmedEmail, sendQuoteSentEmail } from "@/lib/mail";
-import { partnerSchema } from "@/validations/content.schema";
+import { partnerSchema, eventSchema } from "@/validations/content.schema";
 
 const router = Router();
 
@@ -826,6 +826,96 @@ router.patch("/quotes/:id/status", async (req: AuthRequest, res: Response) => {
     res.json(quote);
   } catch (err) {
     console.error("[admin/quotes status]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// ─── Événements ("Nos Events") ────────────────────────────────────────────────
+
+// GET /api/admin/events
+router.get("/events", async (_req: AuthRequest, res: Response) => {
+  try {
+    const events = await prisma.event.findMany({
+      orderBy: { eventDate: "desc" },
+      include: { photos: true },
+    });
+    res.json(events);
+  } catch (err) {
+    console.error("[admin/events]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// POST /api/admin/events
+router.post("/events", async (req: AuthRequest, res: Response) => {
+  const parsed = eventSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+  try {
+    const d = parsed.data;
+    const event = await prisma.event.create({
+      data: {
+        title: d.title,
+        eventDate: new Date(d.eventDate),
+        location: d.location ?? null,
+        summary: d.summary ?? null,
+        isPublished: d.isPublished ?? false,
+        photos: d.photoUrls && d.photoUrls.length > 0
+          ? { create: d.photoUrls.map((photoUrl) => ({ photoUrl })) }
+          : undefined,
+      },
+      include: { photos: true },
+    });
+    res.status(201).json(event);
+  } catch (err) {
+    console.error("[admin/events post]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// PATCH /api/admin/events/:id — met aussi à jour la liste des photos si `photoUrls` est fourni
+router.patch("/events/:id", async (req: AuthRequest, res: Response) => {
+  const parsed = eventSchema.partial().safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+  try {
+    const d = parsed.data;
+    const id = req.params["id"] as string;
+    const event = await prisma.event.update({
+      where: { id },
+      data: {
+        ...(d.title !== undefined && { title: d.title }),
+        ...(d.eventDate !== undefined && { eventDate: new Date(d.eventDate) }),
+        ...(d.location !== undefined && { location: d.location }),
+        ...(d.summary !== undefined && { summary: d.summary }),
+        ...(d.isPublished !== undefined && { isPublished: d.isPublished }),
+        ...(d.photoUrls !== undefined && {
+          photos: {
+            deleteMany: {},
+            create: d.photoUrls.map((photoUrl) => ({ photoUrl })),
+          },
+        }),
+      },
+      include: { photos: true },
+    });
+    res.json(event);
+  } catch (err) {
+    console.error("[admin/events patch]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/events/:id
+router.delete("/events/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    await prisma.event.delete({ where: { id: req.params["id"] as string } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/events delete]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });

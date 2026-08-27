@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  PasswordResetToken: 'PasswordResetToken',
   LearnerProfile: 'LearnerProfile',
   TrainerProfile: 'TrainerProfile',
   Trainer: 'Trainer',
@@ -403,6 +404,8 @@ export const ModelName = {
   ContactRequest: 'ContactRequest',
   Document: 'Document',
   Partner: 'Partner',
+  Event: 'Event',
+  EventPhoto: 'EventPhoto',
   TrainerApplication: 'TrainerApplication',
   TrainerApplicationFile: 'TrainerApplicationFile'
 } as const
@@ -420,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "sessionMaterial" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest" | "document" | "partner" | "trainerApplication" | "trainerApplicationFile"
+    modelProps: "user" | "passwordResetToken" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "sessionMaterial" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest" | "document" | "partner" | "event" | "eventPhoto" | "trainerApplication" | "trainerApplicationFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -487,6 +490,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    PasswordResetToken: {
+      payload: Prisma.$PasswordResetTokenPayload<ExtArgs>
+      fields: Prisma.PasswordResetTokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PasswordResetTokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PasswordResetTokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        findFirst: {
+          args: Prisma.PasswordResetTokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PasswordResetTokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        findMany: {
+          args: Prisma.PasswordResetTokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[]
+        }
+        create: {
+          args: Prisma.PasswordResetTokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        createMany: {
+          args: Prisma.PasswordResetTokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.PasswordResetTokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        update: {
+          args: Prisma.PasswordResetTokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.PasswordResetTokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PasswordResetTokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.PasswordResetTokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        aggregate: {
+          args: Prisma.PasswordResetTokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePasswordResetToken>
+        }
+        groupBy: {
+          args: Prisma.PasswordResetTokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PasswordResetTokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenCountAggregateOutputType> | number
         }
       }
     }
@@ -1678,6 +1747,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Event: {
+      payload: Prisma.$EventPayload<ExtArgs>
+      fields: Prisma.EventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        findFirst: {
+          args: Prisma.EventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        findMany: {
+          args: Prisma.EventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>[]
+        }
+        create: {
+          args: Prisma.EventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        createMany: {
+          args: Prisma.EventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.EventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        update: {
+          args: Prisma.EventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        deleteMany: {
+          args: Prisma.EventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.EventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPayload>
+        }
+        aggregate: {
+          args: Prisma.EventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEvent>
+        }
+        groupBy: {
+          args: Prisma.EventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventCountAggregateOutputType> | number
+        }
+      }
+    }
+    EventPhoto: {
+      payload: Prisma.$EventPhotoPayload<ExtArgs>
+      fields: Prisma.EventPhotoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EventPhotoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EventPhotoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload>
+        }
+        findFirst: {
+          args: Prisma.EventPhotoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EventPhotoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload>
+        }
+        findMany: {
+          args: Prisma.EventPhotoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload>[]
+        }
+        create: {
+          args: Prisma.EventPhotoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload>
+        }
+        createMany: {
+          args: Prisma.EventPhotoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.EventPhotoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload>
+        }
+        update: {
+          args: Prisma.EventPhotoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload>
+        }
+        deleteMany: {
+          args: Prisma.EventPhotoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EventPhotoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.EventPhotoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventPhotoPayload>
+        }
+        aggregate: {
+          args: Prisma.EventPhotoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEventPhoto>
+        }
+        groupBy: {
+          args: Prisma.EventPhotoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventPhotoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EventPhotoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventPhotoCountAggregateOutputType> | number
+        }
+      }
+    }
     TrainerApplication: {
       payload: Prisma.$TrainerApplicationPayload<ExtArgs>
       fields: Prisma.TrainerApplicationFieldRefs
@@ -1861,6 +2062,18 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
 export const LearnerProfileScalarFieldEnum = {
@@ -2129,6 +2342,30 @@ export const PartnerScalarFieldEnum = {
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
 
 
+export const EventScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  eventDate: 'eventDate',
+  location: 'location',
+  summary: 'summary',
+  isPublished: 'isPublished',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+export const EventPhotoScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  photoUrl: 'photoUrl',
+  createdAt: 'createdAt'
+} as const
+
+export type EventPhotoScalarFieldEnum = (typeof EventPhotoScalarFieldEnum)[keyof typeof EventPhotoScalarFieldEnum]
+
+
 export const TrainerApplicationScalarFieldEnum = {
   id: 'id',
   firstName: 'firstName',
@@ -2180,6 +2417,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const PasswordResetTokenOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash'
+} as const
+
+export type PasswordResetTokenOrderByRelevanceFieldEnum = (typeof PasswordResetTokenOrderByRelevanceFieldEnum)[keyof typeof PasswordResetTokenOrderByRelevanceFieldEnum]
 
 
 export const LearnerProfileOrderByRelevanceFieldEnum = {
@@ -2394,6 +2640,25 @@ export const PartnerOrderByRelevanceFieldEnum = {
 } as const
 
 export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFieldEnum)[keyof typeof PartnerOrderByRelevanceFieldEnum]
+
+
+export const EventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  location: 'location',
+  summary: 'summary'
+} as const
+
+export type EventOrderByRelevanceFieldEnum = (typeof EventOrderByRelevanceFieldEnum)[keyof typeof EventOrderByRelevanceFieldEnum]
+
+
+export const EventPhotoOrderByRelevanceFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  photoUrl: 'photoUrl'
+} as const
+
+export type EventPhotoOrderByRelevanceFieldEnum = (typeof EventPhotoOrderByRelevanceFieldEnum)[keyof typeof EventPhotoOrderByRelevanceFieldEnum]
 
 
 export const TrainerApplicationOrderByRelevanceFieldEnum = {
@@ -2627,6 +2892,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  passwordResetToken?: Prisma.PasswordResetTokenOmit
   learnerProfile?: Prisma.LearnerProfileOmit
   trainerProfile?: Prisma.TrainerProfileOmit
   trainer?: Prisma.TrainerOmit
@@ -2645,6 +2911,8 @@ export type GlobalOmitConfig = {
   contactRequest?: Prisma.ContactRequestOmit
   document?: Prisma.DocumentOmit
   partner?: Prisma.PartnerOmit
+  event?: Prisma.EventOmit
+  eventPhoto?: Prisma.EventPhotoOmit
   trainerApplication?: Prisma.TrainerApplicationOmit
   trainerApplicationFile?: Prisma.TrainerApplicationFileOmit
 }

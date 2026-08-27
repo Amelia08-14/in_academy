@@ -99,11 +99,7 @@ function DashboardContent() {
   };
 
   const loadDocuments = () => {
-    const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
-    const t = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (!t) return;
-    fetch(`${BASE}/documents`, { headers: { Authorization: `Bearer ${t}` } })
-      .then((r) => r.json())
+    api.get<Doc[]>("/documents")
       .then((d) => setDocuments(Array.isArray(d) ? d : []))
       .catch(() => {});
   };
@@ -114,15 +110,16 @@ function DashboardContent() {
     if (!token) { router.replace("/connexion"); return; }
     if (role === "COMPANY_ADMIN") { router.replace("/espace-entreprise"); return; }
 
-    const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
-    const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
-
+    // Passe par `api` (et non fetch() direct) : un token expiré ou un compte désactivé
+    // renvoie un 401, ce qu'`api` détecte pour nettoyer la session et déclencher
+    // "authchange" — sans ça, ces appels échouaient silencieusement en boucle et
+    // l'utilisateur restait bloqué sur un tableau de bord figé jusqu'à une reconnexion manuelle.
     Promise.all([
-      fetch(`${BASE}/auth/me`, { headers }).then((r) => r.json()),
-      fetch(`${BASE}/enrollments`, { headers }).then((r) => r.json()),
-      fetch(`${BASE}/partners`).then((r) => r.json()).catch(() => []),
-      fetch(`${BASE}/documents`, { headers }).then((r) => r.json()).catch(() => []),
-      fetch(`${BASE}/enrollments/materials`, { headers }).then((r) => r.json()).catch(() => []),
+      api.get<Me>("/auth/me"),
+      api.get<Enrollment[]>("/enrollments"),
+      api.get<Partner[]>("/partners").catch(() => []),
+      api.get<Doc[]>("/documents").catch(() => []),
+      api.get<SessionMaterials[]>("/enrollments/materials").catch(() => []),
     ])
       .then(([meData, enrData, partnersData, docsData, materialsData]) => {
         setMe(meData);
@@ -157,11 +154,7 @@ function DashboardContent() {
     }
   };
 
-  const loadMe = () => {
-    const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
-    const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
-    return fetch(`${BASE}/auth/me`, { headers }).then((r) => r.json()).then(setMe);
-  };
+  const loadMe = () => api.get<Me>("/auth/me").then(setMe);
 
   const openEditProfile = () => {
     setProfileForm({

@@ -77,6 +77,10 @@ function ConnexionForm() {
               {state?.errors?.password && <span className="auth-field-error">{state.errors.password[0]}</span>}
             </div>
 
+            <div className="auth-forgot-link">
+              <Link href="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
+            </div>
+
             <button type="submit" className="btn btn--primary auth-submit" disabled={pending}>
               {pending ? "Connexion…" : "Se connecter"}
             </button>

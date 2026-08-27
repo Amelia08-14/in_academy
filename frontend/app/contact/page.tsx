@@ -87,9 +87,13 @@ export default function ContactPage() {
                 </span>
                 <h4 className="contact-card__title">Adresse</h4>
                 <p className="contact-card__text">
-                  Hydra, Alger
+                  N8 Parc Paradou, Hydra, Alger
                   <br />
                   Entrée/Sortie autoroute
+                  <br />
+                  <a href="https://maps.app.goo.gl/mGufMtpzVU2Rgazo9" target="_blank" rel="noopener noreferrer">
+                    Voir sur la carte
+                  </a>
                 </p>
               </div>
 
@@ -100,7 +104,7 @@ export default function ContactPage() {
                   </svg>
                 </span>
                 <h4 className="contact-card__title">Téléphone</h4>
-                <p className="contact-card__text">+213 (0) 20 07 17 00</p>
+                <p className="contact-card__text">0560 06 74 85</p>
               </div>
 
               <div className="contact-card" id="contact-email">
@@ -111,7 +115,18 @@ export default function ContactPage() {
                   </svg>
                 </span>
                 <h4 className="contact-card__title">Email</h4>
-                <p className="contact-card__text">contact@imig-dz.com</p>
+                <p className="contact-card__text">formation.in.academy@gmail.com</p>
+              </div>
+
+              <div className="contact-card" id="contact-hours">
+                <span className="contact-card__icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 7v5l3 3"></path>
+                  </svg>
+                </span>
+                <h4 className="contact-card__title">Horaires</h4>
+                <p className="contact-card__text">Dimanche au jeudi, 09h–17h</p>
               </div>
             </aside>
 

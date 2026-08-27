@@ -212,6 +212,7 @@ export type UserWhereInput = {
   enrollments?: Prisma.EnrollmentListRelationFilter
   certificates?: Prisma.CertificateListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
+  resetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -229,6 +230,7 @@ export type UserOrderByWithRelationInput = {
   enrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
   certificates?: Prisma.CertificateOrderByRelationAggregateInput
   documents?: Prisma.DocumentOrderByRelationAggregateInput
+  resetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -250,6 +252,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   enrollments?: Prisma.EnrollmentListRelationFilter
   certificates?: Prisma.CertificateListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
+  resetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -295,6 +298,7 @@ export type UserCreateInput = {
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -312,6 +316,7 @@ export type UserUncheckedCreateInput = {
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -329,6 +334,7 @@ export type UserUpdateInput = {
   enrollments?: Prisma.EnrollmentUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -346,6 +352,7 @@ export type UserUncheckedUpdateInput = {
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -446,6 +453,20 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type UserCreateNestedOneWithoutResetTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutResetTokensInput, Prisma.UserUncheckedCreateWithoutResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutResetTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutResetTokensInput, Prisma.UserUncheckedCreateWithoutResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutResetTokensInput
+  upsert?: Prisma.UserUpsertWithoutResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutResetTokensInput, Prisma.UserUpdateWithoutResetTokensInput>, Prisma.UserUncheckedUpdateWithoutResetTokensInput>
+}
+
 export type UserCreateNestedOneWithoutLearnerProfileInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutLearnerProfileInput, Prisma.UserUncheckedCreateWithoutLearnerProfileInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutLearnerProfileInput
@@ -532,6 +553,90 @@ export type UserUpdateOneWithoutDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDocumentsInput, Prisma.UserUpdateWithoutDocumentsInput>, Prisma.UserUncheckedUpdateWithoutDocumentsInput>
 }
 
+export type UserCreateWithoutResetTokensInput = {
+  id?: string
+  email: string
+  hashedPassword: string
+  role?: $Enums.Role
+  emailVerified?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  learnerProfile?: Prisma.LearnerProfileCreateNestedOneWithoutUserInput
+  trainerProfile?: Prisma.TrainerProfileCreateNestedOneWithoutUserInput
+  companyAdmin?: Prisma.CompanyProfileCreateNestedOneWithoutUserInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutUserInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutResetTokensInput = {
+  id?: string
+  email: string
+  hashedPassword: string
+  role?: $Enums.Role
+  emailVerified?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  learnerProfile?: Prisma.LearnerProfileUncheckedCreateNestedOneWithoutUserInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedCreateNestedOneWithoutUserInput
+  companyAdmin?: Prisma.CompanyProfileUncheckedCreateNestedOneWithoutUserInput
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutUserInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutUserInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutResetTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutResetTokensInput, Prisma.UserUncheckedCreateWithoutResetTokensInput>
+}
+
+export type UserUpsertWithoutResetTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutResetTokensInput, Prisma.UserUncheckedUpdateWithoutResetTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutResetTokensInput, Prisma.UserUncheckedCreateWithoutResetTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutResetTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutResetTokensInput, Prisma.UserUncheckedUpdateWithoutResetTokensInput>
+}
+
+export type UserUpdateWithoutResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  learnerProfile?: Prisma.LearnerProfileUpdateOneWithoutUserNestedInput
+  trainerProfile?: Prisma.TrainerProfileUpdateOneWithoutUserNestedInput
+  companyAdmin?: Prisma.CompanyProfileUpdateOneWithoutUserNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutUserNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  learnerProfile?: Prisma.LearnerProfileUncheckedUpdateOneWithoutUserNestedInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedUpdateOneWithoutUserNestedInput
+  companyAdmin?: Prisma.CompanyProfileUncheckedUpdateOneWithoutUserNestedInput
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutUserNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutUserNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutLearnerProfileInput = {
   id?: string
   email: string
@@ -546,6 +651,7 @@ export type UserCreateWithoutLearnerProfileInput = {
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLearnerProfileInput = {
@@ -562,6 +668,7 @@ export type UserUncheckedCreateWithoutLearnerProfileInput = {
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLearnerProfileInput = {
@@ -594,6 +701,7 @@ export type UserUpdateWithoutLearnerProfileInput = {
   enrollments?: Prisma.EnrollmentUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLearnerProfileInput = {
@@ -610,6 +718,7 @@ export type UserUncheckedUpdateWithoutLearnerProfileInput = {
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTrainerProfileInput = {
@@ -626,6 +735,7 @@ export type UserCreateWithoutTrainerProfileInput = {
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTrainerProfileInput = {
@@ -642,6 +752,7 @@ export type UserUncheckedCreateWithoutTrainerProfileInput = {
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTrainerProfileInput = {
@@ -674,6 +785,7 @@ export type UserUpdateWithoutTrainerProfileInput = {
   enrollments?: Prisma.EnrollmentUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTrainerProfileInput = {
@@ -690,6 +802,7 @@ export type UserUncheckedUpdateWithoutTrainerProfileInput = {
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCompanyAdminInput = {
@@ -706,6 +819,7 @@ export type UserCreateWithoutCompanyAdminInput = {
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanyAdminInput = {
@@ -722,6 +836,7 @@ export type UserUncheckedCreateWithoutCompanyAdminInput = {
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanyAdminInput = {
@@ -754,6 +869,7 @@ export type UserUpdateWithoutCompanyAdminInput = {
   enrollments?: Prisma.EnrollmentUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyAdminInput = {
@@ -770,6 +886,7 @@ export type UserUncheckedUpdateWithoutCompanyAdminInput = {
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEnrollmentsInput = {
@@ -786,6 +903,7 @@ export type UserCreateWithoutEnrollmentsInput = {
   companyAdmin?: Prisma.CompanyProfileCreateNestedOneWithoutUserInput
   certificates?: Prisma.CertificateCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEnrollmentsInput = {
@@ -802,6 +920,7 @@ export type UserUncheckedCreateWithoutEnrollmentsInput = {
   companyAdmin?: Prisma.CompanyProfileUncheckedCreateNestedOneWithoutUserInput
   certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEnrollmentsInput = {
@@ -834,6 +953,7 @@ export type UserUpdateWithoutEnrollmentsInput = {
   companyAdmin?: Prisma.CompanyProfileUpdateOneWithoutUserNestedInput
   certificates?: Prisma.CertificateUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEnrollmentsInput = {
@@ -850,6 +970,7 @@ export type UserUncheckedUpdateWithoutEnrollmentsInput = {
   companyAdmin?: Prisma.CompanyProfileUncheckedUpdateOneWithoutUserNestedInput
   certificates?: Prisma.CertificateUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCertificatesInput = {
@@ -866,6 +987,7 @@ export type UserCreateWithoutCertificatesInput = {
   companyAdmin?: Prisma.CompanyProfileCreateNestedOneWithoutUserInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCertificatesInput = {
@@ -882,6 +1004,7 @@ export type UserUncheckedCreateWithoutCertificatesInput = {
   companyAdmin?: Prisma.CompanyProfileUncheckedCreateNestedOneWithoutUserInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutUserInput
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCertificatesInput = {
@@ -914,6 +1037,7 @@ export type UserUpdateWithoutCertificatesInput = {
   companyAdmin?: Prisma.CompanyProfileUpdateOneWithoutUserNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCertificatesInput = {
@@ -930,6 +1054,7 @@ export type UserUncheckedUpdateWithoutCertificatesInput = {
   companyAdmin?: Prisma.CompanyProfileUncheckedUpdateOneWithoutUserNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutUserNestedInput
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDocumentsInput = {
@@ -946,6 +1071,7 @@ export type UserCreateWithoutDocumentsInput = {
   companyAdmin?: Prisma.CompanyProfileCreateNestedOneWithoutUserInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -962,6 +1088,7 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
   companyAdmin?: Prisma.CompanyProfileUncheckedCreateNestedOneWithoutUserInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutUserInput
   certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutUserInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -994,6 +1121,7 @@ export type UserUpdateWithoutDocumentsInput = {
   companyAdmin?: Prisma.CompanyProfileUpdateOneWithoutUserNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -1010,6 +1138,7 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
   companyAdmin?: Prisma.CompanyProfileUncheckedUpdateOneWithoutUserNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutUserNestedInput
   certificates?: Prisma.CertificateUncheckedUpdateManyWithoutUserNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1021,12 +1150,14 @@ export type UserCountOutputType = {
   enrollments: number
   certificates: number
   documents: number
+  resetTokens: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   enrollments?: boolean | UserCountOutputTypeCountEnrollmentsArgs
   certificates?: boolean | UserCountOutputTypeCountCertificatesArgs
   documents?: boolean | UserCountOutputTypeCountDocumentsArgs
+  resetTokens?: boolean | UserCountOutputTypeCountResetTokensArgs
 }
 
 /**
@@ -1060,6 +1191,13 @@ export type UserCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.DocumentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PasswordResetTokenWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1076,6 +1214,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   enrollments?: boolean | Prisma.User$enrollmentsArgs<ExtArgs>
   certificates?: boolean | Prisma.User$certificatesArgs<ExtArgs>
   documents?: boolean | Prisma.User$documentsArgs<ExtArgs>
+  resetTokens?: boolean | Prisma.User$resetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1100,6 +1239,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   enrollments?: boolean | Prisma.User$enrollmentsArgs<ExtArgs>
   certificates?: boolean | Prisma.User$certificatesArgs<ExtArgs>
   documents?: boolean | Prisma.User$documentsArgs<ExtArgs>
+  resetTokens?: boolean | Prisma.User$resetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1112,6 +1252,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     enrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
     certificates: Prisma.$CertificatePayload<ExtArgs>[]
     documents: Prisma.$DocumentPayload<ExtArgs>[]
+    resetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1468,6 +1609,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   enrollments<T extends Prisma.User$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   certificates<T extends Prisma.User$certificatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$certificatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   documents<T extends Prisma.User$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  resetTokens<T extends Prisma.User$resetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$resetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1979,6 +2121,30 @@ export type User$documentsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[]
+}
+
+/**
+ * User.resetTokens
+ */
+export type User$resetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PasswordResetToken
+   */
+  select?: Prisma.PasswordResetTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PasswordResetToken
+   */
+  omit?: Prisma.PasswordResetTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PasswordResetTokenInclude<ExtArgs> | null
+  where?: Prisma.PasswordResetTokenWhereInput
+  orderBy?: Prisma.PasswordResetTokenOrderByWithRelationInput | Prisma.PasswordResetTokenOrderByWithRelationInput[]
+  cursor?: Prisma.PasswordResetTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PasswordResetTokenScalarFieldEnum | Prisma.PasswordResetTokenScalarFieldEnum[]
 }
 
 /**

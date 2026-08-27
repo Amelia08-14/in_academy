@@ -22,6 +22,16 @@ async function adminApiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
+    // Session admin invalide/expirée : sans ce nettoyage, admin_token restait en
+    // localStorage indéfiniment et chaque appel suivant échouait silencieusement en
+    // boucle — l'utilisateur restait bloqué sur un back-office figé jusqu'à ce qu'il
+    // pense lui-même à se déconnecter/reconnecter manuellement.
+    if (res.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("admin_token");
+      localStorage.removeItem("admin_role");
+      localStorage.removeItem("admin_email");
+      window.dispatchEvent(new Event("adminauthchange"));
+    }
     throw new Error(apiErrorMessage(body, `Erreur ${res.status}`));
   }
 

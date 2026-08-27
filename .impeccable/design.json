@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-26T22:30:00Z",
+  "title": "Design System: IN Academy",
+  "extensions": {
+    "colorMeta": {
+      "navy-deep": { "role": "primary", "displayName": "Navy Deep", "canonical": "#0f2340", "tonalRamp": ["#0c1b32", "#15325b", "#1f4884", "#2c66ba", "#5188d6", "#8bafe4", "#bdd2f0", "#e6eef9"] },
+      "navy-ink": { "role": "primary", "displayName": "Navy Ink", "canonical": "#0a1a30", "tonalRamp": ["#0b1b33", "#13325d", "#1c4987", "#2867be", "#4e89da", "#89b0e6", "#bbd2f1", "#e6eefa"] },
+      "navy-abyss": { "role": "primary", "displayName": "Navy Abyss", "canonical": "#060f1e", "tonalRamp": ["#0a1a33", "#132f5d", "#1b4488", "#2660bf", "#4d82db", "#88ace7", "#bbcff1", "#e5edfa"] },
+      "teal-deep": { "role": "secondary", "displayName": "Teal Deep", "canonical": "#2e7d84", "tonalRamp": ["#102b2d", "#1d4f53", "#2a7379", "#3ba1aa", "#60bfc8", "#95d4da", "#c2e7ea", "#e8f6f7"] },
+      "teal-dark": { "role": "secondary", "displayName": "Teal Dark", "canonical": "#1f5f65", "tonalRamp": ["#0e2c2f", "#1a5156", "#26757d", "#36a5b0", "#5bc3cd", "#92d7dd", "#c1e8ec", "#e8f6f8"] },
+      "teal-soft": { "role": "secondary", "displayName": "Teal Soft", "canonical": "#3d9aa2", "tonalRamp": ["#112a2c", "#1f4d52", "#2d7177", "#3f9ea7", "#63bdc4", "#97d3d8", "#c4e6e9", "#e9f6f7"] },
+      "gold-warm": { "role": "tertiary", "displayName": "Gold Warm", "canonical": "#c4922a", "tonalRamp": ["#32260b", "#5c4514", "#86641d", "#bd8d29", "#d9ac4f", "#e6c889", "#f1dfbc", "#faf3e6"] },
+      "gold-ember": { "role": "tertiary", "displayName": "Gold Ember", "canonical": "#a07520", "tonalRamp": ["#33250a", "#5d4413", "#88631b", "#bf8c26", "#dbab4d", "#e7c788", "#f1dfbb", "#faf3e5"] },
+      "gold-glow": { "role": "tertiary", "displayName": "Gold Glow", "canonical": "#d4a843", "tonalRamp": ["#32260b", "#5b4615", "#85661e", "#bb8f2b", "#d7ae51", "#e4c98b", "#f0e0bd", "#f9f3e6"] },
+      "gold-pale": { "role": "tertiary", "displayName": "Gold Pale", "canonical": "#f0deb0", "tonalRamp": ["#33280a", "#5e4912", "#896a1a", "#c19525", "#ddb44b", "#e8cd87", "#f2e2ba", "#faf4e5"] },
+      "parchment": { "role": "neutral", "displayName": "Parchment", "canonical": "#f2ede6", "tonalRamp": ["#282015", "#4a3b26", "#6b5638", "#97794f", "#b69a72", "#cebba1", "#e3d8c9", "#f5f1eb"] },
+      "parchment-light": { "role": "neutral", "displayName": "Parchment Light", "canonical": "#f8f5f0", "tonalRamp": ["#2a2113", "#4d3d24", "#6f5934", "#9c7d49", "#bb9e6d", "#d2be9e", "#e5dac7", "#f5f1ea"] },
+      "parchment-deep": { "role": "neutral", "displayName": "Parchment Deep", "canonical": "#e4ddd3", "tonalRamp": ["#262017", "#463a2b", "#65553e", "#8e7857", "#ae987a", "#c9bba7", "#e0d8cc", "#f3f0ec"] },
+      "cream": { "role": "neutral", "displayName": "Cream", "canonical": "#ede8e0", "tonalRamp": ["#272016", "#473c29", "#67573c", "#917a54", "#b09a77", "#cbbca5", "#e1d9cb", "#f4f1ec"] },
+      "white": { "role": "neutral", "displayName": "White", "canonical": "#ffffff", "tonalRamp": ["#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#0d1a29", "tonalRamp": ["#0f1d2e", "#1b3655", "#274f7c", "#376fae", "#5c90cb", "#93b5dd", "#c1d5eb", "#e8eff8"] },
+      "slate": { "role": "neutral", "displayName": "Slate", "canonical": "#3a4050", "tonalRamp": ["#1a1c23", "#2f3441", "#454c5f", "#606a85", "#838ca5", "#acb2c3", "#d0d3dd", "#edeff2"] },
+      "stone": { "role": "neutral", "displayName": "Stone", "canonical": "#6b7280", "tonalRamp": ["#1c1e21", "#33363d", "#4a4f59", "#686f7d", "#8a919d", "#b1b5be", "#d3d5da", "#eeeff1"] },
+      "border-stone": { "role": "neutral", "displayName": "Border Stone", "canonical": "#d0c8bb", "tonalRamp": ["#242019", "#423b2e", "#615543", "#88785e", "#a79980", "#c5bbab", "#ded8cf", "#f2f0ed"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero titles only — homepage hero slider, page-hero headlines." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles, always paired with a gold or blue-gradient accent span on the emphasized word." },
+      "title": { "displayName": "Title", "purpose": "Card and component titles — dashboard cards, partner cards, event cards, admin table primary cells." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy. Weight 300 for hero/page-hero subtitles, weight 400 for standard section descriptions." },
+      "label": { "displayName": "Label", "purpose": "Eyebrows, nav links, badges, timestamps — the system's mono/uppercase technical register." }
+    },
+    "shadows": [
+      { "name": "ambient-sm", "value": "0 2px 8px rgba(10, 26, 48, 0.07)", "purpose": "Resting-state cards, subtle lift on static elements." },
+      { "name": "ambient-md", "value": "0 8px 24px rgba(10, 26, 48, 0.10)", "purpose": "Hover state for outline buttons, medium-emphasis surfaces." },
+      { "name": "ambient-lg", "value": "0 20px 48px rgba(10, 26, 48, 0.13)", "purpose": "Hero visuals, large feature panels." },
+      { "name": "card-warmth", "value": "0 4px 20px rgba(196, 146, 42, 0.07), 0 1px 3px rgba(10, 26, 48, 0.05)", "purpose": "Default card shadow — a whisper of gold under the navy base." },
+      { "name": "gold-glow", "value": "0 4px 20px rgba(196, 146, 42, 0.30)", "purpose": "Under primary gold buttons — makes gold read as lit rather than flat." },
+      { "name": "overlay", "value": "0 16px 40px rgba(0, 0, 0, 0.25)", "purpose": "Dropdowns, profile menus, admin modals — the one genuinely structural shadow family." }
+    ],
+    "motion": [
+      { "name": "ease-fast", "value": "0.2s ease", "purpose": "Micro-interactions: link/icon hover, toggle states." },
+      { "name": "ease-base", "value": "0.3s ease", "purpose": "Default transition speed for buttons, cards, nav." },
+      { "name": "ease-slow", "value": "0.5s ease", "purpose": "Larger surface transitions (drawers, panel reveals)." }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "900px" },
+      { "name": "mobile", "value": "560px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one gold action per view — CTAs like \"S'inscrire\", \"Envoyer ma candidature\".",
+      "html": "<button class=\"ds-btn-primary\">Découvrir les formations</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 34px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.2px; border: none; border-radius: 50px; cursor: pointer; color: #ffffff; background: linear-gradient(135deg, #d4a843, #c4922a 55%, #a07520); box-shadow: 0 4px 20px rgba(196, 146, 42, 0.30); transition: all 0.3s ease; } .ds-btn-primary:hover { background: linear-gradient(135deg, #d4a843, #c4922a); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(196, 146, 42, 0.45); } .ds-btn-primary:focus-visible { outline: 2px solid #a07520; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The secondary action beside a primary gold button — never a second saturated accent.",
+      "html": "<button class=\"ds-btn-outline\">Se connecter</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 34px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; border-radius: 50px; cursor: pointer; color: #0f2340; background: #ffffff; border: 1.5px solid rgba(15, 35, 64, 0.18); box-shadow: 0 2px 8px rgba(10, 26, 48, 0.07); transition: all 0.3s ease; } .ds-btn-outline:hover { border-color: #0f2340; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10, 26, 48, 0.10); } .ds-btn-outline:focus-visible { outline: 2px solid #0f2340; outline-offset: 2px; }"
+    },
+    {
+      "name": "Nav Pill",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "The signature component — a solid teal pill nested inside the translucent glass header, holding the primary navigation.",
+      "html": "<nav class=\"ds-nav-pill\"><a href=\"#\" class=\"ds-nav-link ds-nav-link--active\">Accueil</a><a href=\"#\" class=\"ds-nav-link\">Nos Formations</a><a href=\"#\" class=\"ds-nav-link\">Formateurs</a></nav>",
+      "css": ".ds-nav-pill { display: flex; align-items: center; gap: 4px; background-color: #2e7d84; border: 1px solid rgba(255,255,255,0.12); border-radius: 50px; padding: 6px 8px; box-shadow: 0 6px 20px rgba(46, 125, 132, 0.28); } .ds-nav-link { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.75); padding: 10px 16px; border-radius: 50px; text-decoration: none; transition: all 0.2s ease; } .ds-nav-link:hover { color: #ffffff; background: rgba(255,255,255,0.14); } .ds-nav-link--active { background-color: #ffffff; color: #1f5f65; font-weight: 600; } .ds-nav-link:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Text input with the system's gold-glow focus ring.",
+      "html": "<input class=\"ds-input\" type=\"email\" placeholder=\"vous@exemple.com\" />",
+      "css": ".ds-input { padding: 11px 14px; border: 1.5px solid #e4ddd3; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px; color: #0d1a29; background: #f8f5f0; outline: none; width: 100%; transition: border-color 0.15s, box-shadow 0.15s; } .ds-input:focus { border-color: #c4922a; background: #ffffff; box-shadow: 0 0 0 3px rgba(196, 146, 42, 0.12); } .ds-input--error { border-color: #e74c3c; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard content card — dashboard entries, partner offers, event listings. Status is carried by a left border accent, not by changing the shadow.",
+      "html": "<div class=\"ds-card\"><span class=\"ds-card__eyebrow\">Confirmée</span><h3 class=\"ds-card__title\">Techniques de négociation d'achat</h3><p class=\"ds-card__meta\">Inscrit le 12 mars 2026</p></div>",
+      "css": ".ds-card { background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid #e2dbd0; border-left: 4px solid #2e7d84; box-shadow: 0 4px 20px rgba(196, 146, 42, 0.07), 0 1px 3px rgba(10, 26, 48, 0.05); display: flex; flex-direction: column; gap: 10px; } .ds-card__eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #2e7d84; } .ds-card__title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: #0f2340; } .ds-card__meta { font-size: 13px; color: #6b7280; }"
+    },
+    {
+      "name": "Section Eyebrow",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "The mono, uppercase, gold label that opens every marketing section — the system's one purely typographic signature.",
+      "html": "<span class=\"ds-eyebrow\">Avantages partenaires</span>",
+      "css": ".ds-eyebrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: #c4922a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Trade Guild",
+    "overview": "IN Academy isn't a faceless training platform — it's a guild of named, credible experts, and the design carries that: warm, feutré (felted, muted) surfaces in navy and parchment, with gold used sparingly as a seal of validation rather than decoration. Nothing about the system reaches for cold institutional formality; it reaches for the confidence of a well-kept ledger — precise, a little worn-in, trustworthy.\n\nThe signature gesture is the floating header: a translucent parchment-glass bar (backdrop-filter: blur(24px)) with a solid teal pill nested inside it holding the navigation. That teal pill is the guild's seal — a distinct, saturated shape floating on a soft, blurred ground. The rest of the system stays quiet around it: navy carries authority in headings, gold marks the one action that matters per view, and warm-tinted shadows (never pure black) keep every surface feeling lit from within rather than cut out with hard edges.",
+    "keyCharacteristics": [
+      "Warm neutral ground (parchment/beige), never stark white or cold gray, as the resting surface.",
+      "Navy for authority (headings, primary text, footer), gold for validation (the one primary action), teal for wayfinding (the nav pill, links, secondary accents).",
+      "Pill shape (50px/50% radius) owns every clickable chrome element; soft rectangular radii (14–20px) own content containers.",
+      "Shadows are warm-tinted glows (navy or gold rgba, 5–13% opacity), not structural drop shadows.",
+      "Mono uppercase labels (IBM Plex Mono, wide letter-spacing) mark every eyebrow/section-label."
+    ],
+    "rules": [
+      { "name": "The One Gold Rule", "body": "Gold marks exactly one primary action per view. If a screen already has a gold button, every other action is Navy Outline or plain text — never a second gold surface competing for the same attention.", "section": "colors" },
+      { "name": "The Warm Shadow Rule", "body": "No shadow is ever a neutral or pure-black rgba(0,0,0,…). Every shadow ties back to Navy Abyss or Gold Warm at low opacity (5–13%), so depth always reads as this system's light, not a generic one.", "section": "colors" },
+      { "name": "The Mono-Means-Label Rule", "body": "IBM Plex Mono never appears in paragraph copy or headings — only in short, uppercase, letter-spaced fragments. It is the system's tell for 'this text is UI chrome, not content.'", "section": "typography" },
+      { "name": "The Glow-Not-Stack Rule", "body": "Reach for a wider, softer, warm-tinted shadow before reaching for a darker or tighter one. Depth here is atmosphere, not architecture.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep gold to one primary action per view (see The One Gold Rule).",
+      "Do tint every shadow toward Navy Abyss or Gold Warm — never a neutral black.",
+      "Do use the pill radius for anything clickable and a soft rectangle radius for anything that contains content.",
+      "Do reserve IBM Plex Mono for short, uppercase, letter-spaced labels — never for paragraph copy.",
+      "Do lift primary and outline buttons on hover (translateY(-2px) + deepened shadow) — the tactile response is load-bearing for this system's warmth.",
+      "Do show named, real trainer/expert profiles wherever the design references credibility — the guild is made of named people, not generic icons."
+    ],
+    "donts": [
+      "Don't introduce a cold gray or pure-white resting background — Parchment/Beige is the ground this system stands on.",
+      "Don't use a second saturated accent (teal or gold) competing with an existing primary action on the same view.",
+      "Don't give cards or modals a hard, high-contrast drop shadow — depth here is a glow, not a stack (see The Glow-Not-Stack Rule).",
+      "Don't fabricate testimonials, client logos, or accreditations beyond the confirmed Ministère algérien de la Formation professionnelle recognition.",
+      "Don't square off the nav pill, buttons, or avatars — pill/circle shape is this system's clearest signature and squaring it off reads as a different brand."
+    ]
+  }
+}
