@@ -3,10 +3,16 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { fileUrl } from "@/lib/fileUrl";
-import { TRAINING_DOMAINS } from "@/lib/trainingDomains";
-import { type Account, type EventItem, formatEventDate } from "@/lib/events";
+import { ACTIVITY_DOMAINS, ACTIVITY_DOMAIN_OTHER } from "@/lib/activityDomains";
+import { type Account, type EventItem, type RegistrantType, formatEventDate } from "@/lib/events";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+
+function defaultFullName(account: Account | null): string {
+  if (account?.learnerProfile) return `${account.learnerProfile.firstName} ${account.learnerProfile.lastName}`;
+  if (account?.companyAdmin) return `${account.companyAdmin.firstName ?? ""} ${account.companyAdmin.lastName ?? ""}`.trim();
+  return "";
+}
 
 export default function EventRegisterModal({
   event, account, onClose, onRegistered,
@@ -16,13 +22,14 @@ export default function EventRegisterModal({
   onClose: () => void;
   onRegistered: () => void;
 }) {
-  const [fullName, setFullName] = useState(
-    account?.learnerProfile ? `${account.learnerProfile.firstName} ${account.learnerProfile.lastName}` : ""
-  );
+  const [registrantType, setRegistrantType] = useState<RegistrantType>(account?.companyAdmin ? "COMPANY" : "INDIVIDUAL");
+  const [fullName, setFullName] = useState(defaultFullName(account));
   const [email, setEmail] = useState(account?.email ?? "");
   const [phone, setPhone] = useState(account?.learnerProfile?.phone ?? "");
+  const [companyName, setCompanyName] = useState(account?.companyAdmin?.company.raisonSociale ?? "");
   const [jobTitle, setJobTitle] = useState(account?.learnerProfile?.jobTitle ?? "");
-  const [trainingDomain, setTrainingDomain] = useState("");
+  const [activityDomain, setActivityDomain] = useState("");
+  const [activityDomainOther, setActivityDomainOther] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -39,7 +46,13 @@ export default function EventRegisterModal({
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ fullName, email, phone: phone || undefined, jobTitle: jobTitle || undefined, trainingDomain: trainingDomain || undefined }),
+        body: JSON.stringify({
+          fullName, email, phone,
+          registrantType,
+          companyName: registrantType === "COMPANY" ? companyName : undefined,
+          jobTitle,
+          activityDomain: activityDomain === ACTIVITY_DOMAIN_OTHER ? activityDomainOther : activityDomain,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -94,9 +107,29 @@ export default function EventRegisterModal({
                   </p>
                 </>
               )}
-              <p className="event-register-card__prompt">
-                {account ? "Vos coordonnées (reprises de votre profil) :" : "Vos coordonnées pour valider votre place :"}
-              </p>
+
+              <div className="auth-tabs" role="tablist" aria-label="Type de profil" style={{ marginBottom: 16 }}>
+                <button
+                  type="button" role="tab" aria-selected={registrantType === "INDIVIDUAL"}
+                  className={`auth-tab${registrantType === "INDIVIDUAL" ? " auth-tab--active" : ""}`}
+                  onClick={() => setRegistrantType("INDIVIDUAL")}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                  </svg>
+                  Particulier
+                </button>
+                <button
+                  type="button" role="tab" aria-selected={registrantType === "COMPANY"}
+                  className={`auth-tab${registrantType === "COMPANY" ? " auth-tab--active" : ""}`}
+                  onClick={() => setRegistrantType("COMPANY")}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 21h18M6 21V7l6-4 6 4v14M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1" />
+                  </svg>
+                  Entreprise
+                </button>
+              </div>
 
               {error && <div className="auth-error" style={{ marginBottom: 8 }}>{error}</div>}
 
@@ -109,15 +142,15 @@ export default function EventRegisterModal({
                     placeholder="Votre nom et prénom"
                   />
                 </div>
-                <div className="auth-field">
-                  <label className="auth-label">Email</label>
-                  <input
-                    type="email" className="auth-input" required
-                    value={email} onChange={(e) => setEmail(e.target.value)}
-                    placeholder="vous@exemple.com"
-                  />
-                </div>
                 <div className="auth-row">
+                  <div className="auth-field">
+                    <label className="auth-label">Email</label>
+                    <input
+                      type="email" className="auth-input" required
+                      value={email} onChange={(e) => setEmail(e.target.value)}
+                      placeholder="vous@exemple.com"
+                    />
+                  </div>
                   <div className="auth-field">
                     <label className="auth-label">Téléphone</label>
                     <input
@@ -126,26 +159,53 @@ export default function EventRegisterModal({
                       placeholder="+213 XX XX XX XX"
                     />
                   </div>
+                </div>
+
+                {registrantType === "COMPANY" && (
                   <div className="auth-field">
-                    <label className="auth-label">Fonction (facultatif)</label>
+                    <label className="auth-label">Nom de l&apos;entreprise</label>
                     <input
-                      type="text" className="auth-input"
+                      type="text" className="auth-input" required
+                      value={companyName} onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="Raison sociale"
+                    />
+                  </div>
+                )}
+
+                <div className="auth-row">
+                  <div className="auth-field">
+                    <label className="auth-label">Fonction</label>
+                    <input
+                      type="text" className="auth-input" required
                       value={jobTitle} onChange={(e) => setJobTitle(e.target.value)}
                       placeholder="Ex : Responsable RH"
                     />
                   </div>
+                  <div className="auth-field">
+                    <label className="auth-label">Domaine d&apos;activité</label>
+                    <select
+                      className="auth-input auth-select" required
+                      value={activityDomain}
+                      onChange={(e) => setActivityDomain(e.target.value)}
+                    >
+                      <option value="" disabled>Sélectionnez…</option>
+                      {ACTIVITY_DOMAINS.map((d) => <option key={d} value={d}>{d}</option>)}
+                      <option value={ACTIVITY_DOMAIN_OTHER}>{ACTIVITY_DOMAIN_OTHER}</option>
+                    </select>
+                  </div>
                 </div>
-                <div className="auth-field">
-                  <label className="auth-label">Domaine de formation qui vous intéresse (facultatif)</label>
-                  <select
-                    className="auth-input auth-select"
-                    value={trainingDomain}
-                    onChange={(e) => setTrainingDomain(e.target.value)}
-                  >
-                    <option value="">Non précisé</option>
-                    {TRAINING_DOMAINS.map((d) => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                </div>
+
+                {activityDomain === ACTIVITY_DOMAIN_OTHER && (
+                  <div className="auth-field">
+                    <label className="auth-label">Précisez le domaine</label>
+                    <input
+                      type="text" className="auth-input" required
+                      value={activityDomainOther} onChange={(e) => setActivityDomainOther(e.target.value)}
+                      placeholder="Votre domaine d'activité"
+                    />
+                  </div>
+                )}
+
                 <button type="submit" className="btn btn--primary event-register-card__submit" disabled={pending}>
                   {pending ? "Envoi…" : "Confirmer ma place"}
                 </button>

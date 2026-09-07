@@ -22,23 +22,39 @@ export const eventSchema = z.object({
 
 // Inscription à un événement — champs saisis à la main pour un invité, ou
 // complétés/écrasés côté serveur depuis le compte si l'inscrit est connecté.
-export const eventRegistrationSchema = z.object({
-  fullName: z.string().min(2, "Nom requis").trim(),
-  email: z.string().email("Email invalide").trim().toLowerCase(),
-  phone: z.string().min(1, "Téléphone requis").trim(),
-  jobTitle: z.string().optional(),
-  trainingDomain: z.string().optional(),
-});
+// Tout est obligatoire ; le nom d'entreprise n'est requis que pour un profil "Entreprise".
+export const eventRegistrationSchema = z
+  .object({
+    fullName: z.string().min(2, "Nom requis").trim(),
+    email: z.string().email("Email invalide").trim().toLowerCase(),
+    phone: z.string().min(1, "Téléphone requis").trim(),
+    registrantType: z.enum(["INDIVIDUAL", "COMPANY"]),
+    companyName: z.string().optional(),
+    jobTitle: z.string().min(1, "Fonction requise").trim(),
+    activityDomain: z.string().min(1, "Domaine d'activité requis").trim(),
+  })
+  .refine((d) => d.registrantType !== "COMPANY" || Boolean(d.companyName?.trim()), {
+    message: "Nom de l'entreprise requis",
+    path: ["companyName"],
+  });
 
 // Sous-ensemble toujours accepté du corps de la requête même quand l'inscrit est
 // connecté : nom/email viennent du compte, mais le téléphone reste requis (celui
 // du compte sert de valeur par défaut, écrasable si le profil n'en a pas) et
-// fonction/domaine de formation restent propres à cette inscription.
-export const eventRegistrationExtraSchema = z.object({
-  phone: z.string().trim().optional(),
-  jobTitle: z.string().optional(),
-  trainingDomain: z.string().optional(),
-});
+// type de profil / entreprise / fonction / domaine d'activité restent propres
+// à cette inscription (jamais déduits du compte).
+export const eventRegistrationExtraSchema = z
+  .object({
+    phone: z.string().trim().optional(),
+    registrantType: z.enum(["INDIVIDUAL", "COMPANY"]),
+    companyName: z.string().optional(),
+    jobTitle: z.string().min(1, "Fonction requise").trim(),
+    activityDomain: z.string().min(1, "Domaine d'activité requis").trim(),
+  })
+  .refine((d) => d.registrantType !== "COMPANY" || Boolean(d.companyName?.trim()), {
+    message: "Nom de l'entreprise requis",
+    path: ["companyName"],
+  });
 
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 export const trainerApplicationSchema = z.object({

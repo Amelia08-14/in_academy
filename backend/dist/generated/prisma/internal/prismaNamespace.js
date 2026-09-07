@@ -376,8 +376,10 @@ exports.EventRegistrationScalarFieldEnum = {
     fullName: 'fullName',
     email: 'email',
     phone: 'phone',
+    registrantType: 'registrantType',
+    companyName: 'companyName',
     jobTitle: 'jobTitle',
-    trainingDomain: 'trainingDomain',
+    activityDomain: 'activityDomain',
     status: 'status',
     createdAt: 'createdAt'
 };
@@ -580,8 +582,9 @@ exports.EventRegistrationOrderByRelevanceFieldEnum = {
     fullName: 'fullName',
     email: 'email',
     phone: 'phone',
+    companyName: 'companyName',
     jobTitle: 'jobTitle',
-    trainingDomain: 'trainingDomain'
+    activityDomain: 'activityDomain'
 };
 exports.TrainerApplicationOrderByRelevanceFieldEnum = {
     id: 'id',

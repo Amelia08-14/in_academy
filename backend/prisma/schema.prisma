@@ -467,23 +467,31 @@ enum EventRegistrationStatus {
   REJECTED
 }
 
+enum EventRegistrantType {
+  INDIVIDUAL
+  COMPANY
+}
+
 // Inscription publique à un événement — ouverte sans compte (comme le formulaire
 // de contact) : nom/email/téléphone suffisent, pas besoin d'un compte apprenant.
 // Passe par une validation admin (PENDING → CONFIRMED/REJECTED), comme les
-// inscriptions aux formations.
+// inscriptions aux formations. Tous les champs métier (fonction, domaine
+// d'activité, nom d'entreprise si applicable) sont obligatoires à la saisie.
 model EventRegistration {
-  id        String                   @id @default(uuid())
-  eventId   String
+  id             String                   @id @default(uuid())
+  eventId        String
   // Compte lié si l'inscrit était connecté (nom/email/téléphone pré-remplis
   // depuis son profil) ; null pour une inscription invité.
-  userId    String?
-  fullName  String
-  email     String
-  phone     String?
-  jobTitle       String? // "fonction"
-  trainingDomain String? // domaine de formation qui intéresse l'inscrit
-  status    EventRegistrationStatus  @default(PENDING)
-  createdAt DateTime                 @default(now())
+  userId         String?
+  fullName       String
+  email          String
+  phone          String
+  registrantType EventRegistrantType
+  companyName    String? // requis si registrantType = COMPANY
+  jobTitle       String // "fonction"
+  activityDomain String // domaine d'activité de l'inscrit (ou saisie libre si "Autre")
+  status         EventRegistrationStatus  @default(PENDING)
+  createdAt      DateTime                 @default(now())
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)

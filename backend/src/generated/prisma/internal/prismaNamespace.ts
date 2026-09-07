@@ -2442,8 +2442,10 @@ export const EventRegistrationScalarFieldEnum = {
   fullName: 'fullName',
   email: 'email',
   phone: 'phone',
+  registrantType: 'registrantType',
+  companyName: 'companyName',
   jobTitle: 'jobTitle',
-  trainingDomain: 'trainingDomain',
+  activityDomain: 'activityDomain',
   status: 'status',
   createdAt: 'createdAt'
 } as const
@@ -2754,8 +2756,9 @@ export const EventRegistrationOrderByRelevanceFieldEnum = {
   fullName: 'fullName',
   email: 'email',
   phone: 'phone',
+  companyName: 'companyName',
   jobTitle: 'jobTitle',
-  trainingDomain: 'trainingDomain'
+  activityDomain: 'activityDomain'
 } as const
 
 export type EventRegistrationOrderByRelevanceFieldEnum = (typeof EventRegistrationOrderByRelevanceFieldEnum)[keyof typeof EventRegistrationOrderByRelevanceFieldEnum]
@@ -2865,6 +2868,13 @@ export type EnumContactStatutFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'DocumentType'
  */
 export type EnumDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentType'>
+    
+
+
+/**
+ * Reference to a field of type 'EventRegistrantType'
+ */
+export type EnumEventRegistrantTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventRegistrantType'>
     
 
 

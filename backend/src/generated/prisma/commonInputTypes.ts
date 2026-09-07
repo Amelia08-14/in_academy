@@ -321,11 +321,28 @@ export type EnumDocumentTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumDocumentTypeFilter<$PrismaModel>
 }
 
+export type EnumEventRegistrantTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.EventRegistrantType | Prisma.EnumEventRegistrantTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EventRegistrantType[]
+  notIn?: $Enums.EventRegistrantType[]
+  not?: Prisma.NestedEnumEventRegistrantTypeFilter<$PrismaModel> | $Enums.EventRegistrantType
+}
+
 export type EnumEventRegistrationStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.EventRegistrationStatus | Prisma.EnumEventRegistrationStatusFieldRefInput<$PrismaModel>
   in?: $Enums.EventRegistrationStatus[]
   notIn?: $Enums.EventRegistrationStatus[]
   not?: Prisma.NestedEnumEventRegistrationStatusFilter<$PrismaModel> | $Enums.EventRegistrationStatus
+}
+
+export type EnumEventRegistrantTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EventRegistrantType | Prisma.EnumEventRegistrantTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EventRegistrantType[]
+  notIn?: $Enums.EventRegistrantType[]
+  not?: Prisma.NestedEnumEventRegistrantTypeWithAggregatesFilter<$PrismaModel> | $Enums.EventRegistrantType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEventRegistrantTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEventRegistrantTypeFilter<$PrismaModel>
 }
 
 export type EnumEventRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -679,11 +696,28 @@ export type NestedEnumDocumentTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumDocumentTypeFilter<$PrismaModel>
 }
 
+export type NestedEnumEventRegistrantTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.EventRegistrantType | Prisma.EnumEventRegistrantTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EventRegistrantType[]
+  notIn?: $Enums.EventRegistrantType[]
+  not?: Prisma.NestedEnumEventRegistrantTypeFilter<$PrismaModel> | $Enums.EventRegistrantType
+}
+
 export type NestedEnumEventRegistrationStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.EventRegistrationStatus | Prisma.EnumEventRegistrationStatusFieldRefInput<$PrismaModel>
   in?: $Enums.EventRegistrationStatus[]
   notIn?: $Enums.EventRegistrationStatus[]
   not?: Prisma.NestedEnumEventRegistrationStatusFilter<$PrismaModel> | $Enums.EventRegistrationStatus
+}
+
+export type NestedEnumEventRegistrantTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.EventRegistrantType | Prisma.EnumEventRegistrantTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.EventRegistrantType[]
+  notIn?: $Enums.EventRegistrantType[]
+  not?: Prisma.NestedEnumEventRegistrantTypeWithAggregatesFilter<$PrismaModel> | $Enums.EventRegistrantType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumEventRegistrantTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumEventRegistrantTypeFilter<$PrismaModel>
 }
 
 export type NestedEnumEventRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {

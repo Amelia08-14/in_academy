@@ -1,6 +1,7 @@
 // Types partagés entre la liste "Nos Events" et la page de détail d'un événement.
 
 export type RegistrationStatus = "PENDING" | "CONFIRMED" | "REJECTED";
+export type RegistrantType = "INDIVIDUAL" | "COMPANY";
 
 export interface EventPhoto { id: string; photoUrl: string }
 
@@ -20,6 +21,7 @@ export interface EventItem {
 export interface Account {
   email: string;
   learnerProfile: { firstName: string; lastName: string; phone: string | null; jobTitle: string | null } | null;
+  companyAdmin: { firstName: string | null; lastName: string | null; company: { raisonSociale: string } } | null;
 }
 
 export function formatEventDate(iso: string): string {

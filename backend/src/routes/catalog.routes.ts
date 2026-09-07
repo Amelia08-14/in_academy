@@ -86,16 +86,19 @@ router.get("/events/:slug", async (req: AuthRequest, res: Response) => {
 
 // POST /api/events/:id/register — inscription à un événement (statut PENDING,
 // validée ensuite par un admin — voir PATCH /api/admin/events/registrations/:id).
-// Connecté : nom/email/téléphone repris automatiquement du compte.
-// Non connecté : nom/email/téléphone requis dans le corps (inscription invité).
-// Dans les deux cas, fonction/domaine de formation restent saisis dans le corps.
+// Connecté : nom/email repris automatiquement du compte, téléphone pré-rempli
+// mais modifiable. Non connecté : nom/email/téléphone requis dans le corps.
+// Dans les deux cas, type de profil / entreprise / fonction / domaine d'activité
+// sont saisis à chaque inscription (jamais déduits du compte) et obligatoires.
 router.post("/events/:id/register", optionalAuthenticate, async (req: AuthRequest, res: Response) => {
   let fullName: string;
   let email: string;
   let phone: string | null;
   let userId: string | null = null;
-  let jobTitle: string | null;
-  let trainingDomain: string | null;
+  let registrantType: "INDIVIDUAL" | "COMPANY";
+  let companyName: string | null;
+  let jobTitle: string;
+  let activityDomain: string;
 
   if (req.user) {
     const account = await prisma.user.findUnique({
@@ -117,8 +120,10 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
     phone = extra.data.phone || account.learnerProfile?.phone || null;
     if (!phone) { res.status(400).json({ errors: { phone: ["Téléphone requis"] } }); return; }
     userId = account.id;
-    jobTitle = extra.data.jobTitle ?? account.learnerProfile?.jobTitle ?? null;
-    trainingDomain = extra.data.trainingDomain ?? null;
+    registrantType = extra.data.registrantType;
+    companyName = extra.data.companyName?.trim() || null;
+    jobTitle = extra.data.jobTitle;
+    activityDomain = extra.data.activityDomain;
   } else {
     const parsed = eventRegistrationSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -127,9 +132,11 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
     }
     fullName = parsed.data.fullName;
     email = parsed.data.email;
-    phone = parsed.data.phone ?? null;
-    jobTitle = parsed.data.jobTitle ?? null;
-    trainingDomain = parsed.data.trainingDomain ?? null;
+    phone = parsed.data.phone;
+    registrantType = parsed.data.registrantType;
+    companyName = parsed.data.companyName?.trim() || null;
+    jobTitle = parsed.data.jobTitle;
+    activityDomain = parsed.data.activityDomain;
   }
 
   try {
@@ -160,7 +167,7 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
     }
 
     const registration = await prisma.eventRegistration.create({
-      data: { eventId, fullName, email, phone, userId, jobTitle, trainingDomain },
+      data: { eventId, fullName, email, phone, userId, registrantType, companyName, jobTitle, activityDomain },
     });
 
     void sendEventRegistrationPendingEmail({
@@ -173,9 +180,11 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
 
     void sendAdminNotificationEmail(`Nouvelle inscription — ${event.title}`, [
       `${registration.fullName} (${registration.email}) vient de s'inscrire à "${event.title}".`,
-      registration.phone ? `Téléphone : ${registration.phone}` : "",
-      registration.jobTitle ? `Fonction : ${registration.jobTitle}` : "",
-      registration.trainingDomain ? `Domaine de formation : ${registration.trainingDomain}` : "",
+      `Profil : ${registration.registrantType === "COMPANY" ? "Entreprise" : "Particulier"}`,
+      registration.companyName ? `Entreprise : ${registration.companyName}` : "",
+      `Téléphone : ${registration.phone}`,
+      `Fonction : ${registration.jobTitle}`,
+      `Domaine d'activité : ${registration.activityDomain}`,
       "Validez ou refusez l'inscription depuis le back-office → Nos Events.",
     ].filter(Boolean)).catch((err) => console.error("[mail admin event-registration]", err));
 

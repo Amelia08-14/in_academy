@@ -89,6 +89,14 @@ export const EventRegistrationStatus = {
 export type EventRegistrationStatus = (typeof EventRegistrationStatus)[keyof typeof EventRegistrationStatus]
 
 
+export const EventRegistrantType = {
+  INDIVIDUAL: 'INDIVIDUAL',
+  COMPANY: 'COMPANY'
+} as const
+
+export type EventRegistrantType = (typeof EventRegistrantType)[keyof typeof EventRegistrantType]
+
+
 export const TrainerApplicationStatus = {
   PENDING: 'PENDING',
   REVIEWED: 'REVIEWED',

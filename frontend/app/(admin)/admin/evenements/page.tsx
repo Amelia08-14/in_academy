@@ -21,13 +21,16 @@ interface EventItem {
 }
 
 type RegistrationStatus = "PENDING" | "CONFIRMED" | "REJECTED";
+type RegistrantType = "INDIVIDUAL" | "COMPANY";
 interface Registration {
   id: string;
   fullName: string;
   email: string;
-  phone: string | null;
-  jobTitle: string | null;
-  trainingDomain: string | null;
+  phone: string;
+  registrantType: RegistrantType;
+  companyName: string | null;
+  jobTitle: string;
+  activityDomain: string;
   userId: string | null;
   status: RegistrationStatus;
   createdAt: string;
@@ -347,7 +350,7 @@ export default function AdminEvenementsPage() {
 
       {viewingRegs && (
         <div className="admin-modal-overlay" onClick={() => setViewingRegs(null)}>
-          <div className="admin-modal" style={{ maxWidth: 1040, width: "95vw" }} onClick={(e) => e.stopPropagation()}>
+          <div className="admin-modal" style={{ maxWidth: 1240, width: "95vw" }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
               <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
                 Inscrits — {viewingRegs.title}
@@ -364,8 +367,8 @@ export default function AdminEvenementsPage() {
                 <table className="admin-table">
                   <thead>
                     <tr>
-                      <th>Nom</th><th>Email</th><th>Téléphone</th><th>Fonction</th><th>Domaine</th>
-                      <th>Statut</th><th></th>
+                      <th>Nom</th><th>Type</th><th>Entreprise</th><th>Email</th><th>Téléphone</th>
+                      <th>Fonction</th><th>Domaine d&apos;activité</th><th>Statut</th><th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -379,10 +382,14 @@ export default function AdminEvenementsPage() {
                             </span>
                           )}
                         </td>
+                        <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>
+                          {reg.registrantType === "COMPANY" ? "Entreprise" : "Particulier"}
+                        </td>
+                        <td style={{ fontSize: 13 }}>{reg.companyName ?? "—"}</td>
                         <td style={{ fontSize: 13 }}>{reg.email}</td>
-                        <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{reg.phone ?? "—"}</td>
-                        <td style={{ fontSize: 13 }}>{reg.jobTitle ?? "—"}</td>
-                        <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{reg.trainingDomain ?? "—"}</td>
+                        <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{reg.phone}</td>
+                        <td style={{ fontSize: 13 }}>{reg.jobTitle}</td>
+                        <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{reg.activityDomain}</td>
                         <td>
                           <span className={`admin-badge admin-badge--${REG_STATUS_CLS[reg.status]}`}>
                             {REG_STATUS_LABEL[reg.status]}

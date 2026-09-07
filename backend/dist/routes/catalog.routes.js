@@ -80,16 +80,19 @@ router.get("/events/:slug", async (req, res) => {
 });
 // POST /api/events/:id/register — inscription à un événement (statut PENDING,
 // validée ensuite par un admin — voir PATCH /api/admin/events/registrations/:id).
-// Connecté : nom/email/téléphone repris automatiquement du compte.
-// Non connecté : nom/email/téléphone requis dans le corps (inscription invité).
-// Dans les deux cas, fonction/domaine de formation restent saisis dans le corps.
+// Connecté : nom/email repris automatiquement du compte, téléphone pré-rempli
+// mais modifiable. Non connecté : nom/email/téléphone requis dans le corps.
+// Dans les deux cas, type de profil / entreprise / fonction / domaine d'activité
+// sont saisis à chaque inscription (jamais déduits du compte) et obligatoires.
 router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, async (req, res) => {
     let fullName;
     let email;
     let phone;
     let userId = null;
+    let registrantType;
+    let companyName;
     let jobTitle;
-    let trainingDomain;
+    let activityDomain;
     if (req.user) {
         const account = await db_1.prisma.user.findUnique({
             where: { id: req.user.userId },
@@ -114,8 +117,10 @@ router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, asyn
             return;
         }
         userId = account.id;
-        jobTitle = extra.data.jobTitle ?? account.learnerProfile?.jobTitle ?? null;
-        trainingDomain = extra.data.trainingDomain ?? null;
+        registrantType = extra.data.registrantType;
+        companyName = extra.data.companyName?.trim() || null;
+        jobTitle = extra.data.jobTitle;
+        activityDomain = extra.data.activityDomain;
     }
     else {
         const parsed = content_schema_1.eventRegistrationSchema.safeParse(req.body);
@@ -125,9 +130,11 @@ router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, asyn
         }
         fullName = parsed.data.fullName;
         email = parsed.data.email;
-        phone = parsed.data.phone ?? null;
-        jobTitle = parsed.data.jobTitle ?? null;
-        trainingDomain = parsed.data.trainingDomain ?? null;
+        phone = parsed.data.phone;
+        registrantType = parsed.data.registrantType;
+        companyName = parsed.data.companyName?.trim() || null;
+        jobTitle = parsed.data.jobTitle;
+        activityDomain = parsed.data.activityDomain;
     }
     try {
         const eventId = req.params["id"];
@@ -155,7 +162,7 @@ router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, asyn
             return;
         }
         const registration = await db_1.prisma.eventRegistration.create({
-            data: { eventId, fullName, email, phone, userId, jobTitle, trainingDomain },
+            data: { eventId, fullName, email, phone, userId, registrantType, companyName, jobTitle, activityDomain },
         });
         void (0, mail_1.sendEventRegistrationPendingEmail)({
             to: registration.email,
@@ -166,9 +173,11 @@ router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, asyn
         }).catch((err) => console.error("[mail event-registration pending]", err));
         void (0, mail_1.sendAdminNotificationEmail)(`Nouvelle inscription — ${event.title}`, [
             `${registration.fullName} (${registration.email}) vient de s'inscrire à "${event.title}".`,
-            registration.phone ? `Téléphone : ${registration.phone}` : "",
-            registration.jobTitle ? `Fonction : ${registration.jobTitle}` : "",
-            registration.trainingDomain ? `Domaine de formation : ${registration.trainingDomain}` : "",
+            `Profil : ${registration.registrantType === "COMPANY" ? "Entreprise" : "Particulier"}`,
+            registration.companyName ? `Entreprise : ${registration.companyName}` : "",
+            `Téléphone : ${registration.phone}`,
+            `Fonction : ${registration.jobTitle}`,
+            `Domaine d'activité : ${registration.activityDomain}`,
             "Validez ou refusez l'inscription depuis le back-office → Nos Events.",
         ].filter(Boolean)).catch((err) => console.error("[mail admin event-registration]", err));
         res.status(201).json(registration);
