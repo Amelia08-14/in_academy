@@ -388,10 +388,12 @@ export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeo
 
 export const EventScalarFieldEnum = {
   id: 'id',
+  slug: 'slug',
   title: 'title',
   eventDate: 'eventDate',
   location: 'location',
   summary: 'summary',
+  capacity: 'capacity',
   isPublished: 'isPublished',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -417,6 +419,9 @@ export const EventRegistrationScalarFieldEnum = {
   fullName: 'fullName',
   email: 'email',
   phone: 'phone',
+  jobTitle: 'jobTitle',
+  trainingDomain: 'trainingDomain',
+  status: 'status',
   createdAt: 'createdAt'
 } as const
 
@@ -701,6 +706,7 @@ export type PartnerOrderByRelevanceFieldEnum = (typeof PartnerOrderByRelevanceFi
 
 export const EventOrderByRelevanceFieldEnum = {
   id: 'id',
+  slug: 'slug',
   title: 'title',
   location: 'location',
   summary: 'summary'
@@ -724,7 +730,9 @@ export const EventRegistrationOrderByRelevanceFieldEnum = {
   userId: 'userId',
   fullName: 'fullName',
   email: 'email',
-  phone: 'phone'
+  phone: 'phone',
+  jobTitle: 'jobTitle',
+  trainingDomain: 'trainingDomain'
 } as const
 
 export type EventRegistrationOrderByRelevanceFieldEnum = (typeof EventRegistrationOrderByRelevanceFieldEnum)[keyof typeof EventRegistrationOrderByRelevanceFieldEnum]

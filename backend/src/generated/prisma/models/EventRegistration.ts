@@ -31,6 +31,9 @@ export type EventRegistrationMinAggregateOutputType = {
   fullName: string | null
   email: string | null
   phone: string | null
+  jobTitle: string | null
+  trainingDomain: string | null
+  status: $Enums.EventRegistrationStatus | null
   createdAt: Date | null
 }
 
@@ -41,6 +44,9 @@ export type EventRegistrationMaxAggregateOutputType = {
   fullName: string | null
   email: string | null
   phone: string | null
+  jobTitle: string | null
+  trainingDomain: string | null
+  status: $Enums.EventRegistrationStatus | null
   createdAt: Date | null
 }
 
@@ -51,6 +57,9 @@ export type EventRegistrationCountAggregateOutputType = {
   fullName: number
   email: number
   phone: number
+  jobTitle: number
+  trainingDomain: number
+  status: number
   createdAt: number
   _all: number
 }
@@ -63,6 +72,9 @@ export type EventRegistrationMinAggregateInputType = {
   fullName?: true
   email?: true
   phone?: true
+  jobTitle?: true
+  trainingDomain?: true
+  status?: true
   createdAt?: true
 }
 
@@ -73,6 +85,9 @@ export type EventRegistrationMaxAggregateInputType = {
   fullName?: true
   email?: true
   phone?: true
+  jobTitle?: true
+  trainingDomain?: true
+  status?: true
   createdAt?: true
 }
 
@@ -83,6 +98,9 @@ export type EventRegistrationCountAggregateInputType = {
   fullName?: true
   email?: true
   phone?: true
+  jobTitle?: true
+  trainingDomain?: true
+  status?: true
   createdAt?: true
   _all?: true
 }
@@ -166,6 +184,9 @@ export type EventRegistrationGroupByOutputType = {
   fullName: string
   email: string
   phone: string | null
+  jobTitle: string | null
+  trainingDomain: string | null
+  status: $Enums.EventRegistrationStatus
   createdAt: Date
   _count: EventRegistrationCountAggregateOutputType | null
   _min: EventRegistrationMinAggregateOutputType | null
@@ -197,6 +218,9 @@ export type EventRegistrationWhereInput = {
   fullName?: Prisma.StringFilter<"EventRegistration"> | string
   email?: Prisma.StringFilter<"EventRegistration"> | string
   phone?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  jobTitle?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  trainingDomain?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  status?: Prisma.EnumEventRegistrationStatusFilter<"EventRegistration"> | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -209,6 +233,9 @@ export type EventRegistrationOrderByWithRelationInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  trainingDomain?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   event?: Prisma.EventOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -226,6 +253,9 @@ export type EventRegistrationWhereUniqueInput = Prisma.AtLeast<{
   fullName?: Prisma.StringFilter<"EventRegistration"> | string
   email?: Prisma.StringFilter<"EventRegistration"> | string
   phone?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  jobTitle?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  trainingDomain?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  status?: Prisma.EnumEventRegistrationStatusFilter<"EventRegistration"> | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -238,6 +268,9 @@ export type EventRegistrationOrderByWithAggregationInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  trainingDomain?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.EventRegistrationCountOrderByAggregateInput
   _max?: Prisma.EventRegistrationMaxOrderByAggregateInput
@@ -254,6 +287,9 @@ export type EventRegistrationScalarWhereWithAggregatesInput = {
   fullName?: Prisma.StringWithAggregatesFilter<"EventRegistration"> | string
   email?: Prisma.StringWithAggregatesFilter<"EventRegistration"> | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"EventRegistration"> | string | null
+  jobTitle?: Prisma.StringNullableWithAggregatesFilter<"EventRegistration"> | string | null
+  trainingDomain?: Prisma.StringNullableWithAggregatesFilter<"EventRegistration"> | string | null
+  status?: Prisma.EnumEventRegistrationStatusWithAggregatesFilter<"EventRegistration"> | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EventRegistration"> | Date | string
 }
 
@@ -262,6 +298,9 @@ export type EventRegistrationCreateInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
   event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
   user?: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
@@ -274,6 +313,9 @@ export type EventRegistrationUncheckedCreateInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
 }
 
@@ -282,6 +324,9 @@ export type EventRegistrationUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
   user?: Prisma.UserUpdateOneWithoutEventRegistrationsNestedInput
@@ -294,6 +339,9 @@ export type EventRegistrationUncheckedUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -304,6 +352,9 @@ export type EventRegistrationCreateManyInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
 }
 
@@ -312,6 +363,9 @@ export type EventRegistrationUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -322,6 +376,9 @@ export type EventRegistrationUncheckedUpdateManyInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -353,6 +410,9 @@ export type EventRegistrationCountOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  jobTitle?: Prisma.SortOrder
+  trainingDomain?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -363,6 +423,9 @@ export type EventRegistrationMaxOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  jobTitle?: Prisma.SortOrder
+  trainingDomain?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -373,6 +436,9 @@ export type EventRegistrationMinOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  jobTitle?: Prisma.SortOrder
+  trainingDomain?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -460,11 +526,18 @@ export type EventRegistrationUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.EventRegistrationScalarWhereInput | Prisma.EventRegistrationScalarWhereInput[]
 }
 
+export type EnumEventRegistrationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.EventRegistrationStatus
+}
+
 export type EventRegistrationCreateWithoutUserInput = {
   id?: string
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
   event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
 }
@@ -475,6 +548,9 @@ export type EventRegistrationUncheckedCreateWithoutUserInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
 }
 
@@ -514,6 +590,9 @@ export type EventRegistrationScalarWhereInput = {
   fullName?: Prisma.StringFilter<"EventRegistration"> | string
   email?: Prisma.StringFilter<"EventRegistration"> | string
   phone?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  jobTitle?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  trainingDomain?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  status?: Prisma.EnumEventRegistrationStatusFilter<"EventRegistration"> | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
 }
 
@@ -522,6 +601,9 @@ export type EventRegistrationCreateWithoutEventInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
 }
@@ -532,6 +614,9 @@ export type EventRegistrationUncheckedCreateWithoutEventInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
 }
 
@@ -567,6 +652,9 @@ export type EventRegistrationCreateManyUserInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
 }
 
@@ -575,6 +663,9 @@ export type EventRegistrationUpdateWithoutUserInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
 }
@@ -585,6 +676,9 @@ export type EventRegistrationUncheckedUpdateWithoutUserInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -594,6 +688,9 @@ export type EventRegistrationUncheckedUpdateManyWithoutUserInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -603,6 +700,9 @@ export type EventRegistrationCreateManyEventInput = {
   fullName: string
   email: string
   phone?: string | null
+  jobTitle?: string | null
+  trainingDomain?: string | null
+  status?: $Enums.EventRegistrationStatus
   createdAt?: Date | string
 }
 
@@ -611,6 +711,9 @@ export type EventRegistrationUpdateWithoutEventInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutEventRegistrationsNestedInput
 }
@@ -621,6 +724,9 @@ export type EventRegistrationUncheckedUpdateWithoutEventInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -630,6 +736,9 @@ export type EventRegistrationUncheckedUpdateManyWithoutEventInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEventRegistrationStatusFieldUpdateOperationsInput | $Enums.EventRegistrationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -642,6 +751,9 @@ export type EventRegistrationSelect<ExtArgs extends runtime.Types.Extensions.Int
   fullName?: boolean
   email?: boolean
   phone?: boolean
+  jobTitle?: boolean
+  trainingDomain?: boolean
+  status?: boolean
   createdAt?: boolean
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   user?: boolean | Prisma.EventRegistration$userArgs<ExtArgs>
@@ -656,10 +768,13 @@ export type EventRegistrationSelectScalar = {
   fullName?: boolean
   email?: boolean
   phone?: boolean
+  jobTitle?: boolean
+  trainingDomain?: boolean
+  status?: boolean
   createdAt?: boolean
 }
 
-export type EventRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "userId" | "fullName" | "email" | "phone" | "createdAt", ExtArgs["result"]["eventRegistration"]>
+export type EventRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "userId" | "fullName" | "email" | "phone" | "jobTitle" | "trainingDomain" | "status" | "createdAt", ExtArgs["result"]["eventRegistration"]>
 export type EventRegistrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
   user?: boolean | Prisma.EventRegistration$userArgs<ExtArgs>
@@ -678,6 +793,9 @@ export type $EventRegistrationPayload<ExtArgs extends runtime.Types.Extensions.I
     fullName: string
     email: string
     phone: string | null
+    jobTitle: string | null
+    trainingDomain: string | null
+    status: $Enums.EventRegistrationStatus
     createdAt: Date
   }, ExtArgs["result"]["eventRegistration"]>
   composites: {}
@@ -1056,6 +1174,9 @@ export interface EventRegistrationFieldRefs {
   readonly fullName: Prisma.FieldRef<"EventRegistration", 'String'>
   readonly email: Prisma.FieldRef<"EventRegistration", 'String'>
   readonly phone: Prisma.FieldRef<"EventRegistration", 'String'>
+  readonly jobTitle: Prisma.FieldRef<"EventRegistration", 'String'>
+  readonly trainingDomain: Prisma.FieldRef<"EventRegistration", 'String'>
+  readonly status: Prisma.FieldRef<"EventRegistration", 'EventRegistrationStatus'>
   readonly createdAt: Prisma.FieldRef<"EventRegistration", 'DateTime'>
 }
     

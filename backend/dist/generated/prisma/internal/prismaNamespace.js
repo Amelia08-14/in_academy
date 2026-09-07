@@ -353,10 +353,12 @@ exports.PartnerScalarFieldEnum = {
 };
 exports.EventScalarFieldEnum = {
     id: 'id',
+    slug: 'slug',
     title: 'title',
     eventDate: 'eventDate',
     location: 'location',
     summary: 'summary',
+    capacity: 'capacity',
     isPublished: 'isPublished',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -374,6 +376,9 @@ exports.EventRegistrationScalarFieldEnum = {
     fullName: 'fullName',
     email: 'email',
     phone: 'phone',
+    jobTitle: 'jobTitle',
+    trainingDomain: 'trainingDomain',
+    status: 'status',
     createdAt: 'createdAt'
 };
 exports.TrainerApplicationScalarFieldEnum = {
@@ -558,6 +563,7 @@ exports.PartnerOrderByRelevanceFieldEnum = {
 };
 exports.EventOrderByRelevanceFieldEnum = {
     id: 'id',
+    slug: 'slug',
     title: 'title',
     location: 'location',
     summary: 'summary'
@@ -573,7 +579,9 @@ exports.EventRegistrationOrderByRelevanceFieldEnum = {
     userId: 'userId',
     fullName: 'fullName',
     email: 'email',
-    phone: 'phone'
+    phone: 'phone',
+    jobTitle: 'jobTitle',
+    trainingDomain: 'trainingDomain'
 };
 exports.TrainerApplicationOrderByRelevanceFieldEnum = {
     id: 'id',

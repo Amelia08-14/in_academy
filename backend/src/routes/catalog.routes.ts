@@ -1,8 +1,12 @@
 import { Router, Response } from "express";
 import { prisma } from "@/lib/db";
 import { AuthRequest, optionalAuthenticate } from "@/middlewares/auth.middleware";
-import { eventRegistrationSchema } from "@/validations/content.schema";
-import { sendEventRegistrationEmail, sendAdminNotificationEmail } from "@/lib/mail";
+import { eventRegistrationSchema, eventRegistrationExtraSchema } from "@/validations/content.schema";
+import { sendEventRegistrationPendingEmail, sendAdminNotificationEmail } from "@/lib/mail";
+
+// Inscriptions qui occupent réellement une place — un refus libère le quota.
+type EventRegistrationStatusValue = "PENDING" | "CONFIRMED" | "REJECTED";
+const ACTIVE_REGISTRATION_STATUSES: EventRegistrationStatusValue[] = ["PENDING", "CONFIRMED"];
 
 const router = Router();
 
@@ -25,41 +29,73 @@ router.get("/partners", async (_req: AuthRequest, res: Response) => {
 });
 
 // GET /api/events — public, événements publiés ("Nos Events")
-// Auth facultative : si connecté, chaque événement porte `isRegistered` pour que
-// le front puisse proposer une inscription directe en un clic (comme les formations)
-// plutôt que de rouvrir le formulaire à un utilisateur déjà identifié.
+// Auth facultative : si connecté, chaque événement porte `myStatus` (le statut de
+// l'inscription de ce visiteur, ou null) pour que le front adapte le bouton
+// (S'inscrire / En attente / Confirmé) sans rouvrir un formulaire déjà répondu.
 router.get("/events", optionalAuthenticate, async (req: AuthRequest, res: Response) => {
   try {
     const events = await prisma.event.findMany({
       where: { isPublished: true },
       orderBy: { eventDate: "desc" },
-      include: { photos: true },
+      include: {
+        photos: true,
+        _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } },
+      },
     });
 
-    let registeredEventIds = new Set<string>();
+    const myStatusByEvent = new Map<string, string>();
     if (req.user) {
       const mine = await prisma.eventRegistration.findMany({
         where: { userId: req.user.userId },
-        select: { eventId: true },
+        select: { eventId: true, status: true },
       });
-      registeredEventIds = new Set(mine.map((r) => r.eventId));
+      for (const r of mine) myStatusByEvent.set(r.eventId, r.status);
     }
 
-    res.json(events.map((ev) => ({ ...ev, isRegistered: registeredEventIds.has(ev.id) })));
+    res.json(events.map((ev) => ({
+      ...ev,
+      registeredCount: ev._count.registrations,
+      myStatus: myStatusByEvent.get(ev.id) ?? null,
+    })));
   } catch (err) {
     console.error("[events]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
-// POST /api/events/:id/register — inscription à un événement.
-// Connecté : nom/email/téléphone repris automatiquement du compte, aucun formulaire.
-// Non connecté : nom/email/téléphone requis dans le corps de la requête (inscription invité).
+// GET /api/events/:slug — public, page de détail d'un événement
+router.get("/events/:slug", async (req: AuthRequest, res: Response) => {
+  try {
+    const event = await prisma.event.findUnique({
+      where: { slug: req.params["slug"] as string },
+      include: {
+        photos: true,
+        _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } },
+      },
+    });
+    if (!event || !event.isPublished) {
+      res.status(404).json({ error: "Événement introuvable" });
+      return;
+    }
+    res.json({ ...event, registeredCount: event._count.registrations });
+  } catch (err) {
+    console.error("[events detail]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// POST /api/events/:id/register — inscription à un événement (statut PENDING,
+// validée ensuite par un admin — voir PATCH /api/admin/events/registrations/:id).
+// Connecté : nom/email/téléphone repris automatiquement du compte.
+// Non connecté : nom/email/téléphone requis dans le corps (inscription invité).
+// Dans les deux cas, fonction/domaine de formation restent saisis dans le corps.
 router.post("/events/:id/register", optionalAuthenticate, async (req: AuthRequest, res: Response) => {
   let fullName: string;
   let email: string;
   let phone: string | null;
   let userId: string | null = null;
+  let jobTitle: string | null;
+  let trainingDomain: string | null;
 
   if (req.user) {
     const account = await prisma.user.findUnique({
@@ -67,12 +103,21 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
       include: { learnerProfile: true },
     });
     if (!account) { res.status(401).json({ error: "Compte introuvable" }); return; }
+
+    const extra = eventRegistrationExtraSchema.safeParse(req.body);
+    if (!extra.success) {
+      res.status(400).json({ errors: extra.error.flatten().fieldErrors });
+      return;
+    }
+
     fullName = account.learnerProfile
       ? `${account.learnerProfile.firstName} ${account.learnerProfile.lastName}`
       : account.email;
     email = account.email;
     phone = account.learnerProfile?.phone ?? null;
     userId = account.id;
+    jobTitle = extra.data.jobTitle ?? account.learnerProfile?.jobTitle ?? null;
+    trainingDomain = extra.data.trainingDomain ?? null;
   } else {
     const parsed = eventRegistrationSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -82,17 +127,26 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
     fullName = parsed.data.fullName;
     email = parsed.data.email;
     phone = parsed.data.phone ?? null;
+    jobTitle = parsed.data.jobTitle ?? null;
+    trainingDomain = parsed.data.trainingDomain ?? null;
   }
 
   try {
     const eventId = req.params["id"] as string;
-    const event = await prisma.event.findUnique({ where: { id: eventId } });
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: { _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } } },
+    });
     if (!event || !event.isPublished) {
       res.status(404).json({ error: "Événement introuvable" });
       return;
     }
     if (event.eventDate < new Date()) {
       res.status(409).json({ error: "Cet événement est déjà passé, l'inscription n'est plus possible." });
+      return;
+    }
+    if (event.capacity !== null && event._count.registrations >= event.capacity) {
+      res.status(409).json({ error: "Cet événement est complet." });
       return;
     }
 
@@ -105,21 +159,23 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
     }
 
     const registration = await prisma.eventRegistration.create({
-      data: { eventId, fullName, email, phone, userId },
+      data: { eventId, fullName, email, phone, userId, jobTitle, trainingDomain },
     });
 
-    void sendEventRegistrationEmail({
+    void sendEventRegistrationPendingEmail({
       to: registration.email,
       fullName: registration.fullName,
       eventTitle: event.title,
       eventDate: event.eventDate,
       location: event.location,
-    }).catch((err) => console.error("[mail event-registration]", err));
+    }).catch((err) => console.error("[mail event-registration pending]", err));
 
     void sendAdminNotificationEmail(`Nouvelle inscription — ${event.title}`, [
       `${registration.fullName} (${registration.email}) vient de s'inscrire à "${event.title}".`,
       registration.phone ? `Téléphone : ${registration.phone}` : "",
-      "Consultez la liste des inscrits depuis le back-office → Nos Events.",
+      registration.jobTitle ? `Fonction : ${registration.jobTitle}` : "",
+      registration.trainingDomain ? `Domaine de formation : ${registration.trainingDomain}` : "",
+      "Validez ou refusez l'inscription depuis le back-office → Nos Events.",
     ].filter(Boolean)).catch((err) => console.error("[mail admin event-registration]", err));
 
     res.status(201).json(registration);

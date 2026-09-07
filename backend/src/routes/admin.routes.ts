@@ -2,7 +2,7 @@ import { Router, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
-import { sendEnrollmentConfirmedEmail, sendQuoteSentEmail } from "@/lib/mail";
+import { sendEnrollmentConfirmedEmail, sendQuoteSentEmail, sendEventRegistrationConfirmedEmail } from "@/lib/mail";
 import { partnerSchema, eventSchema } from "@/validations/content.schema";
 
 const router = Router();
@@ -832,12 +832,31 @@ router.patch("/quotes/:id/status", async (req: AuthRequest, res: Response) => {
 
 // ─── Événements ("Nos Events") ────────────────────────────────────────────────
 
+type EventRegistrationStatusValue = "PENDING" | "CONFIRMED" | "REJECTED";
+const ACTIVE_REGISTRATION_STATUSES: EventRegistrationStatusValue[] = ["PENDING", "CONFIRMED"];
+
+// Génère un slug unique à partir du titre — ajoute un suffixe numérique en cas
+// de collision plutôt que d'échouer sur la contrainte unique.
+async function uniqueEventSlug(title: string): Promise<string> {
+  const base = slugify(title) || "evenement";
+  let slug = base;
+  let n = 2;
+  while (await prisma.event.findUnique({ where: { slug }, select: { id: true } })) {
+    slug = `${base}-${n}`;
+    n += 1;
+  }
+  return slug;
+}
+
 // GET /api/admin/events
 router.get("/events", async (_req: AuthRequest, res: Response) => {
   try {
     const events = await prisma.event.findMany({
       orderBy: { eventDate: "desc" },
-      include: { photos: true, _count: { select: { registrations: true } } },
+      include: {
+        photos: true,
+        _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } },
+      },
     });
     res.json(events);
   } catch (err) {
@@ -860,7 +879,43 @@ router.get("/events/:id/registrations", async (req: AuthRequest, res: Response) 
   }
 });
 
-// DELETE /api/admin/events/registrations/:id — retirer un inscrit
+// PATCH /api/admin/events/registrations/:id/confirm — valide l'inscription, envoie la confirmation
+router.patch("/events/registrations/:id/confirm", async (req: AuthRequest, res: Response) => {
+  try {
+    const registration = await prisma.eventRegistration.update({
+      where: { id: req.params["id"] as string },
+      data: { status: "CONFIRMED" },
+      include: { event: true },
+    });
+    void sendEventRegistrationConfirmedEmail({
+      to: registration.email,
+      fullName: registration.fullName,
+      eventTitle: registration.event.title,
+      eventDate: registration.event.eventDate,
+      location: registration.event.location,
+    }).catch((err) => console.error("[mail event-registration confirmed]", err));
+    res.json(registration);
+  } catch (err) {
+    console.error("[admin/events registrations confirm]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// PATCH /api/admin/events/registrations/:id/reject — refuse l'inscription (libère la place)
+router.patch("/events/registrations/:id/reject", async (req: AuthRequest, res: Response) => {
+  try {
+    const registration = await prisma.eventRegistration.update({
+      where: { id: req.params["id"] as string },
+      data: { status: "REJECTED" },
+    });
+    res.json(registration);
+  } catch (err) {
+    console.error("[admin/events registrations reject]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/events/registrations/:id — retirer un inscrit définitivement
 router.delete("/events/registrations/:id", async (req: AuthRequest, res: Response) => {
   try {
     await prisma.eventRegistration.delete({ where: { id: req.params["id"] as string } });
@@ -882,10 +937,12 @@ router.post("/events", async (req: AuthRequest, res: Response) => {
     const d = parsed.data;
     const event = await prisma.event.create({
       data: {
+        slug: await uniqueEventSlug(d.title),
         title: d.title,
         eventDate: new Date(d.eventDate),
         location: d.location ?? null,
         summary: d.summary ?? null,
+        capacity: d.capacity ?? null,
         isPublished: d.isPublished ?? false,
         photos: d.photoUrls && d.photoUrls.length > 0
           ? { create: d.photoUrls.map((photoUrl) => ({ photoUrl })) }
@@ -900,7 +957,8 @@ router.post("/events", async (req: AuthRequest, res: Response) => {
   }
 });
 
-// PATCH /api/admin/events/:id — met aussi à jour la liste des photos si `photoUrls` est fourni
+// PATCH /api/admin/events/:id — met aussi à jour la liste des photos si `photoUrls` est fourni.
+// Le slug n'est jamais régénéré ici pour garder les liens déjà partagés stables.
 router.patch("/events/:id", async (req: AuthRequest, res: Response) => {
   const parsed = eventSchema.partial().safeParse(req.body);
   if (!parsed.success) {
@@ -917,6 +975,7 @@ router.patch("/events/:id", async (req: AuthRequest, res: Response) => {
         ...(d.eventDate !== undefined && { eventDate: new Date(d.eventDate) }),
         ...(d.location !== undefined && { location: d.location }),
         ...(d.summary !== undefined && { summary: d.summary }),
+        ...(d.capacity !== undefined && { capacity: d.capacity }),
         ...(d.isPublished !== undefined && { isPublished: d.isPublished }),
         ...(d.photoUrls !== undefined && {
           photos: {

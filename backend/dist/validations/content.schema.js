@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.documentSchema = exports.trainerApplicationSchema = exports.eventRegistrationSchema = exports.eventSchema = exports.partnerSchema = void 0;
+exports.documentSchema = exports.trainerApplicationSchema = exports.eventRegistrationExtraSchema = exports.eventRegistrationSchema = exports.eventSchema = exports.partnerSchema = void 0;
 const zod_1 = require("zod");
 // ─── Partenaires / avantages (tâche 3) ───────────────────────────────────────
 exports.partnerSchema = zod_1.z.object({
@@ -16,14 +16,25 @@ exports.eventSchema = zod_1.z.object({
     eventDate: zod_1.z.string().min(1, "Date requise"),
     location: zod_1.z.string().optional(),
     summary: zod_1.z.string().optional(),
+    capacity: zod_1.z.number().int().positive().nullable().optional(),
     isPublished: zod_1.z.boolean().optional(),
     photoUrls: zod_1.z.array(zod_1.z.string()).optional(),
 });
-// Inscription publique à un événement — ouverte sans compte.
+// Inscription à un événement — champs saisis à la main pour un invité, ou
+// complétés/écrasés côté serveur depuis le compte si l'inscrit est connecté.
 exports.eventRegistrationSchema = zod_1.z.object({
     fullName: zod_1.z.string().min(2, "Nom requis").trim(),
     email: zod_1.z.string().email("Email invalide").trim().toLowerCase(),
     phone: zod_1.z.string().optional(),
+    jobTitle: zod_1.z.string().optional(),
+    trainingDomain: zod_1.z.string().optional(),
+});
+// Sous-ensemble optionnel toujours accepté du corps de la requête, même quand
+// l'inscrit est connecté (nom/email/téléphone viennent alors du compte, mais
+// fonction/domaine de formation restent propres à cette inscription).
+exports.eventRegistrationExtraSchema = zod_1.z.object({
+    jobTitle: zod_1.z.string().optional(),
+    trainingDomain: zod_1.z.string().optional(),
 });
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 exports.trainerApplicationSchema = zod_1.z.object({

@@ -8,24 +8,41 @@ import FileUpload from "@/app/components/FileUpload";
 interface EventPhoto { id: string; photoUrl: string }
 interface EventItem {
   id: string;
+  slug: string;
   title: string;
   eventDate: string;
   location: string | null;
   summary: string | null;
+  capacity: number | null;
   isPublished: boolean;
   photos: EventPhoto[];
   createdAt: string;
   _count: { registrations: number };
 }
 
+type RegistrationStatus = "PENDING" | "CONFIRMED" | "REJECTED";
 interface Registration {
   id: string;
   fullName: string;
   email: string;
   phone: string | null;
+  jobTitle: string | null;
+  trainingDomain: string | null;
   userId: string | null;
+  status: RegistrationStatus;
   createdAt: string;
 }
+
+const REG_STATUS_LABEL: Record<RegistrationStatus, string> = {
+  PENDING: "En attente",
+  CONFIRMED: "Confirmée",
+  REJECTED: "Refusée",
+};
+const REG_STATUS_CLS: Record<RegistrationStatus, string> = {
+  PENDING: "pending",
+  CONFIRMED: "confirmed",
+  REJECTED: "cancelled",
+};
 
 interface EditState {
   id: string | null;
@@ -33,11 +50,12 @@ interface EditState {
   eventDate: string;
   location: string;
   summary: string;
+  capacity: string;
   isPublished: boolean;
   photoUrls: string[];
 }
 
-const EMPTY: EditState = { id: null, title: "", eventDate: "", location: "", summary: "", isPublished: false, photoUrls: [] };
+const EMPTY: EditState = { id: null, title: "", eventDate: "", location: "", summary: "", capacity: "", isPublished: false, photoUrls: [] };
 
 export default function AdminEvenementsPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
@@ -63,6 +81,7 @@ export default function AdminEvenementsPage() {
       eventDate: ev.eventDate.slice(0, 10),
       location: ev.location ?? "",
       summary: ev.summary ?? "",
+      capacity: ev.capacity !== null ? String(ev.capacity) : "",
       isPublished: ev.isPublished,
       photoUrls: ev.photos.map((p) => p.photoUrl),
     });
@@ -80,6 +99,7 @@ export default function AdminEvenementsPage() {
         eventDate: editing.eventDate,
         location: editing.location || undefined,
         summary: editing.summary || undefined,
+        capacity: editing.capacity.trim() ? Number(editing.capacity) : null,
         isPublished: editing.isPublished,
         photoUrls: editing.photoUrls,
       };
@@ -108,15 +128,33 @@ export default function AdminEvenementsPage() {
       .finally(() => setRegsLoading(false));
   };
 
-  const removeRegistration = async (id: string) => {
-    if (!window.confirm("Retirer cet inscrit ?")) return;
-    await api.delete(`/admin/events/registrations/${id}`);
-    setRegistrations((r) => r.filter((reg) => reg.id !== id));
+  const confirmRegistration = async (id: string) => {
+    const updated = await api.patch<Registration>(`/admin/events/registrations/${id}/confirm`);
+    setRegistrations((r) => r.map((reg) => reg.id === id ? updated : reg));
+  };
+
+  const rejectRegistration = async (id: string) => {
+    const updated = await api.patch<Registration>(`/admin/events/registrations/${id}/reject`);
+    setRegistrations((r) => r.map((reg) => reg.id === id ? updated : reg));
     setEvents((evs) => evs.map((ev) =>
       viewingRegs && ev.id === viewingRegs.id
         ? { ...ev, _count: { registrations: ev._count.registrations - 1 } }
         : ev
     ));
+  };
+
+  const removeRegistration = async (id: string) => {
+    if (!window.confirm("Retirer définitivement cet inscrit ?")) return;
+    const wasActive = registrations.find((r) => r.id === id)?.status !== "REJECTED";
+    await api.delete(`/admin/events/registrations/${id}`);
+    setRegistrations((r) => r.filter((reg) => reg.id !== id));
+    if (wasActive) {
+      setEvents((evs) => evs.map((ev) =>
+        viewingRegs && ev.id === viewingRegs.id
+          ? { ...ev, _count: { registrations: ev._count.registrations - 1 } }
+          : ev
+      ));
+    }
   };
 
   return (
@@ -173,6 +211,15 @@ export default function AdminEvenementsPage() {
                     placeholder="Ex : Siège IN ACADEMY, Hydra"
                   />
                 </div>
+              </div>
+              <div className="auth-field">
+                <label className="auth-label">Nombre maximum d&apos;inscrits</label>
+                <input
+                  type="number" min={1} className="auth-input"
+                  value={editing.capacity}
+                  onChange={(e) => setEditing((v) => v ? { ...v, capacity: e.target.value } : v)}
+                  placeholder="Laisser vide = illimité"
+                />
               </div>
               <div className="auth-field">
                 <label className="auth-label">Retour d&apos;expérience</label>
@@ -250,7 +297,7 @@ export default function AdminEvenementsPage() {
                     onClick={() => openRegistrations(ev)}
                     disabled={ev._count.registrations === 0}
                   >
-                    {ev._count.registrations} inscrit{ev._count.registrations !== 1 ? "s" : ""}
+                    {ev._count.registrations}{ev.capacity !== null ? ` / ${ev.capacity}` : ""} inscrit{ev._count.registrations !== 1 ? "s" : ""}
                   </button>
                 </td>
                 <td>
@@ -272,7 +319,7 @@ export default function AdminEvenementsPage() {
 
       {viewingRegs && (
         <div className="admin-modal-overlay" onClick={() => setViewingRegs(null)}>
-          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="admin-modal" style={{ maxWidth: 780 }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
               <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
                 Inscrits — {viewingRegs.title}
@@ -288,7 +335,10 @@ export default function AdminEvenementsPage() {
               <div className="admin-table-wrap">
                 <table className="admin-table">
                   <thead>
-                    <tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Inscrit le</th><th></th></tr>
+                    <tr>
+                      <th>Nom</th><th>Email</th><th>Téléphone</th><th>Fonction</th><th>Domaine</th>
+                      <th>Statut</th><th></th>
+                    </tr>
                   </thead>
                   <tbody>
                     {registrations.map((reg) => (
@@ -303,13 +353,29 @@ export default function AdminEvenementsPage() {
                         </td>
                         <td style={{ fontSize: 13 }}>{reg.email}</td>
                         <td style={{ fontSize: 13 }}>{reg.phone ?? "—"}</td>
-                        <td style={{ fontSize: 12, color: "var(--text-muted)" }}>
-                          {new Date(reg.createdAt).toLocaleDateString("fr-FR")}
+                        <td style={{ fontSize: 13 }}>{reg.jobTitle ?? "—"}</td>
+                        <td style={{ fontSize: 13 }}>{reg.trainingDomain ?? "—"}</td>
+                        <td>
+                          <span className={`admin-badge admin-badge--${REG_STATUS_CLS[reg.status]}`}>
+                            {REG_STATUS_LABEL[reg.status]}
+                          </span>
                         </td>
                         <td>
-                          <button className="admin-btn admin-btn--cancel" onClick={() => removeRegistration(reg.id)}>
-                            Retirer
-                          </button>
+                          <div className="admin-cell-actions">
+                            {reg.status !== "CONFIRMED" && (
+                              <button className="admin-btn admin-btn--confirm" onClick={() => confirmRegistration(reg.id)}>
+                                Valider
+                              </button>
+                            )}
+                            {reg.status !== "REJECTED" && (
+                              <button className="admin-btn admin-btn--cancel" onClick={() => rejectRegistration(reg.id)}>
+                                Refuser
+                              </button>
+                            )}
+                            <button className="admin-btn" onClick={() => removeRegistration(reg.id)}>
+                              Retirer
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}

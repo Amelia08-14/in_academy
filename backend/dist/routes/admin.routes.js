@@ -778,13 +778,28 @@ router.patch("/quotes/:id/status", async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
-// ─── Événements ("Nos Events") ────────────────────────────────────────────────
+const ACTIVE_REGISTRATION_STATUSES = ["PENDING", "CONFIRMED"];
+// Génère un slug unique à partir du titre — ajoute un suffixe numérique en cas
+// de collision plutôt que d'échouer sur la contrainte unique.
+async function uniqueEventSlug(title) {
+    const base = slugify(title) || "evenement";
+    let slug = base;
+    let n = 2;
+    while (await db_1.prisma.event.findUnique({ where: { slug }, select: { id: true } })) {
+        slug = `${base}-${n}`;
+        n += 1;
+    }
+    return slug;
+}
 // GET /api/admin/events
 router.get("/events", async (_req, res) => {
     try {
         const events = await db_1.prisma.event.findMany({
             orderBy: { eventDate: "desc" },
-            include: { photos: true, _count: { select: { registrations: true } } },
+            include: {
+                photos: true,
+                _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } },
+            },
         });
         res.json(events);
     }
@@ -807,7 +822,43 @@ router.get("/events/:id/registrations", async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
-// DELETE /api/admin/events/registrations/:id — retirer un inscrit
+// PATCH /api/admin/events/registrations/:id/confirm — valide l'inscription, envoie la confirmation
+router.patch("/events/registrations/:id/confirm", async (req, res) => {
+    try {
+        const registration = await db_1.prisma.eventRegistration.update({
+            where: { id: req.params["id"] },
+            data: { status: "CONFIRMED" },
+            include: { event: true },
+        });
+        void (0, mail_1.sendEventRegistrationConfirmedEmail)({
+            to: registration.email,
+            fullName: registration.fullName,
+            eventTitle: registration.event.title,
+            eventDate: registration.event.eventDate,
+            location: registration.event.location,
+        }).catch((err) => console.error("[mail event-registration confirmed]", err));
+        res.json(registration);
+    }
+    catch (err) {
+        console.error("[admin/events registrations confirm]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// PATCH /api/admin/events/registrations/:id/reject — refuse l'inscription (libère la place)
+router.patch("/events/registrations/:id/reject", async (req, res) => {
+    try {
+        const registration = await db_1.prisma.eventRegistration.update({
+            where: { id: req.params["id"] },
+            data: { status: "REJECTED" },
+        });
+        res.json(registration);
+    }
+    catch (err) {
+        console.error("[admin/events registrations reject]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// DELETE /api/admin/events/registrations/:id — retirer un inscrit définitivement
 router.delete("/events/registrations/:id", async (req, res) => {
     try {
         await db_1.prisma.eventRegistration.delete({ where: { id: req.params["id"] } });
@@ -829,10 +880,12 @@ router.post("/events", async (req, res) => {
         const d = parsed.data;
         const event = await db_1.prisma.event.create({
             data: {
+                slug: await uniqueEventSlug(d.title),
                 title: d.title,
                 eventDate: new Date(d.eventDate),
                 location: d.location ?? null,
                 summary: d.summary ?? null,
+                capacity: d.capacity ?? null,
                 isPublished: d.isPublished ?? false,
                 photos: d.photoUrls && d.photoUrls.length > 0
                     ? { create: d.photoUrls.map((photoUrl) => ({ photoUrl })) }
@@ -847,7 +900,8 @@ router.post("/events", async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
-// PATCH /api/admin/events/:id — met aussi à jour la liste des photos si `photoUrls` est fourni
+// PATCH /api/admin/events/:id — met aussi à jour la liste des photos si `photoUrls` est fourni.
+// Le slug n'est jamais régénéré ici pour garder les liens déjà partagés stables.
 router.patch("/events/:id", async (req, res) => {
     const parsed = content_schema_1.eventSchema.partial().safeParse(req.body);
     if (!parsed.success) {
@@ -864,6 +918,7 @@ router.patch("/events/:id", async (req, res) => {
                 ...(d.eventDate !== undefined && { eventDate: new Date(d.eventDate) }),
                 ...(d.location !== undefined && { location: d.location }),
                 ...(d.summary !== undefined && { summary: d.summary }),
+                ...(d.capacity !== undefined && { capacity: d.capacity }),
                 ...(d.isPublished !== undefined && { isPublished: d.isPublished }),
                 ...(d.photoUrls !== undefined && {
                     photos: {

@@ -5,6 +5,7 @@ const db_1 = require("../lib/db");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const content_schema_1 = require("../validations/content.schema");
 const mail_1 = require("../lib/mail");
+const ACTIVE_REGISTRATION_STATUSES = ["PENDING", "CONFIRMED"];
 const router = (0, express_1.Router)();
 const OPEN_SESSION_STATUS = ["SCHEDULED", "ONGOING"];
 // GET /api/partners — public, avantages partenaires actifs (espace client, tâche 3)
@@ -23,39 +24,72 @@ router.get("/partners", async (_req, res) => {
     }
 });
 // GET /api/events — public, événements publiés ("Nos Events")
-// Auth facultative : si connecté, chaque événement porte `isRegistered` pour que
-// le front puisse proposer une inscription directe en un clic (comme les formations)
-// plutôt que de rouvrir le formulaire à un utilisateur déjà identifié.
+// Auth facultative : si connecté, chaque événement porte `myStatus` (le statut de
+// l'inscription de ce visiteur, ou null) pour que le front adapte le bouton
+// (S'inscrire / En attente / Confirmé) sans rouvrir un formulaire déjà répondu.
 router.get("/events", auth_middleware_1.optionalAuthenticate, async (req, res) => {
     try {
         const events = await db_1.prisma.event.findMany({
             where: { isPublished: true },
             orderBy: { eventDate: "desc" },
-            include: { photos: true },
+            include: {
+                photos: true,
+                _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } },
+            },
         });
-        let registeredEventIds = new Set();
+        const myStatusByEvent = new Map();
         if (req.user) {
             const mine = await db_1.prisma.eventRegistration.findMany({
                 where: { userId: req.user.userId },
-                select: { eventId: true },
+                select: { eventId: true, status: true },
             });
-            registeredEventIds = new Set(mine.map((r) => r.eventId));
+            for (const r of mine)
+                myStatusByEvent.set(r.eventId, r.status);
         }
-        res.json(events.map((ev) => ({ ...ev, isRegistered: registeredEventIds.has(ev.id) })));
+        res.json(events.map((ev) => ({
+            ...ev,
+            registeredCount: ev._count.registrations,
+            myStatus: myStatusByEvent.get(ev.id) ?? null,
+        })));
     }
     catch (err) {
         console.error("[events]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
-// POST /api/events/:id/register — inscription à un événement.
-// Connecté : nom/email/téléphone repris automatiquement du compte, aucun formulaire.
-// Non connecté : nom/email/téléphone requis dans le corps de la requête (inscription invité).
+// GET /api/events/:slug — public, page de détail d'un événement
+router.get("/events/:slug", async (req, res) => {
+    try {
+        const event = await db_1.prisma.event.findUnique({
+            where: { slug: req.params["slug"] },
+            include: {
+                photos: true,
+                _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } },
+            },
+        });
+        if (!event || !event.isPublished) {
+            res.status(404).json({ error: "Événement introuvable" });
+            return;
+        }
+        res.json({ ...event, registeredCount: event._count.registrations });
+    }
+    catch (err) {
+        console.error("[events detail]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// POST /api/events/:id/register — inscription à un événement (statut PENDING,
+// validée ensuite par un admin — voir PATCH /api/admin/events/registrations/:id).
+// Connecté : nom/email/téléphone repris automatiquement du compte.
+// Non connecté : nom/email/téléphone requis dans le corps (inscription invité).
+// Dans les deux cas, fonction/domaine de formation restent saisis dans le corps.
 router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, async (req, res) => {
     let fullName;
     let email;
     let phone;
     let userId = null;
+    let jobTitle;
+    let trainingDomain;
     if (req.user) {
         const account = await db_1.prisma.user.findUnique({
             where: { id: req.user.userId },
@@ -65,12 +99,19 @@ router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, asyn
             res.status(401).json({ error: "Compte introuvable" });
             return;
         }
+        const extra = content_schema_1.eventRegistrationExtraSchema.safeParse(req.body);
+        if (!extra.success) {
+            res.status(400).json({ errors: extra.error.flatten().fieldErrors });
+            return;
+        }
         fullName = account.learnerProfile
             ? `${account.learnerProfile.firstName} ${account.learnerProfile.lastName}`
             : account.email;
         email = account.email;
         phone = account.learnerProfile?.phone ?? null;
         userId = account.id;
+        jobTitle = extra.data.jobTitle ?? account.learnerProfile?.jobTitle ?? null;
+        trainingDomain = extra.data.trainingDomain ?? null;
     }
     else {
         const parsed = content_schema_1.eventRegistrationSchema.safeParse(req.body);
@@ -81,16 +122,25 @@ router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, asyn
         fullName = parsed.data.fullName;
         email = parsed.data.email;
         phone = parsed.data.phone ?? null;
+        jobTitle = parsed.data.jobTitle ?? null;
+        trainingDomain = parsed.data.trainingDomain ?? null;
     }
     try {
         const eventId = req.params["id"];
-        const event = await db_1.prisma.event.findUnique({ where: { id: eventId } });
+        const event = await db_1.prisma.event.findUnique({
+            where: { id: eventId },
+            include: { _count: { select: { registrations: { where: { status: { in: ACTIVE_REGISTRATION_STATUSES } } } } } },
+        });
         if (!event || !event.isPublished) {
             res.status(404).json({ error: "Événement introuvable" });
             return;
         }
         if (event.eventDate < new Date()) {
             res.status(409).json({ error: "Cet événement est déjà passé, l'inscription n'est plus possible." });
+            return;
+        }
+        if (event.capacity !== null && event._count.registrations >= event.capacity) {
+            res.status(409).json({ error: "Cet événement est complet." });
             return;
         }
         const existing = await db_1.prisma.eventRegistration.findUnique({
@@ -101,19 +151,21 @@ router.post("/events/:id/register", auth_middleware_1.optionalAuthenticate, asyn
             return;
         }
         const registration = await db_1.prisma.eventRegistration.create({
-            data: { eventId, fullName, email, phone, userId },
+            data: { eventId, fullName, email, phone, userId, jobTitle, trainingDomain },
         });
-        void (0, mail_1.sendEventRegistrationEmail)({
+        void (0, mail_1.sendEventRegistrationPendingEmail)({
             to: registration.email,
             fullName: registration.fullName,
             eventTitle: event.title,
             eventDate: event.eventDate,
             location: event.location,
-        }).catch((err) => console.error("[mail event-registration]", err));
+        }).catch((err) => console.error("[mail event-registration pending]", err));
         void (0, mail_1.sendAdminNotificationEmail)(`Nouvelle inscription — ${event.title}`, [
             `${registration.fullName} (${registration.email}) vient de s'inscrire à "${event.title}".`,
             registration.phone ? `Téléphone : ${registration.phone}` : "",
-            "Consultez la liste des inscrits depuis le back-office → Nos Events.",
+            registration.jobTitle ? `Fonction : ${registration.jobTitle}` : "",
+            registration.trainingDomain ? `Domaine de formation : ${registration.trainingDomain}` : "",
+            "Validez ou refusez l'inscription depuis le back-office → Nos Events.",
         ].filter(Boolean)).catch((err) => console.error("[mail admin event-registration]", err));
         res.status(201).json(registration);
     }

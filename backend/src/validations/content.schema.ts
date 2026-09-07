@@ -15,15 +15,27 @@ export const eventSchema = z.object({
   eventDate: z.string().min(1, "Date requise"),
   location: z.string().optional(),
   summary: z.string().optional(),
+  capacity: z.number().int().positive().nullable().optional(),
   isPublished: z.boolean().optional(),
   photoUrls: z.array(z.string()).optional(),
 });
 
-// Inscription publique à un événement — ouverte sans compte.
+// Inscription à un événement — champs saisis à la main pour un invité, ou
+// complétés/écrasés côté serveur depuis le compte si l'inscrit est connecté.
 export const eventRegistrationSchema = z.object({
   fullName: z.string().min(2, "Nom requis").trim(),
   email: z.string().email("Email invalide").trim().toLowerCase(),
   phone: z.string().optional(),
+  jobTitle: z.string().optional(),
+  trainingDomain: z.string().optional(),
+});
+
+// Sous-ensemble optionnel toujours accepté du corps de la requête, même quand
+// l'inscrit est connecté (nom/email/téléphone viennent alors du compte, mais
+// fonction/domaine de formation restent propres à cette inscription).
+export const eventRegistrationExtraSchema = z.object({
+  jobTitle: z.string().optional(),
+  trainingDomain: z.string().optional(),
 });
 
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────

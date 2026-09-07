@@ -80,6 +80,15 @@ export const DocumentType = {
 export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType]
 
 
+export const EventRegistrationStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type EventRegistrationStatus = (typeof EventRegistrationStatus)[keyof typeof EventRegistrationStatus]
+
+
 export const TrainerApplicationStatus = {
   PENDING: 'PENDING',
   REVIEWED: 'REVIEWED',

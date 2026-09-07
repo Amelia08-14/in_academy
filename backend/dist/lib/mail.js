@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEnrollmentPendingEmail = sendEnrollmentPendingEmail;
 exports.sendEnrollmentConfirmedEmail = sendEnrollmentConfirmedEmail;
 exports.sendQuoteSentEmail = sendQuoteSentEmail;
-exports.sendEventRegistrationEmail = sendEventRegistrationEmail;
+exports.sendEventRegistrationPendingEmail = sendEventRegistrationPendingEmail;
+exports.sendEventRegistrationConfirmedEmail = sendEventRegistrationConfirmedEmail;
 exports.sendPasswordResetEmail = sendPasswordResetEmail;
 exports.sendAdminNotificationEmail = sendAdminNotificationEmail;
 const nodemailer_1 = __importDefault(require("nodemailer"));
@@ -100,15 +101,13 @@ async function sendQuoteSentEmail(data) {
     </div>`;
     await sendMail(data.to, subject, html, `Bonjour ${data.company}, votre devis IN ACADEMY est disponible dans votre espace entreprise. Formations : ${data.formations.join(", ")}.`);
 }
-// Confirmation d'inscription à un événement ("Nos Events").
-async function sendEventRegistrationEmail(data) {
-    const subject = `Inscription confirmée — ${data.eventTitle}`;
+function eventRegistrationHtml(title, intro, data) {
     const date = formatDate(data.eventDate);
-    const html = `
+    return `
     <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f2340;max-width:620px;margin:0 auto;padding:24px">
-      <h1 style="font-size:20px;margin:0 0 16px;color:#0b2545">Inscription confirmée</h1>
+      <h1 style="font-size:20px;margin:0 0 16px;color:#0b2545">${escapeHtml(title)}</h1>
       <p>Bonjour ${escapeHtml(data.fullName)},</p>
-      <p>Votre inscription à l'événement suivant est bien enregistrée :</p>
+      <p>${escapeHtml(intro)}</p>
       <div style="border:1px solid #e5dccd;border-radius:10px;padding:16px;margin:20px 0;background:#fbf7ef">
         <strong style="display:block;margin-bottom:8px">${escapeHtml(data.eventTitle)}</strong>
         ${date ? `<div>Date : ${escapeHtml(date)}</div>` : ""}
@@ -116,7 +115,18 @@ async function sendEventRegistrationEmail(data) {
       </div>
       <p style="margin-top:20px">Équipe IN ACADEMY</p>
     </div>`;
-    await sendMail(data.to, subject, html, `Bonjour ${data.fullName}, votre inscription à "${data.eventTitle}"${date ? ` (${date})` : ""} est confirmée.`);
+}
+// Envoyé dès l'inscription — la place n'est pas encore garantie, elle attend une validation admin.
+async function sendEventRegistrationPendingEmail(data) {
+    const subject = `Inscription reçue — ${data.eventTitle}`;
+    const intro = "Votre inscription a bien été reçue. Elle sera validée par notre équipe.";
+    await sendMail(data.to, subject, eventRegistrationHtml("Inscription reçue", intro, data), `Bonjour ${data.fullName}, votre inscription à "${data.eventTitle}" a bien été reçue. Elle sera validée par notre équipe.`);
+}
+// Envoyé quand l'admin valide l'inscription depuis le back-office.
+async function sendEventRegistrationConfirmedEmail(data) {
+    const subject = `Inscription confirmée — ${data.eventTitle}`;
+    const intro = "Votre inscription a été validée par notre équipe — votre place est confirmée.";
+    await sendMail(data.to, subject, eventRegistrationHtml("Inscription confirmée", intro, data), `Bonjour ${data.fullName}, votre inscription à "${data.eventTitle}" est confirmée.`);
 }
 // Email « mot de passe oublié » — lien de réinitialisation à usage unique.
 async function sendPasswordResetEmail(data) {

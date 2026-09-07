@@ -434,10 +434,12 @@ model Partner {
 // ─── Événements ("Nos Events") ────────────────────────────────────────────────
 model Event {
   id          String   @id @default(uuid())
+  slug        String   @unique // page de détail publique /evenements/[slug]
   title       String
   eventDate   DateTime
   location    String?
   summary     String?  @db.Text // retour d'expérience / recap de l'événement
+  capacity    Int?     // nombre max d'inscrits — null = illimité
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -459,18 +461,29 @@ model EventPhoto {
   @@map("event_photos")
 }
 
+enum EventRegistrationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
 // Inscription publique à un événement — ouverte sans compte (comme le formulaire
 // de contact) : nom/email/téléphone suffisent, pas besoin d'un compte apprenant.
+// Passe par une validation admin (PENDING → CONFIRMED/REJECTED), comme les
+// inscriptions aux formations.
 model EventRegistration {
-  id        String   @id @default(uuid())
+  id        String                   @id @default(uuid())
   eventId   String
-  // Compte lié si l'inscrit était connecté (auto-rempli depuis son profil) ;
-  // null pour une inscription invité (nom/email/téléphone saisis à la main).
+  // Compte lié si l'inscrit était connecté (nom/email/téléphone pré-remplis
+  // depuis son profil) ; null pour une inscription invité.
   userId    String?
   fullName  String
   email     String
   phone     String?
-  createdAt DateTime @default(now())
+  jobTitle       String? // "fonction"
+  trainingDomain String? // domaine de formation qui intéresse l'inscrit
+  status    EventRegistrationStatus  @default(PENDING)
+  createdAt DateTime                 @default(now())
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
