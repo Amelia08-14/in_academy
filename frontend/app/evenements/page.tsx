@@ -54,58 +54,80 @@ function RegisterModal({ event, onClose }: { event: EventItem; onClose: () => vo
     }
   };
 
+  const hero = event.photos[0] ?? null;
+
   return (
     <div className="event-register-overlay" onClick={onClose}>
-      <div className="event-register-modal" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="event-register-modal__close" onClick={onClose} aria-label="Fermer">✕</button>
+      <div className={`event-register-card${hero ? " event-register-card--with-visual" : ""}`} onClick={(e) => e.stopPropagation()}>
+        <button type="button" className="event-register-card__close" onClick={onClose} aria-label="Fermer">✕</button>
 
-        {success ? (
-          <div className="event-register-modal__success">
-            <div className="auth-success-icon">✓</div>
-            <h3>Inscription confirmée</h3>
-            <p>Vous êtes inscrit(e) à « {event.title} ». Un email de confirmation vient de vous être envoyé.</p>
+        {hero && (
+          <div className="event-register-card__visual">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={fileUrl(hero.photoUrl)} alt="" />
+            <div className="event-register-card__scrim" />
+            <div className="event-register-card__visual-content">
+              <span className="event-register-card__badge">Invitation</span>
+              <h3>{event.title}</h3>
+              <p>{formatDate(event.eventDate)}{event.location ? ` · ${event.location}` : ""}</p>
+            </div>
           </div>
-        ) : (
-          <>
-            <span className="event-register-modal__eyebrow">S&apos;inscrire</span>
-            <h3 className="event-register-modal__title">{event.title}</h3>
-            <p className="event-register-modal__meta">
-              {formatDate(event.eventDate)}{event.location ? ` — ${event.location}` : ""}
-            </p>
-
-            {error && <div className="auth-error" style={{ marginTop: 16 }}>{error}</div>}
-
-            <form onSubmit={submit} className="auth-form" style={{ marginTop: 16 }}>
-              <div className="auth-field">
-                <label className="auth-label">Nom complet</label>
-                <input
-                  type="text" className="auth-input" required
-                  value={fullName} onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Votre nom et prénom"
-                />
-              </div>
-              <div className="auth-field">
-                <label className="auth-label">Email</label>
-                <input
-                  type="email" className="auth-input" required
-                  value={email} onChange={(e) => setEmail(e.target.value)}
-                  placeholder="vous@exemple.com"
-                />
-              </div>
-              <div className="auth-field">
-                <label className="auth-label">Téléphone (facultatif)</label>
-                <input
-                  type="tel" className="auth-input"
-                  value={phone} onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+213 XX XX XX XX"
-                />
-              </div>
-              <button type="submit" className="btn btn--primary auth-submit" disabled={pending}>
-                {pending ? "Envoi…" : "Confirmer mon inscription"}
-              </button>
-            </form>
-          </>
         )}
+
+        <div className="event-register-card__panel">
+          {success ? (
+            <div className="event-register-card__success">
+              <div className="auth-success-icon">✓</div>
+              <h3>Inscription confirmée</h3>
+              <p>Vous êtes inscrit(e) à « {event.title} ». Un email de confirmation vient de vous être envoyé.</p>
+            </div>
+          ) : (
+            <>
+              {!hero && (
+                <>
+                  <span className="event-register-card__eyebrow">Invitation</span>
+                  <h3 className="event-register-card__title">{event.title}</h3>
+                  <p className="event-register-card__meta">
+                    {formatDate(event.eventDate)}{event.location ? ` · ${event.location}` : ""}
+                  </p>
+                </>
+              )}
+              <p className="event-register-card__prompt">Vos coordonnées pour valider votre place :</p>
+
+              {error && <div className="auth-error" style={{ marginBottom: 8 }}>{error}</div>}
+
+              <form onSubmit={submit} className="event-register-card__form">
+                <div className="auth-field">
+                  <label className="auth-label">Nom complet</label>
+                  <input
+                    type="text" className="auth-input" required
+                    value={fullName} onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Votre nom et prénom"
+                  />
+                </div>
+                <div className="auth-field">
+                  <label className="auth-label">Email</label>
+                  <input
+                    type="email" className="auth-input" required
+                    value={email} onChange={(e) => setEmail(e.target.value)}
+                    placeholder="vous@exemple.com"
+                  />
+                </div>
+                <div className="auth-field">
+                  <label className="auth-label">Téléphone (facultatif)</label>
+                  <input
+                    type="tel" className="auth-input"
+                    value={phone} onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+213 XX XX XX XX"
+                  />
+                </div>
+                <button type="submit" className="btn btn--primary event-register-card__submit" disabled={pending}>
+                  {pending ? "Envoi…" : "Confirmer ma place"}
+                </button>
+              </form>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

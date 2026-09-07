@@ -7540,11 +7540,11 @@ button {
   margin-top: 20px;
 }
 
-/* ── Modale d'inscription (site public) ── */
+/* ── Modale d'inscription (site public) — carte d'invitation ── */
 .event-register-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(6, 15, 30, 0.55);
+  background: rgba(6, 15, 30, 0.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   display: flex;
@@ -7554,35 +7554,104 @@ button {
   padding: 24px;
 }
 
-.event-register-modal {
+.event-register-card {
   position: relative;
   background: var(--white);
   border-radius: 20px;
-  padding: 40px;
   width: 100%;
   max-width: 440px;
   max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 28px 80px rgba(15, 35, 64, 0.22);
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(15, 35, 64, 0.28);
+  display: flex;
+  flex-direction: column;
 }
 
-.event-register-modal__close {
+.event-register-card--with-visual {
+  max-width: 780px;
+  flex-direction: row;
+}
+
+.event-register-card__close {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
   width: 32px;
   height: 32px;
   border-radius: 50%;
   border: none;
-  background: var(--beige-light);
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--navy);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  box-shadow: 0 2px 8px rgba(10, 26, 48, 0.15);
+  transition: background 0.15s, transform 0.15s;
 }
-.event-register-modal__close:hover { background: var(--beige-dark); color: var(--navy); }
+.event-register-card__close:hover { background: var(--white); transform: scale(1.06); }
 
-.event-register-modal__eyebrow {
+/* Panneau visuel — la photo de l'événement fait office d'en-tête d'invitation */
+.event-register-card__visual {
+  position: relative;
+  flex-shrink: 0;
+  width: 42%;
+  min-height: 100%;
+}
+.event-register-card__visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.event-register-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(6, 15, 30, 0.92) 0%, rgba(6, 15, 30, 0.35) 55%, rgba(6, 15, 30, 0.05) 100%);
+}
+.event-register-card__visual-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 28px 24px;
+  color: #fff;
+}
+.event-register-card__badge {
   display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border: 1px solid rgba(212, 168, 67, 0.5);
+  border-radius: 50px;
+  padding: 4px 12px;
+  margin-bottom: 12px;
+}
+.event-register-card__visual-content h3 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 6px;
+}
+.event-register-card__visual-content p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+/* Panneau formulaire */
+.event-register-card__panel {
+  flex: 1;
+  min-width: 0;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.event-register-card__eyebrow {
+  display: block;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 500;
@@ -7591,8 +7660,16 @@ button {
   color: var(--gold);
   margin-bottom: 10px;
 }
+.event-register-card__eyebrow::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 2px;
+  background: var(--gold);
+  margin-bottom: 12px;
+}
 
-.event-register-modal__title {
+.event-register-card__title {
   font-family: var(--font-heading);
   font-size: 22px;
   font-weight: 700;
@@ -7602,30 +7679,52 @@ button {
   padding-right: 24px;
 }
 
-.event-register-modal__meta {
+.event-register-card__meta {
   font-size: 13px;
   color: var(--text-muted);
-  margin: 0;
+  margin: 0 0 20px;
 }
 
-.event-register-modal__success {
+.event-register-card__prompt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--teal-dark);
+  margin: 0 0 16px;
+}
+.event-register-card--with-visual .event-register-card__prompt { margin-top: 4px; }
+
+.event-register-card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.event-register-card__submit {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.event-register-card__success {
   text-align: center;
   padding: 12px 0;
 }
-.event-register-modal__success h3 {
+.event-register-card__success h3 {
   font-family: var(--font-heading);
   font-size: 20px;
   color: var(--navy);
   margin: 18px 0 10px;
 }
-.event-register-modal__success p {
+.event-register-card__success p {
   font-size: 14px;
   color: var(--text-muted);
   line-height: 1.6;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 640px) {
   .events-grid { grid-template-columns: 1fr; }
-  .event-register-modal { padding: 32px 24px; }
+  .event-register-card--with-visual { flex-direction: column; max-width: 440px; }
+  .event-register-card--with-visual .event-register-card__visual { width: 100%; height: 200px; min-height: 0; }
+  .event-register-card__panel { padding: 32px 24px; }
 }
 
