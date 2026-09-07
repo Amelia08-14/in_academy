@@ -2436,6 +2436,7 @@ export type EventPhotoScalarFieldEnum = (typeof EventPhotoScalarFieldEnum)[keyof
 export const EventRegistrationScalarFieldEnum = {
   id: 'id',
   eventId: 'eventId',
+  userId: 'userId',
   fullName: 'fullName',
   email: 'email',
   phone: 'phone',
@@ -2743,6 +2744,7 @@ export type EventPhotoOrderByRelevanceFieldEnum = (typeof EventPhotoOrderByRelev
 export const EventRegistrationOrderByRelevanceFieldEnum = {
   id: 'id',
   eventId: 'eventId',
+  userId: 'userId',
   fullName: 'fullName',
   email: 'email',
   phone: 'phone'

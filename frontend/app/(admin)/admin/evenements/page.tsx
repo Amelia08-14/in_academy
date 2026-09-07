@@ -23,6 +23,7 @@ interface Registration {
   fullName: string;
   email: string;
   phone: string | null;
+  userId: string | null;
   createdAt: string;
 }
 
@@ -292,7 +293,14 @@ export default function AdminEvenementsPage() {
                   <tbody>
                     {registrations.map((reg) => (
                       <tr key={reg.id}>
-                        <td>{reg.fullName}</td>
+                        <td>
+                          {reg.fullName}
+                          {reg.userId && (
+                            <span className="admin-badge admin-badge--role" style={{ marginLeft: 8, fontSize: 10 }}>
+                              compte
+                            </span>
+                          )}
+                        </td>
                         <td style={{ fontSize: 13 }}>{reg.email}</td>
                         <td style={{ fontSize: 13 }}>{reg.phone ?? "—"}</td>
                         <td style={{ fontSize: 12, color: "var(--text-muted)" }}>

@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
 import { prisma } from "@/lib/db";
-import { AuthRequest } from "@/middlewares/auth.middleware";
+import { AuthRequest, optionalAuthenticate } from "@/middlewares/auth.middleware";
 import { eventRegistrationSchema } from "@/validations/content.schema";
 import { sendEventRegistrationEmail, sendAdminNotificationEmail } from "@/lib/mail";
 
@@ -25,27 +25,65 @@ router.get("/partners", async (_req: AuthRequest, res: Response) => {
 });
 
 // GET /api/events — public, événements publiés ("Nos Events")
-router.get("/events", async (_req: AuthRequest, res: Response) => {
+// Auth facultative : si connecté, chaque événement porte `isRegistered` pour que
+// le front puisse proposer une inscription directe en un clic (comme les formations)
+// plutôt que de rouvrir le formulaire à un utilisateur déjà identifié.
+router.get("/events", optionalAuthenticate, async (req: AuthRequest, res: Response) => {
   try {
     const events = await prisma.event.findMany({
       where: { isPublished: true },
       orderBy: { eventDate: "desc" },
       include: { photos: true },
     });
-    res.json(events);
+
+    let registeredEventIds = new Set<string>();
+    if (req.user) {
+      const mine = await prisma.eventRegistration.findMany({
+        where: { userId: req.user.userId },
+        select: { eventId: true },
+      });
+      registeredEventIds = new Set(mine.map((r) => r.eventId));
+    }
+
+    res.json(events.map((ev) => ({ ...ev, isRegistered: registeredEventIds.has(ev.id) })));
   } catch (err) {
     console.error("[events]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
-// POST /api/events/:id/register — public, inscription à un événement (sans compte requis)
-router.post("/events/:id/register", async (req: AuthRequest, res: Response) => {
-  const parsed = eventRegistrationSchema.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
-    return;
+// POST /api/events/:id/register — inscription à un événement.
+// Connecté : nom/email/téléphone repris automatiquement du compte, aucun formulaire.
+// Non connecté : nom/email/téléphone requis dans le corps de la requête (inscription invité).
+router.post("/events/:id/register", optionalAuthenticate, async (req: AuthRequest, res: Response) => {
+  let fullName: string;
+  let email: string;
+  let phone: string | null;
+  let userId: string | null = null;
+
+  if (req.user) {
+    const account = await prisma.user.findUnique({
+      where: { id: req.user.userId },
+      include: { learnerProfile: true },
+    });
+    if (!account) { res.status(401).json({ error: "Compte introuvable" }); return; }
+    fullName = account.learnerProfile
+      ? `${account.learnerProfile.firstName} ${account.learnerProfile.lastName}`
+      : account.email;
+    email = account.email;
+    phone = account.learnerProfile?.phone ?? null;
+    userId = account.id;
+  } else {
+    const parsed = eventRegistrationSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+      return;
+    }
+    fullName = parsed.data.fullName;
+    email = parsed.data.email;
+    phone = parsed.data.phone ?? null;
   }
+
   try {
     const eventId = req.params["id"] as string;
     const event = await prisma.event.findUnique({ where: { id: eventId } });
@@ -59,7 +97,7 @@ router.post("/events/:id/register", async (req: AuthRequest, res: Response) => {
     }
 
     const existing = await prisma.eventRegistration.findUnique({
-      where: { eventId_email: { eventId, email: parsed.data.email } },
+      where: { eventId_email: { eventId, email } },
     });
     if (existing) {
       res.status(409).json({ error: "Vous êtes déjà inscrit(e) à cet événement." });
@@ -67,7 +105,7 @@ router.post("/events/:id/register", async (req: AuthRequest, res: Response) => {
     }
 
     const registration = await prisma.eventRegistration.create({
-      data: { eventId, ...parsed.data },
+      data: { eventId, fullName, email, phone, userId },
     });
 
     void sendEventRegistrationEmail({

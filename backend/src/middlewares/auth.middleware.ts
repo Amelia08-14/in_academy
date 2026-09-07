@@ -35,6 +35,23 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
   }
 }
 
+// Comme `authenticate`, mais ne bloque jamais la requête : utilisé sur des routes
+// publiques (ex. inscription à un événement) qui se comportent différemment
+// selon qu'un visiteur est connecté ou non, sans exiger de compte.
+export async function optionalAuthenticate(req: AuthRequest, _res: Response, next: NextFunction): Promise<void> {
+  const header = req.headers.authorization;
+  if (!header?.startsWith("Bearer ")) { next(); return; }
+
+  try {
+    const payload = verifyToken(header.slice(7));
+    const user = await prisma.user.findUnique({ where: { id: payload.userId }, select: { isActive: true } });
+    if (user?.isActive) req.user = payload;
+  } catch {
+    // Token invalide/expiré : on continue en visiteur anonyme plutôt que de bloquer.
+  }
+  next();
+}
+
 export function requireRole(...roles: string[]) {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user || !roles.includes(req.user.role)) {

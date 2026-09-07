@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
+import { useAuth } from "../hooks/useAuth";
 import { fileUrl } from "@/lib/fileUrl";
+import { api } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -16,13 +18,14 @@ interface EventItem {
   location: string | null;
   summary: string | null;
   photos: EventPhoto[];
+  isRegistered?: boolean;
 }
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
 }
 
-function RegisterModal({ event, onClose }: { event: EventItem; onClose: () => void }) {
+function RegisterModal({ event, onClose, onRegistered }: { event: EventItem; onClose: () => void; onRegistered: () => void }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -47,6 +50,7 @@ function RegisterModal({ event, onClose }: { event: EventItem; onClose: () => vo
         return;
       }
       setSuccess(true);
+      onRegistered();
     } catch {
       setError("Impossible de joindre le serveur.");
     } finally {
@@ -133,12 +137,30 @@ function RegisterModal({ event, onClose }: { event: EventItem; onClose: () => vo
   );
 }
 
-function EventCard({ event }: { event: EventItem }) {
+function EventCard({ event, onRegistered }: { event: EventItem; onRegistered: (eventId: string) => void }) {
+  const { isAuthenticated } = useAuth();
   const [registering, setRegistering] = useState(false);
+  const [directPending, setDirectPending] = useState(false);
+  const [directError, setDirectError] = useState("");
   const isUpcoming = new Date(event.eventDate) >= new Date();
   const hero = event.photos[0] ?? null;
   const extraPhotos = event.photos.slice(1, 4);
   const morePhotosCount = event.photos.length - 1 - extraPhotos.length;
+
+  // Connecté : inscription directe en un clic à partir des données du compte —
+  // même logique que l'inscription à une formation, pas de formulaire à remplir.
+  const registerDirect = async () => {
+    setDirectPending(true);
+    setDirectError("");
+    try {
+      await api.post(`/events/${event.id}/register`, {});
+      onRegistered(event.id);
+    } catch (err: unknown) {
+      setDirectError(err instanceof Error ? err.message : "Erreur lors de l'inscription.");
+    } finally {
+      setDirectPending(false);
+    }
+  };
 
   return (
     <article className="event-card">
@@ -190,13 +212,33 @@ function EventCard({ event }: { event: EventItem }) {
         )}
 
         {isUpcoming && (
-          <button type="button" className="btn btn--primary event-card__cta" onClick={() => setRegistering(true)}>
-            S&apos;inscrire
-          </button>
+          <>
+            {directError && <p className="event-card__error">{directError}</p>}
+            {isAuthenticated ? (
+              <button
+                type="button"
+                className={`btn ${event.isRegistered ? "btn--outline" : "btn--primary"} event-card__cta`}
+                onClick={registerDirect}
+                disabled={event.isRegistered || directPending}
+              >
+                {event.isRegistered ? "✓ Inscrit(e)" : directPending ? "Inscription…" : "S'inscrire"}
+              </button>
+            ) : (
+              <button type="button" className="btn btn--primary event-card__cta" onClick={() => setRegistering(true)}>
+                S&apos;inscrire
+              </button>
+            )}
+          </>
         )}
       </div>
 
-      {registering && <RegisterModal event={event} onClose={() => setRegistering(false)} />}
+      {registering && (
+        <RegisterModal
+          event={event}
+          onClose={() => setRegistering(false)}
+          onRegistered={() => onRegistered(event.id)}
+        />
+      )}
     </article>
   );
 }
@@ -206,12 +248,15 @@ export default function EvenementsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API}/events`)
-      .then((r) => r.json())
+    api.get<EventItem[]>("/events")
       .then((data) => setEvents(Array.isArray(data) ? data : []))
       .catch(() => setEvents([]))
       .finally(() => setLoading(false));
   }, []);
+
+  const markRegistered = (eventId: string) => {
+    setEvents((evs) => evs.map((ev) => ev.id === eventId ? { ...ev, isRegistered: true } : ev));
+  };
 
   return (
     <>
@@ -233,7 +278,7 @@ export default function EvenementsPage() {
           ) : (
             <div className="events-grid">
               {events.map((ev) => (
-                <EventCard event={ev} key={ev.id} />
+                <EventCard event={ev} key={ev.id} onRegistered={markRegistered} />
               ))}
             </div>
           )}

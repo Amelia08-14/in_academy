@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticate = authenticate;
+exports.optionalAuthenticate = optionalAuthenticate;
 exports.requireRole = requireRole;
 const jwt_1 = require("../lib/jwt");
 const db_1 = require("../lib/db");
@@ -29,6 +30,26 @@ async function authenticate(req, res, next) {
     catch {
         res.status(401).json({ error: "Token invalide ou expiré" });
     }
+}
+// Comme `authenticate`, mais ne bloque jamais la requête : utilisé sur des routes
+// publiques (ex. inscription à un événement) qui se comportent différemment
+// selon qu'un visiteur est connecté ou non, sans exiger de compte.
+async function optionalAuthenticate(req, _res, next) {
+    const header = req.headers.authorization;
+    if (!header?.startsWith("Bearer ")) {
+        next();
+        return;
+    }
+    try {
+        const payload = (0, jwt_1.verifyToken)(header.slice(7));
+        const user = await db_1.prisma.user.findUnique({ where: { id: payload.userId }, select: { isActive: true } });
+        if (user?.isActive)
+            req.user = payload;
+    }
+    catch {
+        // Token invalide/expiré : on continue en visiteur anonyme plutôt que de bloquer.
+    }
+    next();
 }
 function requireRole(...roles) {
     return (req, res, next) => {

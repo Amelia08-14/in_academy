@@ -342,6 +342,7 @@ exports.EventPhotoScalarFieldEnum = {
 exports.EventRegistrationScalarFieldEnum = {
     id: 'id',
     eventId: 'eventId',
+    userId: 'userId',
     fullName: 'fullName',
     email: 'email',
     phone: 'phone',
@@ -541,6 +542,7 @@ exports.EventPhotoOrderByRelevanceFieldEnum = {
 exports.EventRegistrationOrderByRelevanceFieldEnum = {
     id: 'id',
     eventId: 'eventId',
+    userId: 'userId',
     fullName: 'fullName',
     email: 'email',
     phone: 'phone'

@@ -73,6 +73,7 @@ model User {
   certificates   Certificate[]
   documents      Document[]
   resetTokens    PasswordResetToken[]
+  eventRegistrations EventRegistration[]
 
   @@map("users")
 }
@@ -463,12 +464,16 @@ model EventPhoto {
 model EventRegistration {
   id        String   @id @default(uuid())
   eventId   String
+  // Compte lié si l'inscrit était connecté (auto-rempli depuis son profil) ;
+  // null pour une inscription invité (nom/email/téléphone saisis à la main).
+  userId    String?
   fullName  String
   email     String
   phone     String?
   createdAt DateTime @default(now())
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@unique([eventId, email])
   @@map("event_registrations")
