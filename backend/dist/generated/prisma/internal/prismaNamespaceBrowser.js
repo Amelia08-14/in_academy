@@ -48,8 +48,8 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QuoteRequestItemOrderByRelevanceFieldEnum = exports.QuoteRequestOrderByRelevanceFieldEnum = exports.CertificateOrderByRelevanceFieldEnum = exports.EnrollmentEmployeeOrderByRelevanceFieldEnum = exports.EnrollmentOrderByRelevanceFieldEnum = exports.SessionMaterialOrderByRelevanceFieldEnum = exports.TrainingSessionOrderByRelevanceFieldEnum = exports.FormationTrainerOrderByRelevanceFieldEnum = exports.FormationOrderByRelevanceFieldEnum = exports.CategoryOrderByRelevanceFieldEnum = exports.CompanyProfileOrderByRelevanceFieldEnum = exports.CompanyOrderByRelevanceFieldEnum = exports.TrainerOrderByRelevanceFieldEnum = exports.TrainerProfileOrderByRelevanceFieldEnum = exports.LearnerProfileOrderByRelevanceFieldEnum = exports.PasswordResetTokenOrderByRelevanceFieldEnum = exports.NullsOrder = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.TrainerApplicationFileScalarFieldEnum = exports.TrainerApplicationScalarFieldEnum = exports.EventPhotoScalarFieldEnum = exports.EventScalarFieldEnum = exports.PartnerScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.ContactRequestScalarFieldEnum = exports.QuoteRequestItemScalarFieldEnum = exports.QuoteRequestScalarFieldEnum = exports.CertificateScalarFieldEnum = exports.EnrollmentEmployeeScalarFieldEnum = exports.EnrollmentScalarFieldEnum = exports.SessionMaterialScalarFieldEnum = exports.TrainingSessionScalarFieldEnum = exports.FormationTrainerScalarFieldEnum = exports.FormationScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.CompanyProfileScalarFieldEnum = exports.CompanyScalarFieldEnum = exports.TrainerScalarFieldEnum = exports.TrainerProfileScalarFieldEnum = exports.LearnerProfileScalarFieldEnum = exports.PasswordResetTokenScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
-exports.TrainerApplicationFileOrderByRelevanceFieldEnum = exports.TrainerApplicationOrderByRelevanceFieldEnum = exports.EventPhotoOrderByRelevanceFieldEnum = exports.EventOrderByRelevanceFieldEnum = exports.PartnerOrderByRelevanceFieldEnum = exports.DocumentOrderByRelevanceFieldEnum = exports.ContactRequestOrderByRelevanceFieldEnum = void 0;
+exports.QuoteRequestOrderByRelevanceFieldEnum = exports.CertificateOrderByRelevanceFieldEnum = exports.EnrollmentEmployeeOrderByRelevanceFieldEnum = exports.EnrollmentOrderByRelevanceFieldEnum = exports.SessionMaterialOrderByRelevanceFieldEnum = exports.TrainingSessionOrderByRelevanceFieldEnum = exports.FormationTrainerOrderByRelevanceFieldEnum = exports.FormationOrderByRelevanceFieldEnum = exports.CategoryOrderByRelevanceFieldEnum = exports.CompanyProfileOrderByRelevanceFieldEnum = exports.CompanyOrderByRelevanceFieldEnum = exports.TrainerOrderByRelevanceFieldEnum = exports.TrainerProfileOrderByRelevanceFieldEnum = exports.LearnerProfileOrderByRelevanceFieldEnum = exports.PasswordResetTokenOrderByRelevanceFieldEnum = exports.NullsOrder = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.TrainerApplicationFileScalarFieldEnum = exports.TrainerApplicationScalarFieldEnum = exports.EventRegistrationScalarFieldEnum = exports.EventPhotoScalarFieldEnum = exports.EventScalarFieldEnum = exports.PartnerScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.ContactRequestScalarFieldEnum = exports.QuoteRequestItemScalarFieldEnum = exports.QuoteRequestScalarFieldEnum = exports.CertificateScalarFieldEnum = exports.EnrollmentEmployeeScalarFieldEnum = exports.EnrollmentScalarFieldEnum = exports.SessionMaterialScalarFieldEnum = exports.TrainingSessionScalarFieldEnum = exports.FormationTrainerScalarFieldEnum = exports.FormationScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.CompanyProfileScalarFieldEnum = exports.CompanyScalarFieldEnum = exports.TrainerScalarFieldEnum = exports.TrainerProfileScalarFieldEnum = exports.LearnerProfileScalarFieldEnum = exports.PasswordResetTokenScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.TrainerApplicationFileOrderByRelevanceFieldEnum = exports.TrainerApplicationOrderByRelevanceFieldEnum = exports.EventRegistrationOrderByRelevanceFieldEnum = exports.EventPhotoOrderByRelevanceFieldEnum = exports.EventOrderByRelevanceFieldEnum = exports.PartnerOrderByRelevanceFieldEnum = exports.DocumentOrderByRelevanceFieldEnum = exports.ContactRequestOrderByRelevanceFieldEnum = exports.QuoteRequestItemOrderByRelevanceFieldEnum = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -98,6 +98,7 @@ exports.ModelName = {
     Partner: 'Partner',
     Event: 'Event',
     EventPhoto: 'EventPhoto',
+    EventRegistration: 'EventRegistration',
     TrainerApplication: 'TrainerApplication',
     TrainerApplicationFile: 'TrainerApplicationFile'
 };
@@ -338,6 +339,14 @@ exports.EventPhotoScalarFieldEnum = {
     photoUrl: 'photoUrl',
     createdAt: 'createdAt'
 };
+exports.EventRegistrationScalarFieldEnum = {
+    id: 'id',
+    eventId: 'eventId',
+    fullName: 'fullName',
+    email: 'email',
+    phone: 'phone',
+    createdAt: 'createdAt'
+};
 exports.TrainerApplicationScalarFieldEnum = {
     id: 'id',
     firstName: 'firstName',
@@ -528,6 +537,13 @@ exports.EventPhotoOrderByRelevanceFieldEnum = {
     id: 'id',
     eventId: 'eventId',
     photoUrl: 'photoUrl'
+};
+exports.EventRegistrationOrderByRelevanceFieldEnum = {
+    id: 'id',
+    eventId: 'eventId',
+    fullName: 'fullName',
+    email: 'email',
+    phone: 'phone'
 };
 exports.TrainerApplicationOrderByRelevanceFieldEnum = {
     id: 'id',

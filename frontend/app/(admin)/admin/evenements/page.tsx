@@ -15,6 +15,15 @@ interface EventItem {
   isPublished: boolean;
   photos: EventPhoto[];
   createdAt: string;
+  _count: { registrations: number };
+}
+
+interface Registration {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string | null;
+  createdAt: string;
 }
 
 interface EditState {
@@ -35,6 +44,9 @@ export default function AdminEvenementsPage() {
   const [editing, setEditing] = useState<EditState | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [viewingRegs, setViewingRegs] = useState<EventItem | null>(null);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
+  const [regsLoading, setRegsLoading] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -85,6 +97,25 @@ export default function AdminEvenementsPage() {
     if (!window.confirm("Supprimer cet événement ?")) return;
     await api.delete(`/admin/events/${id}`);
     load();
+  };
+
+  const openRegistrations = (ev: EventItem) => {
+    setViewingRegs(ev);
+    setRegsLoading(true);
+    api.get<Registration[]>(`/admin/events/${ev.id}/registrations`)
+      .then(setRegistrations)
+      .finally(() => setRegsLoading(false));
+  };
+
+  const removeRegistration = async (id: string) => {
+    if (!window.confirm("Retirer cet inscrit ?")) return;
+    await api.delete(`/admin/events/registrations/${id}`);
+    setRegistrations((r) => r.filter((reg) => reg.id !== id));
+    setEvents((evs) => evs.map((ev) =>
+      viewingRegs && ev.id === viewingRegs.id
+        ? { ...ev, _count: { registrations: ev._count.registrations - 1 } }
+        : ev
+    ));
   };
 
   return (
@@ -199,11 +230,11 @@ export default function AdminEvenementsPage() {
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
-            <tr><th>Événement</th><th>Date</th><th>Lieu</th><th>Photos</th><th>Statut</th><th>Actions</th></tr>
+            <tr><th>Événement</th><th>Date</th><th>Lieu</th><th>Photos</th><th>Inscrits</th><th>Statut</th><th>Actions</th></tr>
           </thead>
           <tbody>
             {events.length === 0 && !loading && (
-              <tr><td colSpan={6} className="admin-table__empty">Aucun événement pour l&apos;instant.</td></tr>
+              <tr><td colSpan={7} className="admin-table__empty">Aucun événement pour l&apos;instant.</td></tr>
             )}
             {events.map((ev) => (
               <tr key={ev.id} style={{ opacity: ev.isPublished ? 1 : 0.55 }}>
@@ -211,6 +242,16 @@ export default function AdminEvenementsPage() {
                 <td style={{ fontSize: 13 }}>{new Date(ev.eventDate).toLocaleDateString("fr-FR")}</td>
                 <td style={{ fontSize: 12, color: "var(--text-muted)" }}>{ev.location ?? "—"}</td>
                 <td style={{ fontSize: 13 }}>{ev.photos.length}</td>
+                <td>
+                  <button
+                    className="admin-btn"
+                    style={{ fontSize: 12 }}
+                    onClick={() => openRegistrations(ev)}
+                    disabled={ev._count.registrations === 0}
+                  >
+                    {ev._count.registrations} inscrit{ev._count.registrations !== 1 ? "s" : ""}
+                  </button>
+                </td>
                 <td>
                   <span className={`admin-badge admin-badge--${ev.isPublished ? "confirmed" : "cancelled"}`}>
                     {ev.isPublished ? "Publié" : "Brouillon"}
@@ -227,6 +268,50 @@ export default function AdminEvenementsPage() {
           </tbody>
         </table>
       </div>
+
+      {viewingRegs && (
+        <div className="admin-modal-overlay" onClick={() => setViewingRegs(null)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal__header">
+              <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
+                Inscrits — {viewingRegs.title}
+              </h2>
+              <button className="admin-modal__close" onClick={() => setViewingRegs(null)}>✕</button>
+            </div>
+
+            {regsLoading ? (
+              <p className="admin-loading">Chargement…</p>
+            ) : registrations.length === 0 ? (
+              <p style={{ color: "var(--text-muted)", fontSize: 14 }}>Aucun inscrit pour l&apos;instant.</p>
+            ) : (
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Inscrit le</th><th></th></tr>
+                  </thead>
+                  <tbody>
+                    {registrations.map((reg) => (
+                      <tr key={reg.id}>
+                        <td>{reg.fullName}</td>
+                        <td style={{ fontSize: 13 }}>{reg.email}</td>
+                        <td style={{ fontSize: 13 }}>{reg.phone ?? "—"}</td>
+                        <td style={{ fontSize: 12, color: "var(--text-muted)" }}>
+                          {new Date(reg.createdAt).toLocaleDateString("fr-FR")}
+                        </td>
+                        <td>
+                          <button className="admin-btn admin-btn--cancel" onClick={() => removeRegistration(reg.id)}>
+                            Retirer
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

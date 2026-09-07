@@ -837,11 +837,36 @@ router.get("/events", async (_req: AuthRequest, res: Response) => {
   try {
     const events = await prisma.event.findMany({
       orderBy: { eventDate: "desc" },
-      include: { photos: true },
+      include: { photos: true, _count: { select: { registrations: true } } },
     });
     res.json(events);
   } catch (err) {
     console.error("[admin/events]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// GET /api/admin/events/:id/registrations — liste des inscrits à un événement
+router.get("/events/:id/registrations", async (req: AuthRequest, res: Response) => {
+  try {
+    const registrations = await prisma.eventRegistration.findMany({
+      where: { eventId: req.params["id"] as string },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json(registrations);
+  } catch (err) {
+    console.error("[admin/events registrations]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/events/registrations/:id — retirer un inscrit
+router.delete("/events/registrations/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    await prisma.eventRegistration.delete({ where: { id: req.params["id"] as string } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/events registrations delete]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });

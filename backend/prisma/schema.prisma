@@ -441,7 +441,8 @@ model Event {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  photos EventPhoto[]
+  photos        EventPhoto[]
+  registrations EventRegistration[]
 
   @@map("events")
 }
@@ -455,6 +456,22 @@ model EventPhoto {
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@map("event_photos")
+}
+
+// Inscription publique à un événement — ouverte sans compte (comme le formulaire
+// de contact) : nom/email/téléphone suffisent, pas besoin d'un compte apprenant.
+model EventRegistration {
+  id        String   @id @default(uuid())
+  eventId   String
+  fullName  String
+  email     String
+  phone     String?
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, email])
+  @@map("event_registrations")
 }
 
 // ─── Candidatures « Devenir collaborateur » ──────────────────────────────────

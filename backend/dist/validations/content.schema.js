@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.documentSchema = exports.trainerApplicationSchema = exports.eventSchema = exports.partnerSchema = void 0;
+exports.documentSchema = exports.trainerApplicationSchema = exports.eventRegistrationSchema = exports.eventSchema = exports.partnerSchema = void 0;
 const zod_1 = require("zod");
 // ─── Partenaires / avantages (tâche 3) ───────────────────────────────────────
 exports.partnerSchema = zod_1.z.object({
@@ -18,6 +18,12 @@ exports.eventSchema = zod_1.z.object({
     summary: zod_1.z.string().optional(),
     isPublished: zod_1.z.boolean().optional(),
     photoUrls: zod_1.z.array(zod_1.z.string()).optional(),
+});
+// Inscription publique à un événement — ouverte sans compte.
+exports.eventRegistrationSchema = zod_1.z.object({
+    fullName: zod_1.z.string().min(2, "Nom requis").trim(),
+    email: zod_1.z.string().email("Email invalide").trim().toLowerCase(),
+    phone: zod_1.z.string().optional(),
 });
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 exports.trainerApplicationSchema = zod_1.z.object({

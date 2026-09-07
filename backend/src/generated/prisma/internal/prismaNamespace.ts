@@ -406,6 +406,7 @@ export const ModelName = {
   Partner: 'Partner',
   Event: 'Event',
   EventPhoto: 'EventPhoto',
+  EventRegistration: 'EventRegistration',
   TrainerApplication: 'TrainerApplication',
   TrainerApplicationFile: 'TrainerApplicationFile'
 } as const
@@ -423,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordResetToken" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "sessionMaterial" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest" | "document" | "partner" | "event" | "eventPhoto" | "trainerApplication" | "trainerApplicationFile"
+    modelProps: "user" | "passwordResetToken" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "sessionMaterial" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest" | "document" | "partner" | "event" | "eventPhoto" | "eventRegistration" | "trainerApplication" | "trainerApplicationFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1879,6 +1880,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EventRegistration: {
+      payload: Prisma.$EventRegistrationPayload<ExtArgs>
+      fields: Prisma.EventRegistrationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EventRegistrationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EventRegistrationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload>
+        }
+        findFirst: {
+          args: Prisma.EventRegistrationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EventRegistrationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload>
+        }
+        findMany: {
+          args: Prisma.EventRegistrationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload>[]
+        }
+        create: {
+          args: Prisma.EventRegistrationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload>
+        }
+        createMany: {
+          args: Prisma.EventRegistrationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.EventRegistrationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload>
+        }
+        update: {
+          args: Prisma.EventRegistrationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload>
+        }
+        deleteMany: {
+          args: Prisma.EventRegistrationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EventRegistrationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.EventRegistrationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventRegistrationPayload>
+        }
+        aggregate: {
+          args: Prisma.EventRegistrationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEventRegistration>
+        }
+        groupBy: {
+          args: Prisma.EventRegistrationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventRegistrationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EventRegistrationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventRegistrationCountAggregateOutputType> | number
+        }
+      }
+    }
     TrainerApplication: {
       payload: Prisma.$TrainerApplicationPayload<ExtArgs>
       fields: Prisma.TrainerApplicationFieldRefs
@@ -2366,6 +2433,18 @@ export const EventPhotoScalarFieldEnum = {
 export type EventPhotoScalarFieldEnum = (typeof EventPhotoScalarFieldEnum)[keyof typeof EventPhotoScalarFieldEnum]
 
 
+export const EventRegistrationScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  createdAt: 'createdAt'
+} as const
+
+export type EventRegistrationScalarFieldEnum = (typeof EventRegistrationScalarFieldEnum)[keyof typeof EventRegistrationScalarFieldEnum]
+
+
 export const TrainerApplicationScalarFieldEnum = {
   id: 'id',
   firstName: 'firstName',
@@ -2661,6 +2740,17 @@ export const EventPhotoOrderByRelevanceFieldEnum = {
 export type EventPhotoOrderByRelevanceFieldEnum = (typeof EventPhotoOrderByRelevanceFieldEnum)[keyof typeof EventPhotoOrderByRelevanceFieldEnum]
 
 
+export const EventRegistrationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone'
+} as const
+
+export type EventRegistrationOrderByRelevanceFieldEnum = (typeof EventRegistrationOrderByRelevanceFieldEnum)[keyof typeof EventRegistrationOrderByRelevanceFieldEnum]
+
+
 export const TrainerApplicationOrderByRelevanceFieldEnum = {
   id: 'id',
   firstName: 'firstName',
@@ -2913,6 +3003,7 @@ export type GlobalOmitConfig = {
   partner?: Prisma.PartnerOmit
   event?: Prisma.EventOmit
   eventPhoto?: Prisma.EventPhotoOmit
+  eventRegistration?: Prisma.EventRegistrationOmit
   trainerApplication?: Prisma.TrainerApplicationOmit
   trainerApplicationFile?: Prisma.TrainerApplicationFileOmit
 }

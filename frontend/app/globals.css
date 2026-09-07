@@ -5585,6 +5585,8 @@ button {
 }
 
 .admin-btn:hover { border-color: var(--navy); color: var(--navy); }
+.admin-btn:disabled { cursor: default; opacity: 0.5; }
+.admin-btn:disabled:hover { border-color: var(--beige-dark); color: var(--text-body); }
 
 .admin-btn--confirm {
   border-color: var(--teal);
@@ -7402,49 +7404,228 @@ button {
 .events-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  gap: 32px;
 }
 
 .event-card {
-  display: flex;
-  gap: 18px;
-  background: var(--white);
-  border: 1px solid var(--border-light);
-  border-radius: 16px;
-  padding: 22px;
-  box-shadow: 0 2px 14px rgba(15, 35, 64, 0.05);
-}
-
-.event-card__date {
-  flex-shrink: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
-  background: var(--navy);
-  color: var(--gold-light);
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(196, 146, 42, 0.07), 0 1px 3px rgba(10, 26, 48, 0.05);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-.event-card__date-day { font-family: var(--font-heading); font-size: 22px; font-weight: 700; line-height: 1; }
-.event-card__date-month { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; opacity: 0.85; }
+.event-card:hover {
+  box-shadow: 0 20px 48px rgba(10, 26, 48, 0.13);
+  transform: translateY(-2px);
+}
 
-.event-card__title { font-family: var(--font-heading); font-size: 18px; color: var(--navy); margin: 0 0 6px; }
-.event-card__location { font-size: 13px; color: var(--text-muted); margin: 0 0 8px; }
-.event-card__summary { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0; }
+.event-card__hero {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--beige);
+}
+.event-card__hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
-.event-card__photos {
+.event-card__status {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 50px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.event-card__status--upcoming { background: rgba(46, 125, 132, 0.88); color: #fff; }
+.event-card__status--past { background: rgba(15, 35, 64, 0.55); color: rgba(255,255,255,0.9); }
+.event-card__status--inline {
+  position: static;
+  align-self: flex-start;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  margin-bottom: 12px;
+}
+.event-card__status--inline.event-card__status--upcoming { background: var(--teal); color: #fff; }
+.event-card__status--inline.event-card__status--past { background: var(--beige-dark); color: var(--text-muted); }
+
+.event-card__body {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  flex: 1;
+}
+
+.event-card__date-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--teal-dark);
+  margin-bottom: 8px;
+}
+
+.event-card__title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.25;
+  margin: 0 0 10px;
+}
+
+.event-card__location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+.event-card__location svg { flex-shrink: 0; color: var(--text-light); }
+
+.event-card__summary {
+  font-size: 14px;
+  color: var(--text-body);
+  line-height: 1.65;
+  margin: 0 0 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.event-card__gallery {
   display: flex;
   gap: 8px;
-  margin-top: 14px;
-  overflow-x: auto;
+  margin-top: 16px;
 }
-.event-card__photos img {
-  width: 84px;
-  height: 84px;
-  object-fit: cover;
+.event-card__gallery-item {
+  position: relative;
+  width: 56px;
+  height: 56px;
   border-radius: 10px;
+  overflow: hidden;
   flex-shrink: 0;
+}
+.event-card__gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.event-card__gallery-more {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 26, 48, 0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.event-card__cta {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* ── Modale d'inscription (site public) ── */
+.event-register-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 15, 30, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 24px;
+}
+
+.event-register-modal {
+  position: relative;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 28px 80px rgba(15, 35, 64, 0.22);
+}
+
+.event-register-modal__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--beige-light);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.event-register-modal__close:hover { background: var(--beige-dark); color: var(--navy); }
+
+.event-register-modal__eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.event-register-modal__title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.25;
+  margin: 0 0 8px;
+  padding-right: 24px;
+}
+
+.event-register-modal__meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.event-register-modal__success {
+  text-align: center;
+  padding: 12px 0;
+}
+.event-register-modal__success h3 {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  color: var(--navy);
+  margin: 18px 0 10px;
+}
+.event-register-modal__success p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 560px) {
+  .events-grid { grid-template-columns: 1fr; }
+  .event-register-modal { padding: 32px 24px; }
 }
 

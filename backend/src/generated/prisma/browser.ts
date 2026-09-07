@@ -128,6 +128,11 @@ export type Event = Prisma.EventModel
  */
 export type EventPhoto = Prisma.EventPhotoModel
 /**
+ * Model EventRegistration
+ * 
+ */
+export type EventRegistration = Prisma.EventRegistrationModel
+/**
  * Model TrainerApplication
  * 
  */

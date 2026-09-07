@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const db_1 = require("../lib/db");
+const content_schema_1 = require("../validations/content.schema");
+const mail_1 = require("../lib/mail");
 const router = (0, express_1.Router)();
 const OPEN_SESSION_STATUS = ["SCHEDULED", "ONGOING"];
 // GET /api/partners — public, avantages partenaires actifs (espace client, tâche 3)
@@ -31,6 +33,53 @@ router.get("/events", async (_req, res) => {
     }
     catch (err) {
         console.error("[events]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// POST /api/events/:id/register — public, inscription à un événement (sans compte requis)
+router.post("/events/:id/register", async (req, res) => {
+    const parsed = content_schema_1.eventRegistrationSchema.safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    try {
+        const eventId = req.params["id"];
+        const event = await db_1.prisma.event.findUnique({ where: { id: eventId } });
+        if (!event || !event.isPublished) {
+            res.status(404).json({ error: "Événement introuvable" });
+            return;
+        }
+        if (event.eventDate < new Date()) {
+            res.status(409).json({ error: "Cet événement est déjà passé, l'inscription n'est plus possible." });
+            return;
+        }
+        const existing = await db_1.prisma.eventRegistration.findUnique({
+            where: { eventId_email: { eventId, email: parsed.data.email } },
+        });
+        if (existing) {
+            res.status(409).json({ error: "Vous êtes déjà inscrit(e) à cet événement." });
+            return;
+        }
+        const registration = await db_1.prisma.eventRegistration.create({
+            data: { eventId, ...parsed.data },
+        });
+        void (0, mail_1.sendEventRegistrationEmail)({
+            to: registration.email,
+            fullName: registration.fullName,
+            eventTitle: event.title,
+            eventDate: event.eventDate,
+            location: event.location,
+        }).catch((err) => console.error("[mail event-registration]", err));
+        void (0, mail_1.sendAdminNotificationEmail)(`Nouvelle inscription — ${event.title}`, [
+            `${registration.fullName} (${registration.email}) vient de s'inscrire à "${event.title}".`,
+            registration.phone ? `Téléphone : ${registration.phone}` : "",
+            "Consultez la liste des inscrits depuis le back-office → Nos Events.",
+        ].filter(Boolean)).catch((err) => console.error("[mail admin event-registration]", err));
+        res.status(201).json(registration);
+    }
+    catch (err) {
+        console.error("[events register]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });

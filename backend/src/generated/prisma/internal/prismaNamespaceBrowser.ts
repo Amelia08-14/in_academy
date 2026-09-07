@@ -73,6 +73,7 @@ export const ModelName = {
   Partner: 'Partner',
   Event: 'Event',
   EventPhoto: 'EventPhoto',
+  EventRegistration: 'EventRegistration',
   TrainerApplication: 'TrainerApplication',
   TrainerApplicationFile: 'TrainerApplicationFile'
 } as const
@@ -409,6 +410,18 @@ export const EventPhotoScalarFieldEnum = {
 export type EventPhotoScalarFieldEnum = (typeof EventPhotoScalarFieldEnum)[keyof typeof EventPhotoScalarFieldEnum]
 
 
+export const EventRegistrationScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  createdAt: 'createdAt'
+} as const
+
+export type EventRegistrationScalarFieldEnum = (typeof EventRegistrationScalarFieldEnum)[keyof typeof EventRegistrationScalarFieldEnum]
+
+
 export const TrainerApplicationScalarFieldEnum = {
   id: 'id',
   firstName: 'firstName',
@@ -702,6 +715,17 @@ export const EventPhotoOrderByRelevanceFieldEnum = {
 } as const
 
 export type EventPhotoOrderByRelevanceFieldEnum = (typeof EventPhotoOrderByRelevanceFieldEnum)[keyof typeof EventPhotoOrderByRelevanceFieldEnum]
+
+
+export const EventRegistrationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone'
+} as const
+
+export type EventRegistrationOrderByRelevanceFieldEnum = (typeof EventRegistrationOrderByRelevanceFieldEnum)[keyof typeof EventRegistrationOrderByRelevanceFieldEnum]
 
 
 export const TrainerApplicationOrderByRelevanceFieldEnum = {

@@ -19,6 +19,13 @@ export const eventSchema = z.object({
   photoUrls: z.array(z.string()).optional(),
 });
 
+// Inscription publique à un événement — ouverte sans compte.
+export const eventRegistrationSchema = z.object({
+  fullName: z.string().min(2, "Nom requis").trim(),
+  email: z.string().email("Email invalide").trim().toLowerCase(),
+  phone: z.string().optional(),
+});
+
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 export const trainerApplicationSchema = z.object({
   firstName: z.string().min(2, "Prénom requis").trim(),

@@ -1,6 +1,8 @@
 import { Router, Response } from "express";
 import { prisma } from "@/lib/db";
 import { AuthRequest } from "@/middlewares/auth.middleware";
+import { eventRegistrationSchema } from "@/validations/content.schema";
+import { sendEventRegistrationEmail, sendAdminNotificationEmail } from "@/lib/mail";
 
 const router = Router();
 
@@ -33,6 +35,58 @@ router.get("/events", async (_req: AuthRequest, res: Response) => {
     res.json(events);
   } catch (err) {
     console.error("[events]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// POST /api/events/:id/register — public, inscription à un événement (sans compte requis)
+router.post("/events/:id/register", async (req: AuthRequest, res: Response) => {
+  const parsed = eventRegistrationSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+  try {
+    const eventId = req.params["id"] as string;
+    const event = await prisma.event.findUnique({ where: { id: eventId } });
+    if (!event || !event.isPublished) {
+      res.status(404).json({ error: "Événement introuvable" });
+      return;
+    }
+    if (event.eventDate < new Date()) {
+      res.status(409).json({ error: "Cet événement est déjà passé, l'inscription n'est plus possible." });
+      return;
+    }
+
+    const existing = await prisma.eventRegistration.findUnique({
+      where: { eventId_email: { eventId, email: parsed.data.email } },
+    });
+    if (existing) {
+      res.status(409).json({ error: "Vous êtes déjà inscrit(e) à cet événement." });
+      return;
+    }
+
+    const registration = await prisma.eventRegistration.create({
+      data: { eventId, ...parsed.data },
+    });
+
+    void sendEventRegistrationEmail({
+      to: registration.email,
+      fullName: registration.fullName,
+      eventTitle: event.title,
+      eventDate: event.eventDate,
+      location: event.location,
+    }).catch((err) => console.error("[mail event-registration]", err));
+
+    void sendAdminNotificationEmail(`Nouvelle inscription — ${event.title}`, [
+      `${registration.fullName} (${registration.email}) vient de s'inscrire à "${event.title}".`,
+      registration.phone ? `Téléphone : ${registration.phone}` : "",
+      "Consultez la liste des inscrits depuis le back-office → Nos Events.",
+    ].filter(Boolean)).catch((err) => console.error("[mail admin event-registration]", err));
+
+    res.status(201).json(registration);
+  } catch (err) {
+    console.error("[events register]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
