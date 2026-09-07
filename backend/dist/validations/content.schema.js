@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.documentSchema = exports.trainerApplicationSchema = exports.partnerSchema = void 0;
+exports.documentSchema = exports.trainerApplicationSchema = exports.eventSchema = exports.partnerSchema = void 0;
 const zod_1 = require("zod");
 // ─── Partenaires / avantages (tâche 3) ───────────────────────────────────────
 exports.partnerSchema = zod_1.z.object({
@@ -10,6 +10,15 @@ exports.partnerSchema = zod_1.z.object({
     contact: zod_1.z.string().optional(),
     isActive: zod_1.z.boolean().optional(),
 });
+// ─── Événements ("Nos Events") ────────────────────────────────────────────────
+exports.eventSchema = zod_1.z.object({
+    title: zod_1.z.string().min(2, "Titre requis").trim(),
+    eventDate: zod_1.z.string().min(1, "Date requise"),
+    location: zod_1.z.string().optional(),
+    summary: zod_1.z.string().optional(),
+    isPublished: zod_1.z.boolean().optional(),
+    photoUrls: zod_1.z.array(zod_1.z.string()).optional(),
+});
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 exports.trainerApplicationSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(2, "Prénom requis").trim(),
@@ -18,7 +27,7 @@ exports.trainerApplicationSchema = zod_1.z.object({
     phone: zod_1.z.string().optional(),
     speciality: zod_1.z.string().optional(),
     message: zod_1.z.string().optional(),
-    cvUrl: zod_1.z.string().optional(),
+    cvUrl: zod_1.z.string().min(1, "CV requis"),
     // fichiers additionnels (fiches techniques) : URLs déjà uploadées via FileUpload
     fileUrls: zod_1.z.array(zod_1.z.string()).optional(),
 });

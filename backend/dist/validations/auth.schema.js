@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.companyRegisterSchema = exports.registerSchema = exports.loginSchema = void 0;
+exports.companyRegisterSchema = exports.resetPasswordSchema = exports.forgotPasswordSchema = exports.registerSchema = exports.loginSchema = void 0;
 const zod_1 = require("zod");
 exports.loginSchema = zod_1.z.object({
     email: zod_1.z.string().email("Email invalide").trim().toLowerCase(),
@@ -18,6 +18,17 @@ exports.registerSchema = zod_1.z.object({
     phone: zod_1.z.string().optional(),
     jobTitle: zod_1.z.string().optional(),
     birthDate: zod_1.z.string().optional(), // date d'anniversaire (ISO "YYYY-MM-DD"), tâche 2
+});
+exports.forgotPasswordSchema = zod_1.z.object({
+    email: zod_1.z.string().email("Email invalide").trim().toLowerCase(),
+});
+exports.resetPasswordSchema = zod_1.z.object({
+    token: zod_1.z.string().min(1, "Token requis"),
+    newPassword: zod_1.z
+        .string()
+        .min(8, "Minimum 8 caractères")
+        .regex(/[A-Z]/, "Au moins une majuscule")
+        .regex(/[0-9]/, "Au moins un chiffre"),
 });
 exports.companyRegisterSchema = zod_1.z.object({
     raisonSociale: zod_1.z.string().min(2, "Raison sociale requise").trim(),

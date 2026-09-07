@@ -41,6 +41,13 @@ app.use(express_1.default.json());
 const uploadsDir = path_1.default.join(process.cwd(), "uploads");
 app.use("/uploads", express_1.default.static(uploadsDir));
 app.use("/api/files", express_1.default.static(uploadsDir));
+// express.static appelle next() (pas de 404) quand le fichier est absent : sans ce
+// handler dédié, une pièce jointe manquante retombe sur le 404 générique de l'API
+// ({"error":"Route introuvable"}), ce qui est trompeur pour l'utilisateur qui clique
+// sur un CV/reçu/dossier — il faut distinguer "fichier introuvable" de "route inconnue".
+app.use(["/uploads", "/api/files"], (_req, res) => {
+    res.status(404).json({ error: "Fichier introuvable" });
+});
 // ─── Routes ──────────────────────────────────────────────────────────────────
 app.use("/api/auth", auth_routes_1.default);
 app.use("/api/companies", company_routes_1.default);

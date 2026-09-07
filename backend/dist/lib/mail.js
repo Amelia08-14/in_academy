@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEnrollmentPendingEmail = sendEnrollmentPendingEmail;
 exports.sendEnrollmentConfirmedEmail = sendEnrollmentConfirmedEmail;
 exports.sendQuoteSentEmail = sendQuoteSentEmail;
+exports.sendPasswordResetEmail = sendPasswordResetEmail;
 exports.sendAdminNotificationEmail = sendAdminNotificationEmail;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const smtpHost = process.env.SMTP_HOST;
@@ -97,6 +98,23 @@ async function sendQuoteSentEmail(data) {
       <p style="margin-top:20px">Équipe IN ACADEMY</p>
     </div>`;
     await sendMail(data.to, subject, html, `Bonjour ${data.company}, votre devis IN ACADEMY est disponible dans votre espace entreprise. Formations : ${data.formations.join(", ")}.`);
+}
+// Email « mot de passe oublié » — lien de réinitialisation à usage unique.
+async function sendPasswordResetEmail(data) {
+    const subject = "Réinitialisation de votre mot de passe IN ACADEMY";
+    const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f2340;max-width:620px;margin:0 auto;padding:24px">
+      <h1 style="font-size:20px;margin:0 0 16px;color:#0b2545">Réinitialisation de mot de passe</h1>
+      <p>Vous avez demandé la réinitialisation de votre mot de passe IN ACADEMY.</p>
+      <p style="margin:24px 0">
+        <a href="${data.resetUrl}" style="background:#c4922a;color:#0f2340;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block">
+          Choisir un nouveau mot de passe
+        </a>
+      </p>
+      <p style="color:#6b7280;font-size:13px">Ce lien est valable 1 heure et ne peut être utilisé qu'une seule fois. Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email.</p>
+      <p style="margin-top:20px">Équipe IN ACADEMY</p>
+    </div>`;
+    await sendMail(data.to, subject, html, `Réinitialisez votre mot de passe IN ACADEMY en suivant ce lien (valable 1 heure) : ${data.resetUrl}`);
 }
 // Notification générique à l'administration (dépôt de reçu, nouvelle candidature, etc.)
 const adminEmail = process.env.ADMIN_EMAIL ?? smtpUser;

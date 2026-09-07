@@ -778,6 +778,95 @@ router.patch("/quotes/:id/status", async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
+// ─── Événements ("Nos Events") ────────────────────────────────────────────────
+// GET /api/admin/events
+router.get("/events", async (_req, res) => {
+    try {
+        const events = await db_1.prisma.event.findMany({
+            orderBy: { eventDate: "desc" },
+            include: { photos: true },
+        });
+        res.json(events);
+    }
+    catch (err) {
+        console.error("[admin/events]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// POST /api/admin/events
+router.post("/events", async (req, res) => {
+    const parsed = content_schema_1.eventSchema.safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    try {
+        const d = parsed.data;
+        const event = await db_1.prisma.event.create({
+            data: {
+                title: d.title,
+                eventDate: new Date(d.eventDate),
+                location: d.location ?? null,
+                summary: d.summary ?? null,
+                isPublished: d.isPublished ?? false,
+                photos: d.photoUrls && d.photoUrls.length > 0
+                    ? { create: d.photoUrls.map((photoUrl) => ({ photoUrl })) }
+                    : undefined,
+            },
+            include: { photos: true },
+        });
+        res.status(201).json(event);
+    }
+    catch (err) {
+        console.error("[admin/events post]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// PATCH /api/admin/events/:id — met aussi à jour la liste des photos si `photoUrls` est fourni
+router.patch("/events/:id", async (req, res) => {
+    const parsed = content_schema_1.eventSchema.partial().safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    try {
+        const d = parsed.data;
+        const id = req.params["id"];
+        const event = await db_1.prisma.event.update({
+            where: { id },
+            data: {
+                ...(d.title !== undefined && { title: d.title }),
+                ...(d.eventDate !== undefined && { eventDate: new Date(d.eventDate) }),
+                ...(d.location !== undefined && { location: d.location }),
+                ...(d.summary !== undefined && { summary: d.summary }),
+                ...(d.isPublished !== undefined && { isPublished: d.isPublished }),
+                ...(d.photoUrls !== undefined && {
+                    photos: {
+                        deleteMany: {},
+                        create: d.photoUrls.map((photoUrl) => ({ photoUrl })),
+                    },
+                }),
+            },
+            include: { photos: true },
+        });
+        res.json(event);
+    }
+    catch (err) {
+        console.error("[admin/events patch]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// DELETE /api/admin/events/:id
+router.delete("/events/:id", async (req, res) => {
+    try {
+        await db_1.prisma.event.delete({ where: { id: req.params["id"] } });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[admin/events delete]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 // ─── Candidatures collaborateur (tâche 8) ────────────────────────────────────
 // GET /api/admin/trainer-applications
 router.get("/trainer-applications", async (_req, res) => {

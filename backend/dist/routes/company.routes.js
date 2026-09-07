@@ -105,9 +105,11 @@ router.patch("/quotes/:id/respond", auth_middleware_1.authenticate, async (req, 
             return;
         }
         // Pour accepter un devis, un reçu de paiement doit avoir été déposé (tâche 7).
+        // Le reçu doit dater d'après la création de CE devis : sinon un reçu déposé pour
+        // un devis précédent suffirait à en accepter un autre sans nouveau dépôt.
         if (accept) {
             const receiptCount = await db_1.prisma.document.count({
-                where: { userId: req.user.userId, type: "RECU" },
+                where: { userId: req.user.userId, type: "RECU", createdAt: { gte: quote.createdAt } },
             });
             if (receiptCount === 0) {
                 res.status(409).json({

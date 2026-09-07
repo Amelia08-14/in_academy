@@ -38,10 +38,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const crypto_1 = __importDefault(require("crypto"));
 const db_1 = require("../lib/db");
 const jwt_1 = require("../lib/jwt");
 const auth_schema_1 = require("../validations/auth.schema");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
+const mail_1 = require("../lib/mail");
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1h — "expiration raisonnable"
+const hashResetToken = (token) => crypto_1.default.createHash("sha256").update(token).digest("hex");
 const router = (0, express_1.Router)();
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
@@ -96,6 +100,72 @@ router.post("/register", async (req, res) => {
     });
     const token = (0, jwt_1.signToken)({ userId: user.id, email: user.email, role: user.role });
     res.status(201).json({ token, role: user.role });
+});
+// POST /api/auth/forgot-password — envoie un lien de réinitialisation par email.
+// Réponse générique dans tous les cas (compte trouvé ou non) pour ne pas laisser
+// deviner quels emails sont enregistrés.
+router.post("/forgot-password", async (req, res) => {
+    const parsed = auth_schema_1.forgotPasswordSchema.safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    const genericResponse = {
+        ok: true,
+        message: "Si un compte existe avec cet email, un lien de réinitialisation vient de lui être envoyé.",
+    };
+    try {
+        const user = await db_1.prisma.user.findUnique({ where: { email: parsed.data.email } });
+        if (user && user.isActive) {
+            const rawToken = crypto_1.default.randomBytes(32).toString("hex");
+            await db_1.prisma.passwordResetToken.create({
+                data: {
+                    userId: user.id,
+                    tokenHash: hashResetToken(rawToken),
+                    expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MS),
+                },
+            });
+            const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
+            const resetUrl = `${frontendUrl}/reinitialiser-mot-de-passe?token=${rawToken}`;
+            void (0, mail_1.sendPasswordResetEmail)({ to: user.email, resetUrl }).catch((err) => console.error("[mail password-reset]", err));
+        }
+        res.json(genericResponse);
+    }
+    catch (err) {
+        console.error("[auth forgot-password]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// POST /api/auth/reset-password — consomme le token reçu par email.
+router.post("/reset-password", async (req, res) => {
+    const parsed = auth_schema_1.resetPasswordSchema.safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    try {
+        const tokenHash = hashResetToken(parsed.data.token);
+        const resetToken = await db_1.prisma.passwordResetToken.findUnique({ where: { tokenHash } });
+        if (!resetToken || resetToken.usedAt || resetToken.expiresAt < new Date()) {
+            res.status(400).json({ error: "Ce lien de réinitialisation est invalide ou a expiré." });
+            return;
+        }
+        const hashedPassword = await bcryptjs_1.default.hash(parsed.data.newPassword, 12);
+        await db_1.prisma.$transaction([
+            db_1.prisma.user.update({ where: { id: resetToken.userId }, data: { hashedPassword } }),
+            db_1.prisma.passwordResetToken.update({ where: { id: resetToken.id }, data: { usedAt: new Date() } }),
+            // Les autres liens en attente pour ce compte sont invalidés — le nouveau mot de
+            // passe rend caducs les liens précédemment envoyés.
+            db_1.prisma.passwordResetToken.deleteMany({
+                where: { userId: resetToken.userId, id: { not: resetToken.id }, usedAt: null },
+            }),
+        ]);
+        res.json({ ok: true });
+    }
+    catch (err) {
+        console.error("[auth reset-password]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
 });
 // GET /api/auth/me
 router.get("/me", async (req, res) => {

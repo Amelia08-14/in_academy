@@ -48,8 +48,8 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FormationOrderByRelevanceFieldEnum = exports.CategoryOrderByRelevanceFieldEnum = exports.CompanyProfileOrderByRelevanceFieldEnum = exports.CompanyOrderByRelevanceFieldEnum = exports.TrainerOrderByRelevanceFieldEnum = exports.TrainerProfileOrderByRelevanceFieldEnum = exports.LearnerProfileOrderByRelevanceFieldEnum = exports.NullsOrder = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.TrainerApplicationFileScalarFieldEnum = exports.TrainerApplicationScalarFieldEnum = exports.PartnerScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.ContactRequestScalarFieldEnum = exports.QuoteRequestItemScalarFieldEnum = exports.QuoteRequestScalarFieldEnum = exports.CertificateScalarFieldEnum = exports.EnrollmentEmployeeScalarFieldEnum = exports.EnrollmentScalarFieldEnum = exports.SessionMaterialScalarFieldEnum = exports.TrainingSessionScalarFieldEnum = exports.FormationTrainerScalarFieldEnum = exports.FormationScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.CompanyProfileScalarFieldEnum = exports.CompanyScalarFieldEnum = exports.TrainerScalarFieldEnum = exports.TrainerProfileScalarFieldEnum = exports.LearnerProfileScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
-exports.defineExtension = exports.TrainerApplicationFileOrderByRelevanceFieldEnum = exports.TrainerApplicationOrderByRelevanceFieldEnum = exports.PartnerOrderByRelevanceFieldEnum = exports.DocumentOrderByRelevanceFieldEnum = exports.ContactRequestOrderByRelevanceFieldEnum = exports.QuoteRequestItemOrderByRelevanceFieldEnum = exports.QuoteRequestOrderByRelevanceFieldEnum = exports.CertificateOrderByRelevanceFieldEnum = exports.EnrollmentEmployeeOrderByRelevanceFieldEnum = exports.EnrollmentOrderByRelevanceFieldEnum = exports.SessionMaterialOrderByRelevanceFieldEnum = exports.TrainingSessionOrderByRelevanceFieldEnum = exports.FormationTrainerOrderByRelevanceFieldEnum = void 0;
+exports.TrainerOrderByRelevanceFieldEnum = exports.TrainerProfileOrderByRelevanceFieldEnum = exports.LearnerProfileOrderByRelevanceFieldEnum = exports.PasswordResetTokenOrderByRelevanceFieldEnum = exports.NullsOrder = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.TrainerApplicationFileScalarFieldEnum = exports.TrainerApplicationScalarFieldEnum = exports.EventPhotoScalarFieldEnum = exports.EventScalarFieldEnum = exports.PartnerScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.ContactRequestScalarFieldEnum = exports.QuoteRequestItemScalarFieldEnum = exports.QuoteRequestScalarFieldEnum = exports.CertificateScalarFieldEnum = exports.EnrollmentEmployeeScalarFieldEnum = exports.EnrollmentScalarFieldEnum = exports.SessionMaterialScalarFieldEnum = exports.TrainingSessionScalarFieldEnum = exports.FormationTrainerScalarFieldEnum = exports.FormationScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.CompanyProfileScalarFieldEnum = exports.CompanyScalarFieldEnum = exports.TrainerScalarFieldEnum = exports.TrainerProfileScalarFieldEnum = exports.LearnerProfileScalarFieldEnum = exports.PasswordResetTokenScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.TrainerApplicationFileOrderByRelevanceFieldEnum = exports.TrainerApplicationOrderByRelevanceFieldEnum = exports.EventPhotoOrderByRelevanceFieldEnum = exports.EventOrderByRelevanceFieldEnum = exports.PartnerOrderByRelevanceFieldEnum = exports.DocumentOrderByRelevanceFieldEnum = exports.ContactRequestOrderByRelevanceFieldEnum = exports.QuoteRequestItemOrderByRelevanceFieldEnum = exports.QuoteRequestOrderByRelevanceFieldEnum = exports.CertificateOrderByRelevanceFieldEnum = exports.EnrollmentEmployeeOrderByRelevanceFieldEnum = exports.EnrollmentOrderByRelevanceFieldEnum = exports.SessionMaterialOrderByRelevanceFieldEnum = exports.TrainingSessionOrderByRelevanceFieldEnum = exports.FormationTrainerOrderByRelevanceFieldEnum = exports.FormationOrderByRelevanceFieldEnum = exports.CategoryOrderByRelevanceFieldEnum = exports.CompanyProfileOrderByRelevanceFieldEnum = exports.CompanyOrderByRelevanceFieldEnum = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/client"));
 /**
  * Prisma Errors
@@ -105,6 +105,7 @@ exports.JsonNull = runtime.JsonNull;
 exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
     User: 'User',
+    PasswordResetToken: 'PasswordResetToken',
     LearnerProfile: 'LearnerProfile',
     TrainerProfile: 'TrainerProfile',
     Trainer: 'Trainer',
@@ -123,6 +124,8 @@ exports.ModelName = {
     ContactRequest: 'ContactRequest',
     Document: 'Document',
     Partner: 'Partner',
+    Event: 'Event',
+    EventPhoto: 'EventPhoto',
     TrainerApplication: 'TrainerApplication',
     TrainerApplicationFile: 'TrainerApplicationFile'
 };
@@ -144,6 +147,14 @@ exports.UserScalarFieldEnum = {
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+exports.PasswordResetTokenScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    tokenHash: 'tokenHash',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    createdAt: 'createdAt'
 };
 exports.LearnerProfileScalarFieldEnum = {
     id: 'id',
@@ -339,6 +350,22 @@ exports.PartnerScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
+exports.EventScalarFieldEnum = {
+    id: 'id',
+    title: 'title',
+    eventDate: 'eventDate',
+    location: 'location',
+    summary: 'summary',
+    isPublished: 'isPublished',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.EventPhotoScalarFieldEnum = {
+    id: 'id',
+    eventId: 'eventId',
+    photoUrl: 'photoUrl',
+    createdAt: 'createdAt'
+};
 exports.TrainerApplicationScalarFieldEnum = {
     id: 'id',
     firstName: 'firstName',
@@ -371,6 +398,11 @@ exports.UserOrderByRelevanceFieldEnum = {
 exports.NullsOrder = {
     first: 'first',
     last: 'last'
+};
+exports.PasswordResetTokenOrderByRelevanceFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    tokenHash: 'tokenHash'
 };
 exports.LearnerProfileOrderByRelevanceFieldEnum = {
     id: 'id',
@@ -513,6 +545,17 @@ exports.PartnerOrderByRelevanceFieldEnum = {
     description: 'description',
     discountRate: 'discountRate',
     contact: 'contact'
+};
+exports.EventOrderByRelevanceFieldEnum = {
+    id: 'id',
+    title: 'title',
+    location: 'location',
+    summary: 'summary'
+};
+exports.EventPhotoOrderByRelevanceFieldEnum = {
+    id: 'id',
+    eventId: 'eventId',
+    photoUrl: 'photoUrl'
 };
 exports.TrainerApplicationOrderByRelevanceFieldEnum = {
     id: 'id',
