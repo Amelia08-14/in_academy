@@ -63,13 +63,18 @@ export default function AdminEvenementsPage() {
   const [editing, setEditing] = useState<EditState | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [loadError, setLoadError] = useState("");
   const [viewingRegs, setViewingRegs] = useState<EventItem | null>(null);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [regsLoading, setRegsLoading] = useState(false);
 
   const load = () => {
     setLoading(true);
-    api.get<EventItem[]>("/admin/events").then(setEvents).finally(() => setLoading(false));
+    setLoadError("");
+    api.get<EventItem[]>("/admin/events")
+      .then(setEvents)
+      .catch((err: unknown) => setLoadError(err instanceof Error ? err.message : "Erreur de chargement."))
+      .finally(() => setLoading(false));
   };
 
   useEffect(load, []);
@@ -116,8 +121,12 @@ export default function AdminEvenementsPage() {
 
   const remove = async (id: string) => {
     if (!window.confirm("Supprimer cet événement ?")) return;
-    await api.delete(`/admin/events/${id}`);
-    load();
+    try {
+      await api.delete(`/admin/events/${id}`);
+      load();
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Erreur lors de la suppression.");
+    }
   };
 
   const openRegistrations = (ev: EventItem) => {
@@ -125,35 +134,48 @@ export default function AdminEvenementsPage() {
     setRegsLoading(true);
     api.get<Registration[]>(`/admin/events/${ev.id}/registrations`)
       .then(setRegistrations)
+      .catch((err: unknown) => alert(err instanceof Error ? err.message : "Erreur de chargement des inscrits."))
       .finally(() => setRegsLoading(false));
   };
 
   const confirmRegistration = async (id: string) => {
-    const updated = await api.patch<Registration>(`/admin/events/registrations/${id}/confirm`);
-    setRegistrations((r) => r.map((reg) => reg.id === id ? updated : reg));
+    try {
+      const updated = await api.patch<Registration>(`/admin/events/registrations/${id}/confirm`);
+      setRegistrations((r) => r.map((reg) => reg.id === id ? updated : reg));
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Erreur lors de la validation.");
+    }
   };
 
   const rejectRegistration = async (id: string) => {
-    const updated = await api.patch<Registration>(`/admin/events/registrations/${id}/reject`);
-    setRegistrations((r) => r.map((reg) => reg.id === id ? updated : reg));
-    setEvents((evs) => evs.map((ev) =>
-      viewingRegs && ev.id === viewingRegs.id
-        ? { ...ev, _count: { registrations: ev._count.registrations - 1 } }
-        : ev
-    ));
-  };
-
-  const removeRegistration = async (id: string) => {
-    if (!window.confirm("Retirer définitivement cet inscrit ?")) return;
-    const wasActive = registrations.find((r) => r.id === id)?.status !== "REJECTED";
-    await api.delete(`/admin/events/registrations/${id}`);
-    setRegistrations((r) => r.filter((reg) => reg.id !== id));
-    if (wasActive) {
+    try {
+      const updated = await api.patch<Registration>(`/admin/events/registrations/${id}/reject`);
+      setRegistrations((r) => r.map((reg) => reg.id === id ? updated : reg));
       setEvents((evs) => evs.map((ev) =>
         viewingRegs && ev.id === viewingRegs.id
           ? { ...ev, _count: { registrations: ev._count.registrations - 1 } }
           : ev
       ));
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Erreur lors du refus.");
+    }
+  };
+
+  const removeRegistration = async (id: string) => {
+    if (!window.confirm("Retirer définitivement cet inscrit ?")) return;
+    try {
+      const wasActive = registrations.find((r) => r.id === id)?.status !== "REJECTED";
+      await api.delete(`/admin/events/registrations/${id}`);
+      setRegistrations((r) => r.filter((reg) => reg.id !== id));
+      if (wasActive) {
+        setEvents((evs) => evs.map((ev) =>
+          viewingRegs && ev.id === viewingRegs.id
+            ? { ...ev, _count: { registrations: ev._count.registrations - 1 } }
+            : ev
+        ));
+      }
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Erreur lors du retrait.");
     }
   };
 
@@ -275,13 +297,19 @@ export default function AdminEvenementsPage() {
         </div>
       )}
 
+      {loadError && (
+        <div className="auth-error" style={{ marginBottom: 16 }}>
+          Impossible de charger les événements : {loadError}
+        </div>
+      )}
+
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
             <tr><th>Événement</th><th>Date</th><th>Lieu</th><th>Photos</th><th>Inscrits</th><th>Statut</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {events.length === 0 && !loading && (
+            {events.length === 0 && !loading && !loadError && (
               <tr><td colSpan={7} className="admin-table__empty">Aucun événement pour l&apos;instant.</td></tr>
             )}
             {events.map((ev) => (

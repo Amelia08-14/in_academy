@@ -1,17 +1,23 @@
 // Photos réelles par domaine de formation, déposées dans public/branches/.
+// Couvre les 12 secteurs principaux + les 4 branches "métiers" (isMetier: true).
 const FILES: Record<string, string> = {
-  "transport-logistique": "Transport_&_logistique.jpg",
-  "commerce-ventes": "Commerce_&_vente.png",
-  "hse-securite": "Hse_&_hygiene.png",
-  "finance-comptabilite": "Finance_&_comptabilite.png",
-  "achats-international": "Achat_&_international.png",
-  "it-digital": "it_&_digital.png",
-  "rh-management": "RH_&_management.png",
-  "juridique-conformite": "Juridique_&_conformité.png",
-  "maritime-import-export": "Maritime_&_import_export.png",
-  "qualite-production": "Qualite_&_prodution.jpg",
-  langues: "Langues.jpg",
+  "transport-logistique": "Transport & Logistique.png",
+  "commerce-ventes": "Commerce & Ventes.png",
+  "hse-securite": "HSE & Sécurité.png",
+  "finance-comptabilite": "Finance & Comptabilité.png",
+  "achats-international": "Achats & International.png",
+  "it-digital": "IT & Digital.png",
+  "rh-management": "RH & Management.png",
+  "juridique-conformite": "Juridique & Conformité.png",
+  "maritime-import-export": "Maritime & ImportExport.png",
+  "qualite-production": "Qualité & Production.png",
+  langues: "Langues.png",
   audit: "Audit.png",
+  // Branches "métiers"
+  barber: "Barber.png",
+  coiffure: "Coiffure.png",
+  esthetique: "Esthétique.png",
+  onglerie: "Onglerie.png",
 };
 
 export function branchImage(slug: string): string | null {
