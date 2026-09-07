@@ -174,6 +174,24 @@ export async function sendEventRegistrationConfirmedEmail(data: EventRegistratio
   );
 }
 
+// Envoyé quand l'admin refuse l'inscription (événement complet, forte demande…).
+export async function sendEventRegistrationRejectedEmail(data: EventRegistrationMailData) {
+  const subject = `Concernant votre inscription — ${data.eventTitle}`;
+  const intro =
+    "Nous vous remercions vivement pour l'intérêt que vous portez à cet événement. " +
+    "Face à une forte demande, la capacité d'accueil a malheureusement été atteinte et nous sommes " +
+    "au regret de ne pouvoir vous y accueillir cette fois-ci. Nous espérons avoir le plaisir de vous " +
+    "retrouver lors de nos prochains événements.";
+  await sendMail(
+    data.to,
+    subject,
+    eventRegistrationHtml("Votre inscription n'a pas pu être retenue", intro, data),
+    `Bonjour ${data.fullName}, nous vous remercions pour votre intérêt envers "${data.eventTitle}". ` +
+    `Face à une forte demande, la capacité d'accueil a été atteinte et nous ne pouvons malheureusement pas vous y accueillir cette fois-ci. ` +
+    `Nous espérons vous retrouver lors de nos prochains événements.`
+  );
+}
+
 // Email « mot de passe oublié » — lien de réinitialisation à usage unique.
 export async function sendPasswordResetEmail(data: { to: string; resetUrl: string }) {
   const subject = "Réinitialisation de votre mot de passe IN ACADEMY";

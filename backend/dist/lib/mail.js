@@ -8,6 +8,7 @@ exports.sendEnrollmentConfirmedEmail = sendEnrollmentConfirmedEmail;
 exports.sendQuoteSentEmail = sendQuoteSentEmail;
 exports.sendEventRegistrationPendingEmail = sendEventRegistrationPendingEmail;
 exports.sendEventRegistrationConfirmedEmail = sendEventRegistrationConfirmedEmail;
+exports.sendEventRegistrationRejectedEmail = sendEventRegistrationRejectedEmail;
 exports.sendPasswordResetEmail = sendPasswordResetEmail;
 exports.sendAdminNotificationEmail = sendAdminNotificationEmail;
 const nodemailer_1 = __importDefault(require("nodemailer"));
@@ -127,6 +128,17 @@ async function sendEventRegistrationConfirmedEmail(data) {
     const subject = `Inscription confirmée — ${data.eventTitle}`;
     const intro = "Votre inscription a été validée par notre équipe — votre place est confirmée.";
     await sendMail(data.to, subject, eventRegistrationHtml("Inscription confirmée", intro, data), `Bonjour ${data.fullName}, votre inscription à "${data.eventTitle}" est confirmée.`);
+}
+// Envoyé quand l'admin refuse l'inscription (événement complet, forte demande…).
+async function sendEventRegistrationRejectedEmail(data) {
+    const subject = `Concernant votre inscription — ${data.eventTitle}`;
+    const intro = "Nous vous remercions vivement pour l'intérêt que vous portez à cet événement. " +
+        "Face à une forte demande, la capacité d'accueil a malheureusement été atteinte et nous sommes " +
+        "au regret de ne pouvoir vous y accueillir cette fois-ci. Nous espérons avoir le plaisir de vous " +
+        "retrouver lors de nos prochains événements.";
+    await sendMail(data.to, subject, eventRegistrationHtml("Votre inscription n'a pas pu être retenue", intro, data), `Bonjour ${data.fullName}, nous vous remercions pour votre intérêt envers "${data.eventTitle}". ` +
+        `Face à une forte demande, la capacité d'accueil a été atteinte et nous ne pouvons malheureusement pas vous y accueillir cette fois-ci. ` +
+        `Nous espérons vous retrouver lors de nos prochains événements.`);
 }
 // Email « mot de passe oublié » — lien de réinitialisation à usage unique.
 async function sendPasswordResetEmail(data) {

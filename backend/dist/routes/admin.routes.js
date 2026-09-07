@@ -850,7 +850,15 @@ router.patch("/events/registrations/:id/reject", async (req, res) => {
         const registration = await db_1.prisma.eventRegistration.update({
             where: { id: req.params["id"] },
             data: { status: "REJECTED" },
+            include: { event: true },
         });
+        void (0, mail_1.sendEventRegistrationRejectedEmail)({
+            to: registration.email,
+            fullName: registration.fullName,
+            eventTitle: registration.event.title,
+            eventDate: registration.event.eventDate,
+            location: registration.event.location,
+        }).catch((err) => console.error("[mail event-registration rejected]", err));
         res.json(registration);
     }
     catch (err) {

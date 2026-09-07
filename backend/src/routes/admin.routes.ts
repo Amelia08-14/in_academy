@@ -2,7 +2,7 @@ import { Router, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
-import { sendEnrollmentConfirmedEmail, sendQuoteSentEmail, sendEventRegistrationConfirmedEmail } from "@/lib/mail";
+import { sendEnrollmentConfirmedEmail, sendQuoteSentEmail, sendEventRegistrationConfirmedEmail, sendEventRegistrationRejectedEmail } from "@/lib/mail";
 import { partnerSchema, eventSchema } from "@/validations/content.schema";
 
 const router = Router();
@@ -907,7 +907,15 @@ router.patch("/events/registrations/:id/reject", async (req: AuthRequest, res: R
     const registration = await prisma.eventRegistration.update({
       where: { id: req.params["id"] as string },
       data: { status: "REJECTED" },
+      include: { event: true },
     });
+    void sendEventRegistrationRejectedEmail({
+      to: registration.email,
+      fullName: registration.fullName,
+      eventTitle: registration.event.title,
+      eventDate: registration.event.eventDate,
+      location: registration.event.location,
+    }).catch((err) => console.error("[mail event-registration rejected]", err));
     res.json(registration);
   } catch (err) {
     console.error("[admin/events registrations reject]", err);
