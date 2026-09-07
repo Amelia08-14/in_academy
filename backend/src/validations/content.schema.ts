@@ -25,15 +25,17 @@ export const eventSchema = z.object({
 export const eventRegistrationSchema = z.object({
   fullName: z.string().min(2, "Nom requis").trim(),
   email: z.string().email("Email invalide").trim().toLowerCase(),
-  phone: z.string().optional(),
+  phone: z.string().min(1, "Téléphone requis").trim(),
   jobTitle: z.string().optional(),
   trainingDomain: z.string().optional(),
 });
 
-// Sous-ensemble optionnel toujours accepté du corps de la requête, même quand
-// l'inscrit est connecté (nom/email/téléphone viennent alors du compte, mais
-// fonction/domaine de formation restent propres à cette inscription).
+// Sous-ensemble toujours accepté du corps de la requête même quand l'inscrit est
+// connecté : nom/email viennent du compte, mais le téléphone reste requis (celui
+// du compte sert de valeur par défaut, écrasable si le profil n'en a pas) et
+// fonction/domaine de formation restent propres à cette inscription.
 export const eventRegistrationExtraSchema = z.object({
+  phone: z.string().trim().optional(),
   jobTitle: z.string().optional(),
   trainingDomain: z.string().optional(),
 });

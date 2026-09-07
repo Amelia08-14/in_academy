@@ -114,7 +114,8 @@ router.post("/events/:id/register", optionalAuthenticate, async (req: AuthReques
       ? `${account.learnerProfile.firstName} ${account.learnerProfile.lastName}`
       : account.email;
     email = account.email;
-    phone = account.learnerProfile?.phone ?? null;
+    phone = extra.data.phone || account.learnerProfile?.phone || null;
+    if (!phone) { res.status(400).json({ errors: { phone: ["Téléphone requis"] } }); return; }
     userId = account.id;
     jobTitle = extra.data.jobTitle ?? account.learnerProfile?.jobTitle ?? null;
     trainingDomain = extra.data.trainingDomain ?? null;

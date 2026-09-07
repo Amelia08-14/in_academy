@@ -119,9 +119,9 @@ export default function EventRegisterModal({
                 </div>
                 <div className="auth-row">
                   <div className="auth-field">
-                    <label className="auth-label">Téléphone (facultatif)</label>
+                    <label className="auth-label">Téléphone</label>
                     <input
-                      type="tel" className="auth-input"
+                      type="tel" className="auth-input" required
                       value={phone} onChange={(e) => setPhone(e.target.value)}
                       placeholder="+213 XX XX XX XX"
                     />

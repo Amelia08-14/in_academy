@@ -347,7 +347,7 @@ export default function AdminEvenementsPage() {
 
       {viewingRegs && (
         <div className="admin-modal-overlay" onClick={() => setViewingRegs(null)}>
-          <div className="admin-modal" style={{ maxWidth: 780 }} onClick={(e) => e.stopPropagation()}>
+          <div className="admin-modal" style={{ maxWidth: 1040, width: "95vw" }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal__header">
               <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
                 Inscrits — {viewingRegs.title}
@@ -380,9 +380,9 @@ export default function AdminEvenementsPage() {
                           )}
                         </td>
                         <td style={{ fontSize: 13 }}>{reg.email}</td>
-                        <td style={{ fontSize: 13 }}>{reg.phone ?? "—"}</td>
+                        <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{reg.phone ?? "—"}</td>
                         <td style={{ fontSize: 13 }}>{reg.jobTitle ?? "—"}</td>
-                        <td style={{ fontSize: 13 }}>{reg.trainingDomain ?? "—"}</td>
+                        <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{reg.trainingDomain ?? "—"}</td>
                         <td>
                           <span className={`admin-badge admin-badge--${REG_STATUS_CLS[reg.status]}`}>
                             {REG_STATUS_LABEL[reg.status]}
