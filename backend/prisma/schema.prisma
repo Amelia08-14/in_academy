@@ -74,6 +74,7 @@ model User {
   documents      Document[]
   resetTokens    PasswordResetToken[]
   eventRegistrations EventRegistration[]
+  sessionRegistrations SessionRegistration[]
 
   @@map("users")
 }
@@ -213,6 +214,7 @@ model Formation {
   slug              String   @unique
   title             String
   description       String?  @db.Text
+  descriptionAr     String?  @db.Text // description en arabe (affichée en RTL)
   duration          String?
   tjm               Int?
   price             Int?
@@ -246,13 +248,20 @@ model FormationTrainer {
   @@map("formation_trainers")
 }
 
+enum PricePeriod {
+  TOTAL // le tarif couvre toute la formation
+  MONTH // le tarif est mensuel (ex : 35 000 DA / mois sur 3 mois)
+}
+
 model TrainingSession {
   id            String         @id @default(uuid())
   title         String
   description   String?        @db.Text
+  descriptionAr String?        @db.Text // description en arabe (affichée en RTL)
   coverImageUrl String?
   duration      String?
   price         Int?
+  pricePeriod   PricePeriod    @default(TOTAL)
   categoryId    String
   formationId   String?
   trainerId     String?
@@ -269,11 +278,40 @@ model TrainingSession {
   category    Category     @relation(fields: [categoryId], references: [id])
   formation   Formation?   @relation(fields: [formationId], references: [id])
   trainer     Trainer?     @relation(fields: [trainerId], references: [id])
-  enrollments Enrollment[]
-  materials   SessionMaterial[]
+  enrollments   Enrollment[]
+  materials     SessionMaterial[]
+  registrations SessionRegistration[]
 
   @@index([categoryId, title])
   @@map("training_sessions")
+}
+
+enum SessionRegistrationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+// Inscription directe à une session métier, sans compte requis (landing page métier).
+// Validée ensuite par un admin (PENDING → CONFIRMED/REJECTED). Si l'inscrit était
+// connecté, `userId` garde le lien avec son compte.
+model SessionRegistration {
+  id             String                    @id @default(uuid())
+  sessionId      String
+  userId         String?
+  firstName      String
+  lastName       String
+  email          String
+  phone          String
+  educationLevel String // niveau d'étude
+  status         SessionRegistrationStatus @default(PENDING)
+  createdAt      DateTime                  @default(now())
+
+  session TrainingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([sessionId, email])
+  @@map("session_registrations")
 }
 
 // Support de cours (PDF, doc…) déposé par l'admin sur une session, visible par les

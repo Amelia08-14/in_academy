@@ -12,9 +12,11 @@ interface Session {
   id: string;
   title: string;
   description: string | null;
+  descriptionAr: string | null;
   coverImageUrl: string | null;
   duration: string | null;
   price: number | null;
+  pricePeriod: "TOTAL" | "MONTH";
   categoryId: string;
   category: Category;
   startDate: string;
@@ -24,15 +26,33 @@ interface Session {
   maxCapacity: number;
   status: "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED";
   _count: { enrollments: number };
+  registrationCounts: { confirmed: number; pending: number; total: number };
 }
+
+type RegistrationStatus = "PENDING" | "CONFIRMED" | "REJECTED";
+interface SessionRegistration {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  educationLevel: string;
+  userId: string | null;
+  status: RegistrationStatus;
+  createdAt: string;
+}
+const REG_LABEL: Record<RegistrationStatus, string> = { PENDING: "En attente", CONFIRMED: "Confirmée", REJECTED: "Refusée" };
+const REG_CLS: Record<RegistrationStatus, string> = { PENDING: "pending", CONFIRMED: "confirmed", REJECTED: "cancelled" };
 
 interface EditState {
   id: string | null;
   title: string;
   description: string;
+  descriptionAr: string;
   coverImageUrl: string | null;
   duration: string;
   price: number | null;
+  pricePeriod: "TOTAL" | "MONTH";
   categoryId: string;
   startDate: string;
   originalStartDate: string;
@@ -47,9 +67,11 @@ const EMPTY: EditState = {
   id: null,
   title: "",
   description: "",
+  descriptionAr: "",
   coverImageUrl: null,
   duration: "",
   price: null,
+  pricePeriod: "TOTAL",
   categoryId: "",
   startDate: "",
   originalStartDate: "",
@@ -163,6 +185,100 @@ function SessionMaterials({ sessionId }: { sessionId: string }) {
   );
 }
 
+function SessionRegistrationsModal({
+  session, onClose, onChanged,
+}: { session: Session; onClose: () => void; onChanged: () => void }) {
+  const [regs, setRegs] = useState<SessionRegistration[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const load = () => {
+    setLoading(true);
+    setError("");
+    api.get<SessionRegistration[]>(`/admin/sessions/${session.id}/registrations`)
+      .then(setRegs)
+      .catch((err: unknown) => setError(err instanceof Error ? err.message : "Erreur de chargement."))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    void Promise.resolve().then(load);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session.id]);
+
+  const act = async (id: string, action: "confirm" | "reject" | "delete") => {
+    if (action === "delete" && !window.confirm("Retirer définitivement cette inscription ?")) return;
+    setError("");
+    try {
+      if (action === "delete") await api.delete(`/admin/sessions/registrations/${id}`);
+      else await api.patch(`/admin/sessions/registrations/${id}/${action}`);
+      load();
+      onChanged();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erreur");
+    }
+  };
+
+  return (
+    <div className="admin-modal-overlay" onClick={onClose}>
+      <div className="admin-modal" style={{ maxWidth: 1100, width: "95vw" }} onClick={(e) => e.stopPropagation()}>
+        <div className="admin-modal__header">
+          <h2 className="admin-modal__title" style={{ fontSize: 16 }}>Inscrits (inscription directe) — {session.title}</h2>
+          <button className="admin-modal__close" onClick={onClose}>✕</button>
+        </div>
+
+        {error && <div className="auth-error">{error}</div>}
+
+        {loading ? (
+          <p className="admin-loading">Chargement…</p>
+        ) : regs.length === 0 ? (
+          <p style={{ color: "var(--text-muted)", fontSize: 14 }}>Aucune inscription directe pour l&apos;instant.</p>
+        ) : (
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Nom</th><th>Prénom</th><th>Email</th><th>Téléphone</th><th>Niveau d&apos;étude</th>
+                  <th>Reçue le</th><th>Statut</th><th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {regs.map((r) => (
+                  <tr key={r.id}>
+                    <td>
+                      {r.lastName}
+                      {r.userId && (
+                        <span className="admin-badge admin-badge--role" style={{ marginLeft: 8, fontSize: 10 }}>compte</span>
+                      )}
+                    </td>
+                    <td>{r.firstName}</td>
+                    <td style={{ fontSize: 13 }}>{r.email}</td>
+                    <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{r.phone}</td>
+                    <td style={{ fontSize: 13 }}>{r.educationLevel}</td>
+                    <td style={{ fontSize: 12, color: "var(--text-muted)" }}>{new Date(r.createdAt).toLocaleDateString("fr-FR")}</td>
+                    <td><span className={`admin-badge admin-badge--${REG_CLS[r.status]}`}>{REG_LABEL[r.status]}</span></td>
+                    <td>
+                      <div className="admin-cell-actions">
+                        {r.status !== "CONFIRMED" && (
+                          <button className="admin-btn admin-btn--confirm" onClick={() => act(r.id, "confirm")}>Valider</button>
+                        )}
+                        {r.status !== "REJECTED" && (
+                          <button className="admin-btn admin-btn--cancel" onClick={() => act(r.id, "reject")}>Refuser</button>
+                        )}
+                        <button className="admin-btn" onClick={() => act(r.id, "delete")}>Retirer</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminSessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -174,6 +290,7 @@ export default function AdminSessionsPage() {
   const [saveError, setSaveError] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [materialsSession, setMaterialsSession] = useState<Session | null>(null);
+  const [registrationsSession, setRegistrationsSession] = useState<Session | null>(null);
 
   const copyLink = async (id: string) => {
     const url = `${window.location.origin}/session/${id}`;
@@ -221,9 +338,11 @@ export default function AdminSessionsPage() {
       id: s.id,
       title: s.title,
       description: s.description ?? "",
+      descriptionAr: s.descriptionAr ?? "",
       coverImageUrl: s.coverImageUrl,
       duration: s.duration ?? "",
       price: s.price,
+      pricePeriod: s.pricePeriod ?? "TOTAL",
       categoryId: s.categoryId,
       startDate: s.startDate.slice(0, 10),
       originalStartDate: s.startDate.slice(0, 10),
@@ -245,9 +364,11 @@ export default function AdminSessionsPage() {
       const payload = {
         title: editing.title,
         description: editing.description || null,
+        descriptionAr: editing.descriptionAr || null,
         coverImageUrl: editing.coverImageUrl,
         duration: editing.duration || null,
         price: editing.price,
+        pricePeriod: editing.pricePeriod,
         categoryId: editing.categoryId,
         startDate: editing.startDate,
         location: editing.location || null,
@@ -355,7 +476,7 @@ export default function AdminSessionsPage() {
                 }}
               >
                 <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  Lien d&apos;inscription directe : /session/{editing.id}
+                  Lien de la page d&apos;inscription : /session/{editing.id}
                 </span>
                 <button type="button" className="admin-btn" onClick={() => copyLink(editing.id as string)}>
                   {copiedId === editing.id ? "Copié ✓" : "Copier"}
@@ -389,24 +510,37 @@ export default function AdminSessionsPage() {
                   </select>
                 </div>
                 <div className="auth-field">
-                  <label className="auth-label">Durée (jours)</label>
+                  <label className="auth-label">Durée</label>
                   <input
                     type="text" className="auth-input"
                     value={editing.duration}
                     onChange={(e) => setEditing((v) => v ? { ...v, duration: e.target.value } : v)}
-                    placeholder="Ex : 8"
+                    placeholder="Ex : 8 (jours) ou 3 mois"
                   />
                 </div>
               </div>
 
-              <div className="auth-field">
-                <label className="auth-label">Tarif (DA)</label>
-                <input
-                  type="number" className="auth-input" min={0}
-                  value={editing.price ?? ""}
-                  onChange={(e) => setEditing((v) => v ? { ...v, price: e.target.value ? Number(e.target.value) : null } : v)}
-                  placeholder="Ex : 45000"
-                />
+              <div className="auth-row">
+                <div className="auth-field">
+                  <label className="auth-label">Tarif (DA)</label>
+                  <input
+                    type="number" className="auth-input" min={0}
+                    value={editing.price ?? ""}
+                    onChange={(e) => setEditing((v) => v ? { ...v, price: e.target.value ? Number(e.target.value) : null } : v)}
+                    placeholder="Ex : 45000"
+                  />
+                </div>
+                <div className="auth-field">
+                  <label className="auth-label">Le tarif est</label>
+                  <select
+                    className="auth-input"
+                    value={editing.pricePeriod}
+                    onChange={(e) => setEditing((v) => v ? { ...v, pricePeriod: e.target.value as "TOTAL" | "MONTH" } : v)}
+                  >
+                    <option value="TOTAL">Le prix total de la formation</option>
+                    <option value="MONTH">Un prix par mois (ex : 35 000 DA / mois)</option>
+                  </select>
+                </div>
               </div>
 
               {editing.id && editing.enrollmentsCount > 0 && editing.startDate !== editing.originalStartDate && (
@@ -438,11 +572,22 @@ export default function AdminSessionsPage() {
               </div>
 
               <div className="auth-field">
-                <label className="auth-label">Description</label>
+                <label className="auth-label">Description (français)</label>
                 <textarea
-                  className="auth-input" rows={3}
+                  className="auth-input" rows={8}
                   value={editing.description}
                   onChange={(e) => setEditing((v) => v ? { ...v, description: e.target.value } : v)}
+                  placeholder={"Une ligne courte = sous-titre · « ● élément » ou « - élément » = puce · une ligne vide sépare les blocs"}
+                />
+              </div>
+              <div className="auth-field">
+                <label className="auth-label">الوصف بالعربية (description arabe — affichée automatiquement en RTL)</label>
+                <textarea
+                  className="auth-input" rows={8} dir="rtl" lang="ar"
+                  style={{ fontFamily: "var(--font-arabic), var(--font-body)", textAlign: "right" }}
+                  value={editing.descriptionAr}
+                  onChange={(e) => setEditing((v) => v ? { ...v, descriptionAr: e.target.value } : v)}
+                  placeholder="اكتب الوصف بالعربية هنا…"
                 />
               </div>
 
@@ -504,6 +649,14 @@ export default function AdminSessionsPage() {
         </div>
       )}
 
+      {registrationsSession && (
+        <SessionRegistrationsModal
+          session={registrationsSession}
+          onClose={() => setRegistrationsSession(null)}
+          onChanged={load}
+        />
+      )}
+
       {materialsSession && (
         <div className="admin-modal-overlay" onClick={() => setMaterialsSession(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
@@ -552,7 +705,14 @@ export default function AdminSessionsPage() {
                 <td style={{ fontSize: 13 }}>{new Date(s.startDate).toLocaleDateString("fr-FR")}</td>
                 <td style={{ fontSize: 13 }}>{s.duration ?? <span style={{ color: "var(--border)" }}>—</span>}</td>
                 <td style={{ fontSize: 13 }}>{formatDa(s.price) ?? <span style={{ color: "var(--border)" }}>—</span>}</td>
-                <td style={{ fontSize: 13 }}>{s._count.enrollments} / {s.maxCapacity}</td>
+                <td style={{ fontSize: 13 }}>
+                  {s._count.enrollments + s.registrationCounts.confirmed} / {s.maxCapacity}
+                  {s.registrationCounts.pending > 0 && (
+                    <span className="admin-badge admin-badge--pending" style={{ marginLeft: 8, fontSize: 10 }}>
+                      {s.registrationCounts.pending} en attente
+                    </span>
+                  )}
+                </td>
                 <td>
                   <span className={`admin-badge admin-badge--${s.status === "CANCELLED" ? "cancelled" : s.status === "COMPLETED" ? "cancelled" : "confirmed"}`}>
                     {STATUS_LABELS[s.status]}
@@ -561,6 +721,9 @@ export default function AdminSessionsPage() {
                 <td>
                   <div className="admin-cell-actions">
                     <button className="admin-btn" onClick={() => openEdit(s)}>Modifier</button>
+                    <button className="admin-btn" onClick={() => setRegistrationsSession(s)}>
+                      Inscrits{s.registrationCounts.total > 0 ? ` (${s.registrationCounts.total})` : ""}
+                    </button>
                     <button className="admin-btn" onClick={() => setMaterialsSession(s)}>Supports de cours</button>
                     <button className="admin-btn" onClick={() => copyLink(s.id)} title="Copier le lien d'inscription directe">
                       {copiedId === s.id ? "Copié ✓" : "Copier le lien"}

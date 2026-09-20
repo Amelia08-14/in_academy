@@ -42,9 +42,11 @@ export type TrainingSessionMinAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  descriptionAr: string | null
   coverImageUrl: string | null
   duration: string | null
   price: number | null
+  pricePeriod: $Enums.PricePeriod | null
   categoryId: string | null
   formationId: string | null
   trainerId: string | null
@@ -63,9 +65,11 @@ export type TrainingSessionMaxAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  descriptionAr: string | null
   coverImageUrl: string | null
   duration: string | null
   price: number | null
+  pricePeriod: $Enums.PricePeriod | null
   categoryId: string | null
   formationId: string | null
   trainerId: string | null
@@ -84,9 +88,11 @@ export type TrainingSessionCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  descriptionAr: number
   coverImageUrl: number
   duration: number
   price: number
+  pricePeriod: number
   categoryId: number
   formationId: number
   trainerId: number
@@ -119,9 +125,11 @@ export type TrainingSessionMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  descriptionAr?: true
   coverImageUrl?: true
   duration?: true
   price?: true
+  pricePeriod?: true
   categoryId?: true
   formationId?: true
   trainerId?: true
@@ -140,9 +148,11 @@ export type TrainingSessionMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  descriptionAr?: true
   coverImageUrl?: true
   duration?: true
   price?: true
+  pricePeriod?: true
   categoryId?: true
   formationId?: true
   trainerId?: true
@@ -161,9 +171,11 @@ export type TrainingSessionCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  descriptionAr?: true
   coverImageUrl?: true
   duration?: true
   price?: true
+  pricePeriod?: true
   categoryId?: true
   formationId?: true
   trainerId?: true
@@ -269,9 +281,11 @@ export type TrainingSessionGroupByOutputType = {
   id: string
   title: string
   description: string | null
+  descriptionAr: string | null
   coverImageUrl: string | null
   duration: string | null
   price: number | null
+  pricePeriod: $Enums.PricePeriod
   categoryId: string
   formationId: string | null
   trainerId: string | null
@@ -313,9 +327,11 @@ export type TrainingSessionWhereInput = {
   id?: Prisma.StringFilter<"TrainingSession"> | string
   title?: Prisma.StringFilter<"TrainingSession"> | string
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  descriptionAr?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFilter<"TrainingSession"> | $Enums.PricePeriod
   categoryId?: Prisma.StringFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
@@ -333,15 +349,18 @@ export type TrainingSessionWhereInput = {
   trainer?: Prisma.XOR<Prisma.TrainerNullableScalarRelationFilter, Prisma.TrainerWhereInput> | null
   enrollments?: Prisma.EnrollmentListRelationFilter
   materials?: Prisma.SessionMaterialListRelationFilter
+  registrations?: Prisma.SessionRegistrationListRelationFilter
 }
 
 export type TrainingSessionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
+  pricePeriod?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrderInput | Prisma.SortOrder
   trainerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -359,6 +378,7 @@ export type TrainingSessionOrderByWithRelationInput = {
   trainer?: Prisma.TrainerOrderByWithRelationInput
   enrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
   materials?: Prisma.SessionMaterialOrderByRelationAggregateInput
+  registrations?: Prisma.SessionRegistrationOrderByRelationAggregateInput
   _relevance?: Prisma.TrainingSessionOrderByRelevanceInput
 }
 
@@ -369,9 +389,11 @@ export type TrainingSessionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TrainingSessionWhereInput | Prisma.TrainingSessionWhereInput[]
   title?: Prisma.StringFilter<"TrainingSession"> | string
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  descriptionAr?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFilter<"TrainingSession"> | $Enums.PricePeriod
   categoryId?: Prisma.StringFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
@@ -389,15 +411,18 @@ export type TrainingSessionWhereUniqueInput = Prisma.AtLeast<{
   trainer?: Prisma.XOR<Prisma.TrainerNullableScalarRelationFilter, Prisma.TrainerWhereInput> | null
   enrollments?: Prisma.EnrollmentListRelationFilter
   materials?: Prisma.SessionMaterialListRelationFilter
+  registrations?: Prisma.SessionRegistrationListRelationFilter
 }, "id">
 
 export type TrainingSessionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
+  pricePeriod?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrderInput | Prisma.SortOrder
   trainerId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -424,9 +449,11 @@ export type TrainingSessionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"TrainingSession"> | string
   title?: Prisma.StringWithAggregatesFilter<"TrainingSession"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
+  descriptionAr?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableWithAggregatesFilter<"TrainingSession"> | number | null
+  pricePeriod?: Prisma.EnumPricePeriodWithAggregatesFilter<"TrainingSession"> | $Enums.PricePeriod
   categoryId?: Prisma.StringWithAggregatesFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
@@ -445,9 +472,11 @@ export type TrainingSessionCreateInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -462,15 +491,18 @@ export type TrainingSessionCreateInput = {
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   formationId?: string | null
   trainerId?: string | null
@@ -485,15 +517,18 @@ export type TrainingSessionUncheckedCreateInput = {
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -508,15 +543,18 @@ export type TrainingSessionUpdateInput = {
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -531,15 +569,18 @@ export type TrainingSessionUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionCreateManyInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   formationId?: string | null
   trainerId?: string | null
@@ -558,9 +599,11 @@ export type TrainingSessionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -576,9 +619,11 @@ export type TrainingSessionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -613,9 +658,11 @@ export type TrainingSessionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  pricePeriod?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   trainerId?: Prisma.SortOrder
@@ -640,9 +687,11 @@ export type TrainingSessionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  pricePeriod?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   trainerId?: Prisma.SortOrder
@@ -661,9 +710,11 @@ export type TrainingSessionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  pricePeriod?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   trainerId?: Prisma.SortOrder
@@ -820,6 +871,10 @@ export type TrainingSessionUncheckedUpdateManyWithoutFormationNestedInput = {
   deleteMany?: Prisma.TrainingSessionScalarWhereInput | Prisma.TrainingSessionScalarWhereInput[]
 }
 
+export type EnumPricePeriodFieldUpdateOperationsInput = {
+  set?: $Enums.PricePeriod
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -834,6 +889,20 @@ export type EnumEnrollmentTypeFieldUpdateOperationsInput = {
 
 export type EnumSessionStatusFieldUpdateOperationsInput = {
   set?: $Enums.SessionStatus
+}
+
+export type TrainingSessionCreateNestedOneWithoutRegistrationsInput = {
+  create?: Prisma.XOR<Prisma.TrainingSessionCreateWithoutRegistrationsInput, Prisma.TrainingSessionUncheckedCreateWithoutRegistrationsInput>
+  connectOrCreate?: Prisma.TrainingSessionCreateOrConnectWithoutRegistrationsInput
+  connect?: Prisma.TrainingSessionWhereUniqueInput
+}
+
+export type TrainingSessionUpdateOneRequiredWithoutRegistrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.TrainingSessionCreateWithoutRegistrationsInput, Prisma.TrainingSessionUncheckedCreateWithoutRegistrationsInput>
+  connectOrCreate?: Prisma.TrainingSessionCreateOrConnectWithoutRegistrationsInput
+  upsert?: Prisma.TrainingSessionUpsertWithoutRegistrationsInput
+  connect?: Prisma.TrainingSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TrainingSessionUpdateToOneWithWhereWithoutRegistrationsInput, Prisma.TrainingSessionUpdateWithoutRegistrationsInput>, Prisma.TrainingSessionUncheckedUpdateWithoutRegistrationsInput>
 }
 
 export type TrainingSessionCreateNestedOneWithoutMaterialsInput = {
@@ -870,9 +939,11 @@ export type TrainingSessionCreateWithoutTrainerInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -886,15 +957,18 @@ export type TrainingSessionCreateWithoutTrainerInput = {
   formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutTrainerInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   formationId?: string | null
   startDate: Date | string
@@ -908,6 +982,7 @@ export type TrainingSessionUncheckedCreateWithoutTrainerInput = {
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutTrainerInput = {
@@ -943,9 +1018,11 @@ export type TrainingSessionScalarWhereInput = {
   id?: Prisma.StringFilter<"TrainingSession"> | string
   title?: Prisma.StringFilter<"TrainingSession"> | string
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  descriptionAr?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFilter<"TrainingSession"> | $Enums.PricePeriod
   categoryId?: Prisma.StringFilter<"TrainingSession"> | string
   formationId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   trainerId?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
@@ -964,9 +1041,11 @@ export type TrainingSessionCreateWithoutCategoryInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -980,15 +1059,18 @@ export type TrainingSessionCreateWithoutCategoryInput = {
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutCategoryInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   formationId?: string | null
   trainerId?: string | null
   startDate: Date | string
@@ -1002,6 +1084,7 @@ export type TrainingSessionUncheckedCreateWithoutCategoryInput = {
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutCategoryInput = {
@@ -1034,9 +1117,11 @@ export type TrainingSessionCreateWithoutFormationInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -1050,15 +1135,18 @@ export type TrainingSessionCreateWithoutFormationInput = {
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutFormationInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   trainerId?: string | null
   startDate: Date | string
@@ -1072,6 +1160,7 @@ export type TrainingSessionUncheckedCreateWithoutFormationInput = {
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
   materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutFormationInput = {
@@ -1100,13 +1189,15 @@ export type TrainingSessionUpdateManyWithWhereWithoutFormationInput = {
   data: Prisma.XOR<Prisma.TrainingSessionUpdateManyMutationInput, Prisma.TrainingSessionUncheckedUpdateManyWithoutFormationInput>
 }
 
-export type TrainingSessionCreateWithoutMaterialsInput = {
+export type TrainingSessionCreateWithoutRegistrationsInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -1120,15 +1211,18 @@ export type TrainingSessionCreateWithoutMaterialsInput = {
   formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
 }
 
-export type TrainingSessionUncheckedCreateWithoutMaterialsInput = {
+export type TrainingSessionUncheckedCreateWithoutRegistrationsInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   formationId?: string | null
   trainerId?: string | null
@@ -1142,6 +1236,123 @@ export type TrainingSessionUncheckedCreateWithoutMaterialsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
+  materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
+}
+
+export type TrainingSessionCreateOrConnectWithoutRegistrationsInput = {
+  where: Prisma.TrainingSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.TrainingSessionCreateWithoutRegistrationsInput, Prisma.TrainingSessionUncheckedCreateWithoutRegistrationsInput>
+}
+
+export type TrainingSessionUpsertWithoutRegistrationsInput = {
+  update: Prisma.XOR<Prisma.TrainingSessionUpdateWithoutRegistrationsInput, Prisma.TrainingSessionUncheckedUpdateWithoutRegistrationsInput>
+  create: Prisma.XOR<Prisma.TrainingSessionCreateWithoutRegistrationsInput, Prisma.TrainingSessionUncheckedCreateWithoutRegistrationsInput>
+  where?: Prisma.TrainingSessionWhereInput
+}
+
+export type TrainingSessionUpdateToOneWithWhereWithoutRegistrationsInput = {
+  where?: Prisma.TrainingSessionWhereInput
+  data: Prisma.XOR<Prisma.TrainingSessionUpdateWithoutRegistrationsInput, Prisma.TrainingSessionUncheckedUpdateWithoutRegistrationsInput>
+}
+
+export type TrainingSessionUpdateWithoutRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  maxCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumEnrollmentTypeFieldUpdateOperationsInput | $Enums.EnrollmentType
+  status?: Prisma.EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.CategoryUpdateOneRequiredWithoutSessionsNestedInput
+  formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
+  trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
+}
+
+export type TrainingSessionUncheckedUpdateWithoutRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  maxCapacity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumEnrollmentTypeFieldUpdateOperationsInput | $Enums.EnrollmentType
+  status?: Prisma.EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
+  materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
+}
+
+export type TrainingSessionCreateWithoutMaterialsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  descriptionAr?: string | null
+  coverImageUrl?: string | null
+  duration?: string | null
+  price?: number | null
+  pricePeriod?: $Enums.PricePeriod
+  startDate: Date | string
+  endDate?: Date | string | null
+  location?: string | null
+  minCapacity?: number
+  maxCapacity?: number
+  type?: $Enums.EnrollmentType
+  status?: $Enums.SessionStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category: Prisma.CategoryCreateNestedOneWithoutSessionsInput
+  formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
+  trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationCreateNestedManyWithoutSessionInput
+}
+
+export type TrainingSessionUncheckedCreateWithoutMaterialsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  descriptionAr?: string | null
+  coverImageUrl?: string | null
+  duration?: string | null
+  price?: number | null
+  pricePeriod?: $Enums.PricePeriod
+  categoryId: string
+  formationId?: string | null
+  trainerId?: string | null
+  startDate: Date | string
+  endDate?: Date | string | null
+  location?: string | null
+  minCapacity?: number
+  maxCapacity?: number
+  type?: $Enums.EnrollmentType
+  status?: $Enums.SessionStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutMaterialsInput = {
@@ -1164,9 +1375,11 @@ export type TrainingSessionUpdateWithoutMaterialsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1180,15 +1393,18 @@ export type TrainingSessionUpdateWithoutMaterialsInput = {
   formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutMaterialsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1202,15 +1418,18 @@ export type TrainingSessionUncheckedUpdateWithoutMaterialsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionCreateWithoutEnrollmentsInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   startDate: Date | string
   endDate?: Date | string | null
   location?: string | null
@@ -1224,15 +1443,18 @@ export type TrainingSessionCreateWithoutEnrollmentsInput = {
   formation?: Prisma.FormationCreateNestedOneWithoutSessionsInput
   trainer?: Prisma.TrainerCreateNestedOneWithoutSessionsInput
   materials?: Prisma.SessionMaterialCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionUncheckedCreateWithoutEnrollmentsInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   formationId?: string | null
   trainerId?: string | null
@@ -1246,6 +1468,7 @@ export type TrainingSessionUncheckedCreateWithoutEnrollmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   materials?: Prisma.SessionMaterialUncheckedCreateNestedManyWithoutSessionInput
+  registrations?: Prisma.SessionRegistrationUncheckedCreateNestedManyWithoutSessionInput
 }
 
 export type TrainingSessionCreateOrConnectWithoutEnrollmentsInput = {
@@ -1268,9 +1491,11 @@ export type TrainingSessionUpdateWithoutEnrollmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1284,15 +1509,18 @@ export type TrainingSessionUpdateWithoutEnrollmentsInput = {
   formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutEnrollmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1306,15 +1534,18 @@ export type TrainingSessionUncheckedUpdateWithoutEnrollmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionCreateManyTrainerInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   formationId?: string | null
   startDate: Date | string
@@ -1332,9 +1563,11 @@ export type TrainingSessionUpdateWithoutTrainerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1348,15 +1581,18 @@ export type TrainingSessionUpdateWithoutTrainerInput = {
   formation?: Prisma.FormationUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutTrainerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1370,15 +1606,18 @@ export type TrainingSessionUncheckedUpdateWithoutTrainerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateManyWithoutTrainerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1396,9 +1635,11 @@ export type TrainingSessionCreateManyCategoryInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   formationId?: string | null
   trainerId?: string | null
   startDate: Date | string
@@ -1416,9 +1657,11 @@ export type TrainingSessionUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1432,15 +1675,18 @@ export type TrainingSessionUpdateWithoutCategoryInput = {
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1454,15 +1700,18 @@ export type TrainingSessionUncheckedUpdateWithoutCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   formationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1480,9 +1729,11 @@ export type TrainingSessionCreateManyFormationInput = {
   id?: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   coverImageUrl?: string | null
   duration?: string | null
   price?: number | null
+  pricePeriod?: $Enums.PricePeriod
   categoryId: string
   trainerId?: string | null
   startDate: Date | string
@@ -1500,9 +1751,11 @@ export type TrainingSessionUpdateWithoutFormationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1516,15 +1769,18 @@ export type TrainingSessionUpdateWithoutFormationInput = {
   trainer?: Prisma.TrainerUpdateOneWithoutSessionsNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateWithoutFormationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1538,15 +1794,18 @@ export type TrainingSessionUncheckedUpdateWithoutFormationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutSessionNestedInput
   materials?: Prisma.SessionMaterialUncheckedUpdateManyWithoutSessionNestedInput
+  registrations?: Prisma.SessionRegistrationUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type TrainingSessionUncheckedUpdateManyWithoutFormationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   trainerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1568,11 +1827,13 @@ export type TrainingSessionUncheckedUpdateManyWithoutFormationInput = {
 export type TrainingSessionCountOutputType = {
   enrollments: number
   materials: number
+  registrations: number
 }
 
 export type TrainingSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   enrollments?: boolean | TrainingSessionCountOutputTypeCountEnrollmentsArgs
   materials?: boolean | TrainingSessionCountOutputTypeCountMaterialsArgs
+  registrations?: boolean | TrainingSessionCountOutputTypeCountRegistrationsArgs
 }
 
 /**
@@ -1599,14 +1860,23 @@ export type TrainingSessionCountOutputTypeCountMaterialsArgs<ExtArgs extends run
   where?: Prisma.SessionMaterialWhereInput
 }
 
+/**
+ * TrainingSessionCountOutputType without action
+ */
+export type TrainingSessionCountOutputTypeCountRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SessionRegistrationWhereInput
+}
+
 
 export type TrainingSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   description?: boolean
+  descriptionAr?: boolean
   coverImageUrl?: boolean
   duration?: boolean
   price?: boolean
+  pricePeriod?: boolean
   categoryId?: boolean
   formationId?: boolean
   trainerId?: boolean
@@ -1624,6 +1894,7 @@ export type TrainingSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   trainer?: boolean | Prisma.TrainingSession$trainerArgs<ExtArgs>
   enrollments?: boolean | Prisma.TrainingSession$enrollmentsArgs<ExtArgs>
   materials?: boolean | Prisma.TrainingSession$materialsArgs<ExtArgs>
+  registrations?: boolean | Prisma.TrainingSession$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.TrainingSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trainingSession"]>
 
@@ -1633,9 +1904,11 @@ export type TrainingSessionSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  descriptionAr?: boolean
   coverImageUrl?: boolean
   duration?: boolean
   price?: boolean
+  pricePeriod?: boolean
   categoryId?: boolean
   formationId?: boolean
   trainerId?: boolean
@@ -1650,13 +1923,14 @@ export type TrainingSessionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TrainingSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "coverImageUrl" | "duration" | "price" | "categoryId" | "formationId" | "trainerId" | "startDate" | "endDate" | "location" | "minCapacity" | "maxCapacity" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["trainingSession"]>
+export type TrainingSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "descriptionAr" | "coverImageUrl" | "duration" | "price" | "pricePeriod" | "categoryId" | "formationId" | "trainerId" | "startDate" | "endDate" | "location" | "minCapacity" | "maxCapacity" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["trainingSession"]>
 export type TrainingSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   formation?: boolean | Prisma.TrainingSession$formationArgs<ExtArgs>
   trainer?: boolean | Prisma.TrainingSession$trainerArgs<ExtArgs>
   enrollments?: boolean | Prisma.TrainingSession$enrollmentsArgs<ExtArgs>
   materials?: boolean | Prisma.TrainingSession$materialsArgs<ExtArgs>
+  registrations?: boolean | Prisma.TrainingSession$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.TrainingSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1668,14 +1942,17 @@ export type $TrainingSessionPayload<ExtArgs extends runtime.Types.Extensions.Int
     trainer: Prisma.$TrainerPayload<ExtArgs> | null
     enrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
     materials: Prisma.$SessionMaterialPayload<ExtArgs>[]
+    registrations: Prisma.$SessionRegistrationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
     description: string | null
+    descriptionAr: string | null
     coverImageUrl: string | null
     duration: string | null
     price: number | null
+    pricePeriod: $Enums.PricePeriod
     categoryId: string
     formationId: string | null
     trainerId: string | null
@@ -2033,6 +2310,7 @@ export interface Prisma__TrainingSessionClient<T, Null = never, ExtArgs extends 
   trainer<T extends Prisma.TrainingSession$trainerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$trainerArgs<ExtArgs>>): Prisma.Prisma__TrainerClient<runtime.Types.Result.GetResult<Prisma.$TrainerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   enrollments<T extends Prisma.TrainingSession$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   materials<T extends Prisma.TrainingSession$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionMaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrations<T extends Prisma.TrainingSession$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrainingSession$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2065,9 +2343,11 @@ export interface TrainingSessionFieldRefs {
   readonly id: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly title: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly description: Prisma.FieldRef<"TrainingSession", 'String'>
+  readonly descriptionAr: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly coverImageUrl: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly duration: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly price: Prisma.FieldRef<"TrainingSession", 'Int'>
+  readonly pricePeriod: Prisma.FieldRef<"TrainingSession", 'PricePeriod'>
   readonly categoryId: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly formationId: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly trainerId: Prisma.FieldRef<"TrainingSession", 'String'>
@@ -2511,6 +2791,30 @@ export type TrainingSession$materialsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.SessionMaterialScalarFieldEnum | Prisma.SessionMaterialScalarFieldEnum[]
+}
+
+/**
+ * TrainingSession.registrations
+ */
+export type TrainingSession$registrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SessionRegistration
+   */
+  select?: Prisma.SessionRegistrationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SessionRegistration
+   */
+  omit?: Prisma.SessionRegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionRegistrationInclude<ExtArgs> | null
+  where?: Prisma.SessionRegistrationWhereInput
+  orderBy?: Prisma.SessionRegistrationOrderByWithRelationInput | Prisma.SessionRegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.SessionRegistrationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SessionRegistrationScalarFieldEnum | Prisma.SessionRegistrationScalarFieldEnum[]
 }
 
 /**

@@ -192,6 +192,13 @@ export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntNullableFilter<$PrismaModel>
 }
 
+export type EnumPricePeriodFilter<$PrismaModel = never> = {
+  equals?: $Enums.PricePeriod | Prisma.EnumPricePeriodFieldRefInput<$PrismaModel>
+  in?: $Enums.PricePeriod[]
+  notIn?: $Enums.PricePeriod[]
+  not?: Prisma.NestedEnumPricePeriodFilter<$PrismaModel> | $Enums.PricePeriod
+}
+
 export type IntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[]
@@ -215,6 +222,16 @@ export type EnumSessionStatusFilter<$PrismaModel = never> = {
   in?: $Enums.SessionStatus[]
   notIn?: $Enums.SessionStatus[]
   not?: Prisma.NestedEnumSessionStatusFilter<$PrismaModel> | $Enums.SessionStatus
+}
+
+export type EnumPricePeriodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PricePeriod | Prisma.EnumPricePeriodFieldRefInput<$PrismaModel>
+  in?: $Enums.PricePeriod[]
+  notIn?: $Enums.PricePeriod[]
+  not?: Prisma.NestedEnumPricePeriodWithAggregatesFilter<$PrismaModel> | $Enums.PricePeriod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPricePeriodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPricePeriodFilter<$PrismaModel>
 }
 
 export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -251,6 +268,23 @@ export type EnumSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSessionStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSessionStatusFilter<$PrismaModel>
+}
+
+export type EnumSessionRegistrationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRegistrationStatus | Prisma.EnumSessionRegistrationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionRegistrationStatus[]
+  notIn?: $Enums.SessionRegistrationStatus[]
+  not?: Prisma.NestedEnumSessionRegistrationStatusFilter<$PrismaModel> | $Enums.SessionRegistrationStatus
+}
+
+export type EnumSessionRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRegistrationStatus | Prisma.EnumSessionRegistrationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionRegistrationStatus[]
+  notIn?: $Enums.SessionRegistrationStatus[]
+  not?: Prisma.NestedEnumSessionRegistrationStatusWithAggregatesFilter<$PrismaModel> | $Enums.SessionRegistrationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionRegistrationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionRegistrationStatusFilter<$PrismaModel>
 }
 
 export type EnumEnrollmentStatusFilter<$PrismaModel = never> = {
@@ -567,6 +601,13 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
 }
 
+export type NestedEnumPricePeriodFilter<$PrismaModel = never> = {
+  equals?: $Enums.PricePeriod | Prisma.EnumPricePeriodFieldRefInput<$PrismaModel>
+  in?: $Enums.PricePeriod[]
+  notIn?: $Enums.PricePeriod[]
+  not?: Prisma.NestedEnumPricePeriodFilter<$PrismaModel> | $Enums.PricePeriod
+}
+
 export type NestedEnumEnrollmentTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.EnrollmentType | Prisma.EnumEnrollmentTypeFieldRefInput<$PrismaModel>
   in?: $Enums.EnrollmentType[]
@@ -579,6 +620,16 @@ export type NestedEnumSessionStatusFilter<$PrismaModel = never> = {
   in?: $Enums.SessionStatus[]
   notIn?: $Enums.SessionStatus[]
   not?: Prisma.NestedEnumSessionStatusFilter<$PrismaModel> | $Enums.SessionStatus
+}
+
+export type NestedEnumPricePeriodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PricePeriod | Prisma.EnumPricePeriodFieldRefInput<$PrismaModel>
+  in?: $Enums.PricePeriod[]
+  notIn?: $Enums.PricePeriod[]
+  not?: Prisma.NestedEnumPricePeriodWithAggregatesFilter<$PrismaModel> | $Enums.PricePeriod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPricePeriodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPricePeriodFilter<$PrismaModel>
 }
 
 export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -626,6 +677,23 @@ export type NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel = never> = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSessionStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSessionStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSessionRegistrationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRegistrationStatus | Prisma.EnumSessionRegistrationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionRegistrationStatus[]
+  notIn?: $Enums.SessionRegistrationStatus[]
+  not?: Prisma.NestedEnumSessionRegistrationStatusFilter<$PrismaModel> | $Enums.SessionRegistrationStatus
+}
+
+export type NestedEnumSessionRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SessionRegistrationStatus | Prisma.EnumSessionRegistrationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SessionRegistrationStatus[]
+  notIn?: $Enums.SessionRegistrationStatus[]
+  not?: Prisma.NestedEnumSessionRegistrationStatusWithAggregatesFilter<$PrismaModel> | $Enums.SessionRegistrationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSessionRegistrationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSessionRegistrationStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumEnrollmentStatusFilter<$PrismaModel = never> = {

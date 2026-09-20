@@ -230,14 +230,19 @@ router.get("/sessions", async (req, res) => {
             include: {
                 category: true,
                 formation: true,
-                // Une place est "réservée" dès qu'une inscription est en attente ou confirmée.
-                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+                // Places prises : inscriptions avec compte confirmées + inscriptions directes confirmées.
+                _count: {
+                    select: {
+                        enrollments: { where: { status: "CONFIRMED" } },
+                        registrations: { where: { status: "CONFIRMED" } },
+                    },
+                },
             },
         });
         // "Complet" = toutes les places réservées. "En cours" = places encore disponibles.
         // L'ouverture ne dépend PAS de la date de début (une session du jour reste ouverte).
         const withState = sessions.map((s) => {
-            const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments);
+            const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments - s._count.registrations);
             const isFull = spotsLeft <= 0;
             const isOpen = OPEN_SESSION_STATUS.includes(s.status) && !isFull;
             return { ...s, spotsLeft, isFull, isOpen, nextSessionId: null };
@@ -257,20 +262,90 @@ router.get("/sessions/:id", async (req, res) => {
             include: {
                 category: true,
                 formation: true,
-                _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+                _count: {
+                    select: {
+                        enrollments: { where: { status: "CONFIRMED" } },
+                        registrations: { where: { status: "CONFIRMED" } },
+                    },
+                },
             },
         });
         if (!s) {
             res.status(404).json({ error: "Session introuvable" });
             return;
         }
-        const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments);
+        const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments - s._count.registrations);
         const isFull = spotsLeft <= 0;
         const isOpen = OPEN_SESSION_STATUS.includes(s.status) && !isFull;
         res.json({ ...s, spotsLeft, isFull, isOpen });
     }
     catch (err) {
         console.error("[sessions/:id]", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+// POST /api/sessions/:id/register — inscription directe à une session (landing page métier),
+// sans compte requis : nom, prénom, email, téléphone, niveau d'étude. Statut PENDING,
+// validée ensuite par un admin. Un visiteur connecté garde le lien avec son compte.
+router.post("/sessions/:id/register", auth_middleware_1.optionalAuthenticate, async (req, res) => {
+    const parsed = content_schema_1.sessionRegistrationSchema.safeParse(req.body);
+    if (!parsed.success) {
+        res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+        return;
+    }
+    try {
+        const sessionId = req.params["id"];
+        const session = await db_1.prisma.trainingSession.findUnique({
+            where: { id: sessionId },
+            include: {
+                _count: {
+                    select: {
+                        enrollments: { where: { status: "CONFIRMED" } },
+                        registrations: { where: { status: "CONFIRMED" } },
+                    },
+                },
+            },
+        });
+        if (!session) {
+            res.status(404).json({ error: "Session introuvable" });
+            return;
+        }
+        if (!OPEN_SESSION_STATUS.includes(session.status)) {
+            res.status(409).json({ error: "Cette session n'est plus ouverte aux inscriptions." });
+            return;
+        }
+        if (session._count.enrollments + session._count.registrations >= session.maxCapacity) {
+            res.status(409).json({ error: "Cette session est complète." });
+            return;
+        }
+        const { firstName, lastName, email, phone, educationLevel } = parsed.data;
+        const existing = await db_1.prisma.sessionRegistration.findUnique({
+            where: { sessionId_email: { sessionId, email } },
+        });
+        if (existing) {
+            res.status(409).json({ error: "Une demande d'inscription existe déjà avec cet email pour cette session." });
+            return;
+        }
+        const registration = await db_1.prisma.sessionRegistration.create({
+            data: { sessionId, userId: req.user?.userId ?? null, firstName, lastName, email, phone, educationLevel },
+        });
+        void (0, mail_1.sendSessionRegistrationPendingEmail)({
+            to: registration.email,
+            fullName: `${registration.firstName} ${registration.lastName}`,
+            sessionTitle: session.title,
+            startDate: session.startDate,
+            location: session.location,
+        }).catch((err) => console.error("[mail session-registration pending]", err));
+        void (0, mail_1.sendAdminNotificationEmail)(`Nouvelle inscription — ${session.title}`, [
+            `${registration.firstName} ${registration.lastName} (${registration.email}) souhaite s'inscrire à "${session.title}".`,
+            `Téléphone : ${registration.phone}`,
+            `Niveau d'étude : ${registration.educationLevel}`,
+            "Validez ou refusez l'inscription depuis le back-office → Sessions → Inscrits.",
+        ]).catch((err) => console.error("[mail admin session-registration]", err));
+        res.status(201).json({ id: registration.id, status: registration.status });
+    }
+    catch (err) {
+        console.error("[sessions register]", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });

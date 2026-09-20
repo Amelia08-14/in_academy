@@ -41,6 +41,7 @@ export type FormationMinAggregateOutputType = {
   slug: string | null
   title: string | null
   description: string | null
+  descriptionAr: string | null
   duration: string | null
   tjm: number | null
   price: number | null
@@ -58,6 +59,7 @@ export type FormationMaxAggregateOutputType = {
   slug: string | null
   title: string | null
   description: string | null
+  descriptionAr: string | null
   duration: string | null
   tjm: number | null
   price: number | null
@@ -75,6 +77,7 @@ export type FormationCountAggregateOutputType = {
   slug: number
   title: number
   description: number
+  descriptionAr: number
   duration: number
   tjm: number
   price: number
@@ -104,6 +107,7 @@ export type FormationMinAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  descriptionAr?: true
   duration?: true
   tjm?: true
   price?: true
@@ -121,6 +125,7 @@ export type FormationMaxAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  descriptionAr?: true
   duration?: true
   tjm?: true
   price?: true
@@ -138,6 +143,7 @@ export type FormationCountAggregateInputType = {
   slug?: true
   title?: true
   description?: true
+  descriptionAr?: true
   duration?: true
   tjm?: true
   price?: true
@@ -242,6 +248,7 @@ export type FormationGroupByOutputType = {
   slug: string
   title: string
   description: string | null
+  descriptionAr: string | null
   duration: string | null
   tjm: number | null
   price: number | null
@@ -282,6 +289,7 @@ export type FormationWhereInput = {
   slug?: Prisma.StringFilter<"Formation"> | string
   title?: Prisma.StringFilter<"Formation"> | string
   description?: Prisma.StringNullableFilter<"Formation"> | string | null
+  descriptionAr?: Prisma.StringNullableFilter<"Formation"> | string | null
   duration?: Prisma.StringNullableFilter<"Formation"> | string | null
   tjm?: Prisma.IntNullableFilter<"Formation"> | number | null
   price?: Prisma.IntNullableFilter<"Formation"> | number | null
@@ -304,6 +312,7 @@ export type FormationOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   tjm?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -330,6 +339,7 @@ export type FormationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FormationWhereInput | Prisma.FormationWhereInput[]
   title?: Prisma.StringFilter<"Formation"> | string
   description?: Prisma.StringNullableFilter<"Formation"> | string | null
+  descriptionAr?: Prisma.StringNullableFilter<"Formation"> | string | null
   duration?: Prisma.StringNullableFilter<"Formation"> | string | null
   tjm?: Prisma.IntNullableFilter<"Formation"> | number | null
   price?: Prisma.IntNullableFilter<"Formation"> | number | null
@@ -352,6 +362,7 @@ export type FormationOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   tjm?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -377,6 +388,7 @@ export type FormationScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Formation"> | string
   title?: Prisma.StringWithAggregatesFilter<"Formation"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Formation"> | string | null
+  descriptionAr?: Prisma.StringNullableWithAggregatesFilter<"Formation"> | string | null
   duration?: Prisma.StringNullableWithAggregatesFilter<"Formation"> | string | null
   tjm?: Prisma.IntNullableWithAggregatesFilter<"Formation"> | number | null
   price?: Prisma.IntNullableWithAggregatesFilter<"Formation"> | number | null
@@ -394,6 +406,7 @@ export type FormationCreateInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -415,6 +428,7 @@ export type FormationUncheckedCreateInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -436,6 +450,7 @@ export type FormationUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -457,6 +472,7 @@ export type FormationUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -478,6 +494,7 @@ export type FormationCreateManyInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -495,6 +512,7 @@ export type FormationUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -511,6 +529,7 @@ export type FormationUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -544,6 +563,7 @@ export type FormationCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   tjm?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -566,6 +586,7 @@ export type FormationMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   tjm?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -583,6 +604,7 @@ export type FormationMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionAr?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   tjm?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -725,6 +747,7 @@ export type FormationCreateWithoutCategoryInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -745,6 +768,7 @@ export type FormationUncheckedCreateWithoutCategoryInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -794,6 +818,7 @@ export type FormationScalarWhereInput = {
   slug?: Prisma.StringFilter<"Formation"> | string
   title?: Prisma.StringFilter<"Formation"> | string
   description?: Prisma.StringNullableFilter<"Formation"> | string | null
+  descriptionAr?: Prisma.StringNullableFilter<"Formation"> | string | null
   duration?: Prisma.StringNullableFilter<"Formation"> | string | null
   tjm?: Prisma.IntNullableFilter<"Formation"> | number | null
   price?: Prisma.IntNullableFilter<"Formation"> | number | null
@@ -811,6 +836,7 @@ export type FormationCreateWithoutTrainersInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -831,6 +857,7 @@ export type FormationUncheckedCreateWithoutTrainersInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -867,6 +894,7 @@ export type FormationUpdateWithoutTrainersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -887,6 +915,7 @@ export type FormationUncheckedUpdateWithoutTrainersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -907,6 +936,7 @@ export type FormationCreateWithoutSessionsInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -927,6 +957,7 @@ export type FormationUncheckedCreateWithoutSessionsInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -963,6 +994,7 @@ export type FormationUpdateWithoutSessionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -983,6 +1015,7 @@ export type FormationUncheckedUpdateWithoutSessionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1003,6 +1036,7 @@ export type FormationCreateWithoutEnrollmentsInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -1023,6 +1057,7 @@ export type FormationUncheckedCreateWithoutEnrollmentsInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -1059,6 +1094,7 @@ export type FormationUpdateWithoutEnrollmentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1079,6 +1115,7 @@ export type FormationUncheckedUpdateWithoutEnrollmentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1099,6 +1136,7 @@ export type FormationCreateWithoutQuoteItemsInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -1119,6 +1157,7 @@ export type FormationUncheckedCreateWithoutQuoteItemsInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -1155,6 +1194,7 @@ export type FormationUpdateWithoutQuoteItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1175,6 +1215,7 @@ export type FormationUncheckedUpdateWithoutQuoteItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1195,6 +1236,7 @@ export type FormationCreateManyCategoryInput = {
   slug: string
   title: string
   description?: string | null
+  descriptionAr?: string | null
   duration?: string | null
   tjm?: number | null
   price?: number | null
@@ -1211,6 +1253,7 @@ export type FormationUpdateWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1231,6 +1274,7 @@ export type FormationUncheckedUpdateWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1251,6 +1295,7 @@ export type FormationUncheckedUpdateManyWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tjm?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1325,6 +1370,7 @@ export type FormationSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   slug?: boolean
   title?: boolean
   description?: boolean
+  descriptionAr?: boolean
   duration?: boolean
   tjm?: boolean
   price?: boolean
@@ -1350,6 +1396,7 @@ export type FormationSelectScalar = {
   slug?: boolean
   title?: boolean
   description?: boolean
+  descriptionAr?: boolean
   duration?: boolean
   tjm?: boolean
   price?: boolean
@@ -1362,7 +1409,7 @@ export type FormationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type FormationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "description" | "duration" | "tjm" | "price" | "isCertifying" | "isActive" | "ficheTechniqueUrl" | "coverImageUrl" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["formation"]>
+export type FormationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "description" | "descriptionAr" | "duration" | "tjm" | "price" | "isCertifying" | "isActive" | "ficheTechniqueUrl" | "coverImageUrl" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["formation"]>
 export type FormationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   trainers?: boolean | Prisma.Formation$trainersArgs<ExtArgs>
@@ -1386,6 +1433,7 @@ export type $FormationPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     slug: string
     title: string
     description: string | null
+    descriptionAr: string | null
     duration: string | null
     tjm: number | null
     price: number | null
@@ -1774,6 +1822,7 @@ export interface FormationFieldRefs {
   readonly slug: Prisma.FieldRef<"Formation", 'String'>
   readonly title: Prisma.FieldRef<"Formation", 'String'>
   readonly description: Prisma.FieldRef<"Formation", 'String'>
+  readonly descriptionAr: Prisma.FieldRef<"Formation", 'String'>
   readonly duration: Prisma.FieldRef<"Formation", 'String'>
   readonly tjm: Prisma.FieldRef<"Formation", 'Int'>
   readonly price: Prisma.FieldRef<"Formation", 'Int'>

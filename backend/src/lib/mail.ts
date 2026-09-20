@@ -231,3 +231,65 @@ export async function sendAdminNotificationEmail(subject: string, lines: string[
     </div>`;
   await sendMail(adminEmail, subject, html, lines.join("\n"));
 }
+
+// ─── Inscription directe à une session métier (sans compte) ──────────────────
+
+type SessionRegistrationMailData = {
+  to: string;
+  fullName: string;
+  sessionTitle: string;
+  startDate: Date;
+  location?: string | null;
+};
+
+function sessionRegistrationHtml(title: string, intro: string, data: SessionRegistrationMailData) {
+  const date = formatDate(data.startDate);
+  return `
+    <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f2340;max-width:620px;margin:0 auto;padding:24px">
+      <h1 style="font-size:20px;margin:0 0 16px;color:#0b2545">${escapeHtml(title)}</h1>
+      <p>Bonjour ${escapeHtml(data.fullName)},</p>
+      <p>${escapeHtml(intro)}</p>
+      <div style="border:1px solid #e5dccd;border-radius:10px;padding:16px;margin:20px 0;background:#fbf7ef">
+        <strong style="display:block;margin-bottom:8px">${escapeHtml(data.sessionTitle)}</strong>
+        ${date ? `<div>Début : ${escapeHtml(date)}</div>` : ""}
+        ${data.location ? `<div>Lieu : ${escapeHtml(data.location)}</div>` : ""}
+      </div>
+      <p style="margin-top:20px">Équipe IN ACADEMY</p>
+    </div>`;
+}
+
+// Envoyé dès la demande — la place n'est pas encore garantie, elle attend la validation admin.
+export async function sendSessionRegistrationPendingEmail(data: SessionRegistrationMailData) {
+  const intro = "Votre demande d'inscription a bien été reçue. Notre équipe vous recontactera très prochainement pour la valider.";
+  await sendMail(
+    data.to,
+    `Demande d'inscription reçue — ${data.sessionTitle}`,
+    sessionRegistrationHtml("Demande d'inscription reçue", intro, data),
+    `Bonjour ${data.fullName}, votre demande d'inscription à "${data.sessionTitle}" a bien été reçue. Notre équipe vous recontactera très prochainement.`
+  );
+}
+
+// Envoyé quand l'admin valide l'inscription.
+export async function sendSessionRegistrationConfirmedEmail(data: SessionRegistrationMailData) {
+  const intro = "Votre inscription a été validée par notre équipe — votre place est confirmée. Nous vous contacterons pour les modalités pratiques.";
+  await sendMail(
+    data.to,
+    `Inscription confirmée — ${data.sessionTitle}`,
+    sessionRegistrationHtml("Inscription confirmée", intro, data),
+    `Bonjour ${data.fullName}, votre inscription à "${data.sessionTitle}" est confirmée.`
+  );
+}
+
+// Envoyé quand l'admin refuse l'inscription (session complète, profil non retenu…).
+export async function sendSessionRegistrationRejectedEmail(data: SessionRegistrationMailData) {
+  const intro =
+    "Nous vous remercions vivement pour l'intérêt que vous portez à cette formation. " +
+    "Malheureusement, nous ne sommes pas en mesure de retenir votre inscription pour cette session. " +
+    "N'hésitez pas à nous recontacter : nous serons ravis de vous accueillir lors d'une prochaine session.";
+  await sendMail(
+    data.to,
+    `Concernant votre inscription — ${data.sessionTitle}`,
+    sessionRegistrationHtml("Votre inscription n'a pas pu être retenue", intro, data),
+    `Bonjour ${data.fullName}, merci pour votre intérêt pour "${data.sessionTitle}". Nous ne sommes malheureusement pas en mesure de retenir votre inscription pour cette session. Nous serons ravis de vous accueillir lors d'une prochaine session.`
+  );
+}

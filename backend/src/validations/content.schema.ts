@@ -56,6 +56,15 @@ export const eventRegistrationExtraSchema = z
     path: ["companyName"],
   });
 
+// ─── Inscription directe à une session métier (sans compte) ──────────────────
+export const sessionRegistrationSchema = z.object({
+  lastName: z.string().min(2, "Nom requis").trim(),
+  firstName: z.string().min(2, "Prénom requis").trim(),
+  email: z.string().email("Email invalide").trim().toLowerCase(),
+  phone: z.string().min(6, "Téléphone requis").trim(),
+  educationLevel: z.string().min(1, "Niveau d'étude requis").trim(),
+});
+
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 export const trainerApplicationSchema = z.object({
   firstName: z.string().min(2, "Prénom requis").trim(),

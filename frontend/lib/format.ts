@@ -12,3 +12,20 @@ export function formatDurationDays(duration: string | null | undefined): string 
   const days = match[1]?.padStart(2, "0");
   return `${days} jours`;
 }
+
+export type PricePeriod = "TOTAL" | "MONTH";
+
+// "35 000 DA" ou "35 000 DA / mois" selon la périodicité du tarif de la session.
+export function formatPrice(price: number | null | undefined, period: PricePeriod | undefined): string | null {
+  const base = formatDa(price);
+  if (!base) return null;
+  return period === "MONTH" ? `${base} / mois` : base;
+}
+
+// Vrai si le texte est majoritairement en écriture arabe (→ affichage RTL automatique).
+export function isArabicText(text: string | null | undefined): boolean {
+  if (!text) return false;
+  const arabic = (text.match(/[\u0600-\u06FF\u0750-\u077F]/g) ?? []).length;
+  const latin = (text.match(/[A-Za-zÀ-ÿ]/g) ?? []).length;
+  return arabic > latin;
+}

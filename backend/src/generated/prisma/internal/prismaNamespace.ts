@@ -395,6 +395,7 @@ export const ModelName = {
   Formation: 'Formation',
   FormationTrainer: 'FormationTrainer',
   TrainingSession: 'TrainingSession',
+  SessionRegistration: 'SessionRegistration',
   SessionMaterial: 'SessionMaterial',
   Enrollment: 'Enrollment',
   EnrollmentEmployee: 'EnrollmentEmployee',
@@ -424,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordResetToken" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "sessionMaterial" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest" | "document" | "partner" | "event" | "eventPhoto" | "eventRegistration" | "trainerApplication" | "trainerApplicationFile"
+    modelProps: "user" | "passwordResetToken" | "learnerProfile" | "trainerProfile" | "trainer" | "company" | "companyProfile" | "category" | "formation" | "formationTrainer" | "trainingSession" | "sessionRegistration" | "sessionMaterial" | "enrollment" | "enrollmentEmployee" | "certificate" | "quoteRequest" | "quoteRequestItem" | "contactRequest" | "document" | "partner" | "event" | "eventPhoto" | "eventRegistration" | "trainerApplication" | "trainerApplicationFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1151,6 +1152,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TrainingSessionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TrainingSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    SessionRegistration: {
+      payload: Prisma.$SessionRegistrationPayload<ExtArgs>
+      fields: Prisma.SessionRegistrationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SessionRegistrationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SessionRegistrationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload>
+        }
+        findFirst: {
+          args: Prisma.SessionRegistrationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SessionRegistrationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload>
+        }
+        findMany: {
+          args: Prisma.SessionRegistrationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload>[]
+        }
+        create: {
+          args: Prisma.SessionRegistrationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload>
+        }
+        createMany: {
+          args: Prisma.SessionRegistrationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SessionRegistrationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload>
+        }
+        update: {
+          args: Prisma.SessionRegistrationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SessionRegistrationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SessionRegistrationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SessionRegistrationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionRegistrationPayload>
+        }
+        aggregate: {
+          args: Prisma.SessionRegistrationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSessionRegistration>
+        }
+        groupBy: {
+          args: Prisma.SessionRegistrationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SessionRegistrationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SessionRegistrationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SessionRegistrationCountAggregateOutputType> | number
         }
       }
     }
@@ -2241,6 +2308,7 @@ export const FormationScalarFieldEnum = {
   slug: 'slug',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   duration: 'duration',
   tjm: 'tjm',
   price: 'price',
@@ -2269,9 +2337,11 @@ export const TrainingSessionScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   coverImageUrl: 'coverImageUrl',
   duration: 'duration',
   price: 'price',
+  pricePeriod: 'pricePeriod',
   categoryId: 'categoryId',
   formationId: 'formationId',
   trainerId: 'trainerId',
@@ -2287,6 +2357,22 @@ export const TrainingSessionScalarFieldEnum = {
 } as const
 
 export type TrainingSessionScalarFieldEnum = (typeof TrainingSessionScalarFieldEnum)[keyof typeof TrainingSessionScalarFieldEnum]
+
+
+export const SessionRegistrationScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  educationLevel: 'educationLevel',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type SessionRegistrationScalarFieldEnum = (typeof SessionRegistrationScalarFieldEnum)[keyof typeof SessionRegistrationScalarFieldEnum]
 
 
 export const SessionMaterialScalarFieldEnum = {
@@ -2598,6 +2684,7 @@ export const FormationOrderByRelevanceFieldEnum = {
   slug: 'slug',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   duration: 'duration',
   ficheTechniqueUrl: 'ficheTechniqueUrl',
   coverImageUrl: 'coverImageUrl',
@@ -2619,6 +2706,7 @@ export const TrainingSessionOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   coverImageUrl: 'coverImageUrl',
   duration: 'duration',
   categoryId: 'categoryId',
@@ -2628,6 +2716,20 @@ export const TrainingSessionOrderByRelevanceFieldEnum = {
 } as const
 
 export type TrainingSessionOrderByRelevanceFieldEnum = (typeof TrainingSessionOrderByRelevanceFieldEnum)[keyof typeof TrainingSessionOrderByRelevanceFieldEnum]
+
+
+export const SessionRegistrationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  educationLevel: 'educationLevel'
+} as const
+
+export type SessionRegistrationOrderByRelevanceFieldEnum = (typeof SessionRegistrationOrderByRelevanceFieldEnum)[keyof typeof SessionRegistrationOrderByRelevanceFieldEnum]
 
 
 export const SessionMaterialOrderByRelevanceFieldEnum = {
@@ -2830,6 +2932,13 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 
 
 /**
+ * Reference to a field of type 'PricePeriod'
+ */
+export type EnumPricePeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PricePeriod'>
+    
+
+
+/**
  * Reference to a field of type 'EnrollmentType'
  */
 export type EnumEnrollmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EnrollmentType'>
@@ -2840,6 +2949,13 @@ export type EnumEnrollmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'SessionStatus'
  */
 export type EnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'SessionRegistrationStatus'
+ */
+export type EnumSessionRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionRegistrationStatus'>
     
 
 
@@ -3019,6 +3135,7 @@ export type GlobalOmitConfig = {
   formation?: Prisma.FormationOmit
   formationTrainer?: Prisma.FormationTrainerOmit
   trainingSession?: Prisma.TrainingSessionOmit
+  sessionRegistration?: Prisma.SessionRegistrationOmit
   sessionMaterial?: Prisma.SessionMaterialOmit
   enrollment?: Prisma.EnrollmentOmit
   enrollmentEmployee?: Prisma.EnrollmentEmployeeOmit

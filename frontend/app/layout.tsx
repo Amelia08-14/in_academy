@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Inter, IBM_Plex_Mono, Caveat } from "next/font/google";
+import { Bricolage_Grotesque, Inter, IBM_Plex_Mono, Caveat, Cairo } from "next/font/google";
 import "./globals.css";
 import QuoteCartFab from "./components/QuoteCartFab";
 
@@ -27,6 +27,13 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
+// Police arabe (descriptions de formation en arabe, affichées en RTL).
+const cairo = Cairo({
+  variable: "--font-arabic",
+  subsets: ["arabic"],
+  weight: ["400", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "IN ACADEMY — L'excellence de la formation professionnelle",
   description:
@@ -43,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${bricolage.variable} ${inter.variable} ${plexMono.variable} ${caveat.variable}`}>
+    <html lang="fr" className={`${bricolage.variable} ${inter.variable} ${plexMono.variable} ${caveat.variable} ${cairo.variable}`}>
       <body>
         {children}
         <QuoteCartFab />

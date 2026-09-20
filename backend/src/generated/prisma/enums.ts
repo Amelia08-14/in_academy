@@ -72,6 +72,23 @@ export const ContactStatut = {
 export type ContactStatut = (typeof ContactStatut)[keyof typeof ContactStatut]
 
 
+export const PricePeriod = {
+  TOTAL: 'TOTAL',
+  MONTH: 'MONTH'
+} as const
+
+export type PricePeriod = (typeof PricePeriod)[keyof typeof PricePeriod]
+
+
+export const SessionRegistrationStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type SessionRegistrationStatus = (typeof SessionRegistrationStatus)[keyof typeof SessionRegistrationStatus]
+
+
 export const DocumentType = {
   RECU: 'RECU',
   DOSSIER_ADMIN: 'DOSSIER_ADMIN'

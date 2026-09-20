@@ -2,7 +2,11 @@ import { Router, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
-import { sendEnrollmentConfirmedEmail, sendQuoteSentEmail, sendEventRegistrationConfirmedEmail, sendEventRegistrationRejectedEmail } from "@/lib/mail";
+import {
+  sendEnrollmentConfirmedEmail, sendQuoteSentEmail,
+  sendEventRegistrationConfirmedEmail, sendEventRegistrationRejectedEmail,
+  sendSessionRegistrationConfirmedEmail, sendSessionRegistrationRejectedEmail,
+} from "@/lib/mail";
 import { partnerSchema, eventSchema } from "@/validations/content.schema";
 
 const router = Router();
@@ -300,10 +304,11 @@ router.get("/formations", async (_req: AuthRequest, res: Response) => {
 // POST /api/admin/formations — créer une formation
 router.post("/formations", async (req: AuthRequest, res: Response) => {
   try {
-    const { title, categoryId, description, duration, tjm, price, isCertifying, ficheTechniqueUrl, coverImageUrl } = req.body as {
+    const { title, categoryId, description, descriptionAr, duration, tjm, price, isCertifying, ficheTechniqueUrl, coverImageUrl } = req.body as {
       title: string;
       categoryId: string;
       description?: string;
+      descriptionAr?: string | null;
       duration?: string;
       tjm?: number;
       price?: number;
@@ -321,6 +326,7 @@ router.post("/formations", async (req: AuthRequest, res: Response) => {
         slug: slugify(title),
         categoryId,
         description: description ?? null,
+        descriptionAr: descriptionAr || null,
         duration: duration ?? null,
         tjm: tjm ?? null,
         price: price ?? null,
@@ -340,12 +346,13 @@ router.post("/formations", async (req: AuthRequest, res: Response) => {
 // PATCH /api/admin/formations/:id — mettre à jour fiche technique / infos
 router.patch("/formations/:id", async (req: AuthRequest, res: Response) => {
   try {
-    const { ficheTechniqueUrl, tjm, price, duration, description, isActive, coverImageUrl } = req.body as {
+    const { ficheTechniqueUrl, tjm, price, duration, description, descriptionAr, isActive, coverImageUrl } = req.body as {
       ficheTechniqueUrl?: string;
       tjm?: number | null;
       price?: number;
       duration?: string;
       description?: string;
+      descriptionAr?: string | null;
       isActive?: boolean;
       coverImageUrl?: string;
     };
@@ -354,6 +361,7 @@ router.patch("/formations/:id", async (req: AuthRequest, res: Response) => {
       data: {
         ...(ficheTechniqueUrl !== undefined && { ficheTechniqueUrl }),
         ...(description !== undefined && { description }),
+        ...(descriptionAr !== undefined && { descriptionAr: descriptionAr || null }),
         ...(tjm !== undefined && { tjm }),
         ...(price !== undefined && { price }),
         ...(duration !== undefined && { duration }),
@@ -605,9 +613,19 @@ router.get("/sessions", async (_req: AuthRequest, res: Response) => {
         category: true,
         formation: true,
         _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+        registrations: { select: { status: true } },
       },
     });
-    res.json(sessions);
+    // Inscriptions directes (sans compte) : confirmées comptent dans la capacité,
+    // "en attente" sont signalées à l'admin pour traitement.
+    res.json(sessions.map(({ registrations, ...s }) => ({
+      ...s,
+      registrationCounts: {
+        confirmed: registrations.filter((r) => r.status === "CONFIRMED").length,
+        pending: registrations.filter((r) => r.status === "PENDING").length,
+        total: registrations.length,
+      },
+    })));
   } catch (err) {
     console.error("[admin/sessions]", err);
     res.status(500).json({ error: "Erreur serveur" });
@@ -618,11 +636,11 @@ router.get("/sessions", async (_req: AuthRequest, res: Response) => {
 router.post("/sessions", async (req: AuthRequest, res: Response) => {
   try {
     const {
-      title, description, coverImageUrl, duration, price, categoryId, formationId,
+      title, description, descriptionAr, coverImageUrl, duration, price, pricePeriod, categoryId, formationId,
       startDate, endDate, location, minCapacity, maxCapacity,
     } = req.body as {
-      title?: string; description?: string; coverImageUrl?: string; duration?: string;
-      price?: number | null; categoryId?: string; formationId?: string | null; startDate: string; endDate?: string; location?: string;
+      title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; duration?: string;
+      price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; startDate: string; endDate?: string; location?: string;
       minCapacity?: number; maxCapacity?: number;
     };
 
@@ -652,9 +670,11 @@ router.post("/sessions", async (req: AuthRequest, res: Response) => {
       data: {
         title: resolvedTitle,
         description: description ?? formation?.description ?? null,
+        descriptionAr: descriptionAr || formation?.descriptionAr || null,
         coverImageUrl: coverImageUrl ?? formation?.coverImageUrl ?? null,
         duration: duration ?? formation?.duration ?? null,
         price: price ?? formation?.price ?? null,
+        pricePeriod: pricePeriod === "MONTH" ? "MONTH" : "TOTAL",
         categoryId: resolvedCategoryId,
         formationId: formation?.id ?? null,
         startDate: new Date(startDate),
@@ -676,11 +696,11 @@ router.post("/sessions", async (req: AuthRequest, res: Response) => {
 router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
   try {
     const {
-      title, description, coverImageUrl, duration, price, categoryId, formationId,
+      title, description, descriptionAr, coverImageUrl, duration, price, pricePeriod, categoryId, formationId,
       startDate, endDate, location, minCapacity, maxCapacity, status,
     } = req.body as {
-      title?: string; description?: string; coverImageUrl?: string; duration?: string;
-      price?: number | null; categoryId?: string; formationId?: string | null; startDate?: string; endDate?: string | null; location?: string;
+      title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; duration?: string;
+      price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; startDate?: string; endDate?: string | null; location?: string;
       minCapacity?: number; maxCapacity?: number; status?: string;
     };
 
@@ -704,14 +724,17 @@ router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
       data: {
         ...(title !== undefined && { title }),
         ...(description !== undefined && { description }),
+        ...(descriptionAr !== undefined && { descriptionAr: descriptionAr || null }),
         ...(coverImageUrl !== undefined && { coverImageUrl }),
         ...(duration !== undefined && { duration }),
         ...(price !== undefined && { price }),
+        ...(pricePeriod !== undefined && { pricePeriod: pricePeriod === "MONTH" ? "MONTH" as const : "TOTAL" as const }),
         ...(formationId !== undefined && { formationId }),
         ...(formation && {
           categoryId: formation.categoryId,
           title: title ?? formation.title,
           description: description !== undefined ? description : formation.description,
+          descriptionAr: descriptionAr !== undefined ? (descriptionAr || null) : formation.descriptionAr,
           coverImageUrl: coverImageUrl !== undefined ? coverImageUrl : formation.coverImageUrl,
           duration: duration !== undefined ? duration : formation.duration,
           price: price !== undefined ? price : formation.price,
@@ -729,6 +752,95 @@ router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
     res.json(session);
   } catch (err) {
     console.error("[admin/sessions patch]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// GET /api/admin/sessions/:id/registrations — inscriptions directes (sans compte) à une session
+router.get("/sessions/:id/registrations", async (req: AuthRequest, res: Response) => {
+  try {
+    const registrations = await prisma.sessionRegistration.findMany({
+      where: { sessionId: req.params["id"] as string },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json(registrations);
+  } catch (err) {
+    console.error("[admin/sessions registrations]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// PATCH /api/admin/sessions/registrations/:id/confirm — valide l'inscription, envoie la confirmation
+router.patch("/sessions/registrations/:id/confirm", async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params["id"] as string;
+    const current = await prisma.sessionRegistration.findUnique({
+      where: { id },
+      include: { session: { include: { _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } } } } },
+    });
+    if (!current) { res.status(404).json({ error: "Inscription introuvable" }); return; }
+
+    // Ne pas dépasser la capacité de la session (inscriptions avec compte + directes confirmées).
+    if (current.status !== "CONFIRMED") {
+      const confirmedDirect = await prisma.sessionRegistration.count({
+        where: { sessionId: current.sessionId, status: "CONFIRMED" },
+      });
+      if (current.session._count.enrollments + confirmedDirect >= current.session.maxCapacity) {
+        res.status(409).json({ error: "Cette session est déjà complète." });
+        return;
+      }
+    }
+
+    const registration = await prisma.sessionRegistration.update({
+      where: { id },
+      data: { status: "CONFIRMED" },
+      include: { session: true },
+    });
+    if (current.status !== "CONFIRMED") {
+      void sendSessionRegistrationConfirmedEmail({
+        to: registration.email,
+        fullName: `${registration.firstName} ${registration.lastName}`,
+        sessionTitle: registration.session.title,
+        startDate: registration.session.startDate,
+        location: registration.session.location,
+      }).catch((err) => console.error("[mail session-registration confirmed]", err));
+    }
+    res.json(registration);
+  } catch (err) {
+    console.error("[admin/sessions registrations confirm]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// PATCH /api/admin/sessions/registrations/:id/reject — refuse l'inscription (avec email courtois)
+router.patch("/sessions/registrations/:id/reject", async (req: AuthRequest, res: Response) => {
+  try {
+    const registration = await prisma.sessionRegistration.update({
+      where: { id: req.params["id"] as string },
+      data: { status: "REJECTED" },
+      include: { session: true },
+    });
+    void sendSessionRegistrationRejectedEmail({
+      to: registration.email,
+      fullName: `${registration.firstName} ${registration.lastName}`,
+      sessionTitle: registration.session.title,
+      startDate: registration.session.startDate,
+      location: registration.session.location,
+    }).catch((err) => console.error("[mail session-registration rejected]", err));
+    res.json(registration);
+  } catch (err) {
+    console.error("[admin/sessions registrations reject]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// DELETE /api/admin/sessions/registrations/:id — retirer une inscription définitivement
+router.delete("/sessions/registrations/:id", async (req: AuthRequest, res: Response) => {
+  try {
+    await prisma.sessionRegistration.delete({ where: { id: req.params["id"] as string } });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[admin/sessions registrations delete]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });

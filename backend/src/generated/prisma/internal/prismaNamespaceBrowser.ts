@@ -62,6 +62,7 @@ export const ModelName = {
   Formation: 'Formation',
   FormationTrainer: 'FormationTrainer',
   TrainingSession: 'TrainingSession',
+  SessionRegistration: 'SessionRegistration',
   SessionMaterial: 'SessionMaterial',
   Enrollment: 'Enrollment',
   EnrollmentEmployee: 'EnrollmentEmployee',
@@ -218,6 +219,7 @@ export const FormationScalarFieldEnum = {
   slug: 'slug',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   duration: 'duration',
   tjm: 'tjm',
   price: 'price',
@@ -246,9 +248,11 @@ export const TrainingSessionScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   coverImageUrl: 'coverImageUrl',
   duration: 'duration',
   price: 'price',
+  pricePeriod: 'pricePeriod',
   categoryId: 'categoryId',
   formationId: 'formationId',
   trainerId: 'trainerId',
@@ -264,6 +268,22 @@ export const TrainingSessionScalarFieldEnum = {
 } as const
 
 export type TrainingSessionScalarFieldEnum = (typeof TrainingSessionScalarFieldEnum)[keyof typeof TrainingSessionScalarFieldEnum]
+
+
+export const SessionRegistrationScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  educationLevel: 'educationLevel',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type SessionRegistrationScalarFieldEnum = (typeof SessionRegistrationScalarFieldEnum)[keyof typeof SessionRegistrationScalarFieldEnum]
 
 
 export const SessionMaterialScalarFieldEnum = {
@@ -575,6 +595,7 @@ export const FormationOrderByRelevanceFieldEnum = {
   slug: 'slug',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   duration: 'duration',
   ficheTechniqueUrl: 'ficheTechniqueUrl',
   coverImageUrl: 'coverImageUrl',
@@ -596,6 +617,7 @@ export const TrainingSessionOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  descriptionAr: 'descriptionAr',
   coverImageUrl: 'coverImageUrl',
   duration: 'duration',
   categoryId: 'categoryId',
@@ -605,6 +627,20 @@ export const TrainingSessionOrderByRelevanceFieldEnum = {
 } as const
 
 export type TrainingSessionOrderByRelevanceFieldEnum = (typeof TrainingSessionOrderByRelevanceFieldEnum)[keyof typeof TrainingSessionOrderByRelevanceFieldEnum]
+
+
+export const SessionRegistrationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  educationLevel: 'educationLevel'
+} as const
+
+export type SessionRegistrationOrderByRelevanceFieldEnum = (typeof SessionRegistrationOrderByRelevanceFieldEnum)[keyof typeof SessionRegistrationOrderByRelevanceFieldEnum]
 
 
 export const SessionMaterialOrderByRelevanceFieldEnum = {

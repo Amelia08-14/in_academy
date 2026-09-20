@@ -9,7 +9,7 @@
 * 🟢 You can import this file directly.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TrainerApplicationStatus = exports.EventRegistrantType = exports.EventRegistrationStatus = exports.DocumentType = exports.ContactStatut = exports.SessionStatus = exports.QuoteStatus = exports.EnrollmentType = exports.EnrollmentStatus = exports.Role = void 0;
+exports.TrainerApplicationStatus = exports.EventRegistrantType = exports.EventRegistrationStatus = exports.DocumentType = exports.SessionRegistrationStatus = exports.PricePeriod = exports.ContactStatut = exports.SessionStatus = exports.QuoteStatus = exports.EnrollmentType = exports.EnrollmentStatus = exports.Role = void 0;
 exports.Role = {
     SUPER_ADMIN: 'SUPER_ADMIN',
     ADMIN: 'ADMIN',
@@ -48,6 +48,15 @@ exports.ContactStatut = {
     SALARIE: 'SALARIE',
     ETUDIANT: 'ETUDIANT',
     AUTRE: 'AUTRE'
+};
+exports.PricePeriod = {
+    TOTAL: 'TOTAL',
+    MONTH: 'MONTH'
+};
+exports.SessionRegistrationStatus = {
+    PENDING: 'PENDING',
+    CONFIRMED: 'CONFIRMED',
+    REJECTED: 'REJECTED'
 };
 exports.DocumentType = {
     RECU: 'RECU',

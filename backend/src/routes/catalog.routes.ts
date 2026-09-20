@@ -1,8 +1,8 @@
 import { Router, Response } from "express";
 import { prisma } from "@/lib/db";
 import { AuthRequest, optionalAuthenticate } from "@/middlewares/auth.middleware";
-import { eventRegistrationSchema, eventRegistrationExtraSchema } from "@/validations/content.schema";
-import { sendEventRegistrationPendingEmail, sendAdminNotificationEmail } from "@/lib/mail";
+import { eventRegistrationSchema, eventRegistrationExtraSchema, sessionRegistrationSchema } from "@/validations/content.schema";
+import { sendEventRegistrationPendingEmail, sendSessionRegistrationPendingEmail, sendAdminNotificationEmail } from "@/lib/mail";
 
 // Inscriptions qui occupent réellement une place — un refus libère le quota.
 type EventRegistrationStatusValue = "PENDING" | "CONFIRMED" | "REJECTED";
@@ -243,15 +243,20 @@ router.get("/sessions", async (req: AuthRequest, res: Response) => {
       include: {
         category: true,
         formation: true,
-        // Une place est "réservée" dès qu'une inscription est en attente ou confirmée.
-        _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+        // Places prises : inscriptions avec compte confirmées + inscriptions directes confirmées.
+        _count: {
+          select: {
+            enrollments: { where: { status: "CONFIRMED" } },
+            registrations: { where: { status: "CONFIRMED" } },
+          },
+        },
       },
     });
 
     // "Complet" = toutes les places réservées. "En cours" = places encore disponibles.
     // L'ouverture ne dépend PAS de la date de début (une session du jour reste ouverte).
     const withState = sessions.map((s) => {
-      const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments);
+      const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments - s._count.registrations);
       const isFull = spotsLeft <= 0;
       const isOpen =
         OPEN_SESSION_STATUS.includes(s.status as (typeof OPEN_SESSION_STATUS)[number]) && !isFull;
@@ -274,7 +279,12 @@ router.get("/sessions/:id", async (req: AuthRequest, res: Response) => {
       include: {
         category: true,
         formation: true,
-        _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
+        _count: {
+          select: {
+            enrollments: { where: { status: "CONFIRMED" } },
+            registrations: { where: { status: "CONFIRMED" } },
+          },
+        },
       },
     });
 
@@ -283,7 +293,7 @@ router.get("/sessions/:id", async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments);
+    const spotsLeft = Math.max(0, s.maxCapacity - s._count.enrollments - s._count.registrations);
     const isFull = spotsLeft <= 0;
     const isOpen =
       OPEN_SESSION_STATUS.includes(s.status as (typeof OPEN_SESSION_STATUS)[number]) && !isFull;
@@ -291,6 +301,76 @@ router.get("/sessions/:id", async (req: AuthRequest, res: Response) => {
     res.json({ ...s, spotsLeft, isFull, isOpen });
   } catch (err) {
     console.error("[sessions/:id]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+// POST /api/sessions/:id/register — inscription directe à une session (landing page métier),
+// sans compte requis : nom, prénom, email, téléphone, niveau d'étude. Statut PENDING,
+// validée ensuite par un admin. Un visiteur connecté garde le lien avec son compte.
+router.post("/sessions/:id/register", optionalAuthenticate, async (req: AuthRequest, res: Response) => {
+  const parsed = sessionRegistrationSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ errors: parsed.error.flatten().fieldErrors });
+    return;
+  }
+  try {
+    const sessionId = req.params["id"] as string;
+    const session = await prisma.trainingSession.findUnique({
+      where: { id: sessionId },
+      include: {
+        _count: {
+          select: {
+            enrollments: { where: { status: "CONFIRMED" } },
+            registrations: { where: { status: "CONFIRMED" } },
+          },
+        },
+      },
+    });
+    if (!session) {
+      res.status(404).json({ error: "Session introuvable" });
+      return;
+    }
+    if (!OPEN_SESSION_STATUS.includes(session.status as (typeof OPEN_SESSION_STATUS)[number])) {
+      res.status(409).json({ error: "Cette session n'est plus ouverte aux inscriptions." });
+      return;
+    }
+    if (session._count.enrollments + session._count.registrations >= session.maxCapacity) {
+      res.status(409).json({ error: "Cette session est complète." });
+      return;
+    }
+
+    const { firstName, lastName, email, phone, educationLevel } = parsed.data;
+    const existing = await prisma.sessionRegistration.findUnique({
+      where: { sessionId_email: { sessionId, email } },
+    });
+    if (existing) {
+      res.status(409).json({ error: "Une demande d'inscription existe déjà avec cet email pour cette session." });
+      return;
+    }
+
+    const registration = await prisma.sessionRegistration.create({
+      data: { sessionId, userId: req.user?.userId ?? null, firstName, lastName, email, phone, educationLevel },
+    });
+
+    void sendSessionRegistrationPendingEmail({
+      to: registration.email,
+      fullName: `${registration.firstName} ${registration.lastName}`,
+      sessionTitle: session.title,
+      startDate: session.startDate,
+      location: session.location,
+    }).catch((err) => console.error("[mail session-registration pending]", err));
+
+    void sendAdminNotificationEmail(`Nouvelle inscription — ${session.title}`, [
+      `${registration.firstName} ${registration.lastName} (${registration.email}) souhaite s'inscrire à "${session.title}".`,
+      `Téléphone : ${registration.phone}`,
+      `Niveau d'étude : ${registration.educationLevel}`,
+      "Validez ou refusez l'inscription depuis le back-office → Sessions → Inscrits.",
+    ]).catch((err) => console.error("[mail admin session-registration]", err));
+
+    res.status(201).json({ id: registration.id, status: registration.status });
+  } catch (err) {
+    console.error("[sessions register]", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });

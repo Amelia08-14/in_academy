@@ -13,6 +13,7 @@ interface Formation {
   title: string;
   slug: string;
   description: string | null;
+  descriptionAr: string | null;
   duration: string | null;
   tjm: number | null;
   price: number | null;
@@ -30,6 +31,7 @@ interface EditState {
   id: string | null;
   title: string;
   description: string;
+  descriptionAr: string;
   categoryId: string;
   ficheTechniqueUrl: string | null;
   coverImageUrl: string | null;
@@ -44,6 +46,7 @@ const EMPTY: EditState = {
   id: null,
   title: "",
   description: "",
+  descriptionAr: "",
   categoryId: "",
   ficheTechniqueUrl: null,
   coverImageUrl: null,
@@ -95,6 +98,7 @@ export default function AdminFormationsPage() {
       id: f.id,
       title: f.title,
       description: f.description ?? "",
+      descriptionAr: f.descriptionAr ?? "",
       categoryId: f.categoryId,
       ficheTechniqueUrl: f.ficheTechniqueUrl,
       coverImageUrl: f.coverImageUrl,
@@ -118,6 +122,7 @@ export default function AdminFormationsPage() {
           ficheTechniqueUrl: editing.ficheTechniqueUrl,
           coverImageUrl: editing.coverImageUrl,
           description: editing.description || null,
+          descriptionAr: editing.descriptionAr || null,
           tjm: editing.tjm,
           price: editing.price,
           duration: editing.duration,
@@ -128,6 +133,7 @@ export default function AdminFormationsPage() {
           title: editing.title,
           categoryId: editing.categoryId,
           description: editing.description || undefined,
+          descriptionAr: editing.descriptionAr || undefined,
           duration: editing.duration || undefined,
           tjm: editing.tjm ?? undefined,
           price: editing.price ?? undefined,
@@ -277,12 +283,22 @@ export default function AdminFormationsPage() {
               )}
 
               <div className="auth-field">
-                <label className="auth-label">Description</label>
+                <label className="auth-label">Description (français)</label>
                 <textarea
                   className="auth-input" rows={4}
                   value={editing.description}
                   onChange={(e) => setEditing((v) => v ? { ...v, description: e.target.value } : v)}
                   placeholder="Objectifs, contenu, public visé…"
+                />
+              </div>
+              <div className="auth-field">
+                <label className="auth-label">الوصف بالعربية (description arabe — affichée automatiquement en RTL)</label>
+                <textarea
+                  className="auth-input" rows={4} dir="rtl" lang="ar"
+                  style={{ fontFamily: "var(--font-arabic), var(--font-body)", textAlign: "right" }}
+                  value={editing.descriptionAr}
+                  onChange={(e) => setEditing((v) => v ? { ...v, descriptionAr: e.target.value } : v)}
+                  placeholder="اكتب الوصف بالعربية هنا…"
                 />
               </div>
 

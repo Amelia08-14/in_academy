@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.documentSchema = exports.trainerApplicationSchema = exports.eventRegistrationExtraSchema = exports.eventRegistrationSchema = exports.eventSchema = exports.partnerSchema = void 0;
+exports.documentSchema = exports.trainerApplicationSchema = exports.sessionRegistrationSchema = exports.eventRegistrationExtraSchema = exports.eventRegistrationSchema = exports.eventSchema = exports.partnerSchema = void 0;
 const zod_1 = require("zod");
 // ─── Partenaires / avantages (tâche 3) ───────────────────────────────────────
 exports.partnerSchema = zod_1.z.object({
@@ -53,6 +53,14 @@ exports.eventRegistrationExtraSchema = zod_1.z
     .refine((d) => d.registrantType !== "COMPANY" || Boolean(d.companyName?.trim()), {
     message: "Nom de l'entreprise requis",
     path: ["companyName"],
+});
+// ─── Inscription directe à une session métier (sans compte) ──────────────────
+exports.sessionRegistrationSchema = zod_1.z.object({
+    lastName: zod_1.z.string().min(2, "Nom requis").trim(),
+    firstName: zod_1.z.string().min(2, "Prénom requis").trim(),
+    email: zod_1.z.string().email("Email invalide").trim().toLowerCase(),
+    phone: zod_1.z.string().min(6, "Téléphone requis").trim(),
+    educationLevel: zod_1.z.string().min(1, "Niveau d'étude requis").trim(),
 });
 // ─── Candidature « Devenir collaborateur » (tâche 8) ─────────────────────────
 exports.trainerApplicationSchema = zod_1.z.object({
