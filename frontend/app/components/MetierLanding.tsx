@@ -221,6 +221,19 @@ export default function MetierLanding({ session: initial }: { session: PublicSes
       <section className="metier-body">
         <div className="container metier-body__layout">
           <article className="metier-body__content">
+            {session.posterImageUrl && (
+              <a
+                href={fileUrl(session.posterImageUrl)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="metier-poster"
+                aria-label="Voir l'affiche en grand"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={fileUrl(session.posterImageUrl)} alt={`Affiche — ${session.title}`} loading="lazy" />
+              </a>
+            )}
+
             {descFr && descAr && (
               <div className="metier-lang" role="tablist" aria-label="Langue de la description">
                 <button type="button" role="tab" aria-selected={lang === "fr"}

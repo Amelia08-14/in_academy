@@ -44,6 +44,7 @@ export type TrainingSessionMinAggregateOutputType = {
   description: string | null
   descriptionAr: string | null
   coverImageUrl: string | null
+  posterImageUrl: string | null
   duration: string | null
   price: number | null
   pricePeriod: $Enums.PricePeriod | null
@@ -67,6 +68,7 @@ export type TrainingSessionMaxAggregateOutputType = {
   description: string | null
   descriptionAr: string | null
   coverImageUrl: string | null
+  posterImageUrl: string | null
   duration: string | null
   price: number | null
   pricePeriod: $Enums.PricePeriod | null
@@ -90,6 +92,7 @@ export type TrainingSessionCountAggregateOutputType = {
   description: number
   descriptionAr: number
   coverImageUrl: number
+  posterImageUrl: number
   duration: number
   price: number
   pricePeriod: number
@@ -127,6 +130,7 @@ export type TrainingSessionMinAggregateInputType = {
   description?: true
   descriptionAr?: true
   coverImageUrl?: true
+  posterImageUrl?: true
   duration?: true
   price?: true
   pricePeriod?: true
@@ -150,6 +154,7 @@ export type TrainingSessionMaxAggregateInputType = {
   description?: true
   descriptionAr?: true
   coverImageUrl?: true
+  posterImageUrl?: true
   duration?: true
   price?: true
   pricePeriod?: true
@@ -173,6 +178,7 @@ export type TrainingSessionCountAggregateInputType = {
   description?: true
   descriptionAr?: true
   coverImageUrl?: true
+  posterImageUrl?: true
   duration?: true
   price?: true
   pricePeriod?: true
@@ -283,6 +289,7 @@ export type TrainingSessionGroupByOutputType = {
   description: string | null
   descriptionAr: string | null
   coverImageUrl: string | null
+  posterImageUrl: string | null
   duration: string | null
   price: number | null
   pricePeriod: $Enums.PricePeriod
@@ -329,6 +336,7 @@ export type TrainingSessionWhereInput = {
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   descriptionAr?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  posterImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
   pricePeriod?: Prisma.EnumPricePeriodFilter<"TrainingSession"> | $Enums.PricePeriod
@@ -358,6 +366,7 @@ export type TrainingSessionOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   descriptionAr?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  posterImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   pricePeriod?: Prisma.SortOrder
@@ -391,6 +400,7 @@ export type TrainingSessionWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   descriptionAr?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  posterImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
   pricePeriod?: Prisma.EnumPricePeriodFilter<"TrainingSession"> | $Enums.PricePeriod
@@ -420,6 +430,7 @@ export type TrainingSessionOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   descriptionAr?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  posterImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
   pricePeriod?: Prisma.SortOrder
@@ -451,6 +462,7 @@ export type TrainingSessionScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   descriptionAr?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
+  posterImageUrl?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableWithAggregatesFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableWithAggregatesFilter<"TrainingSession"> | number | null
   pricePeriod?: Prisma.EnumPricePeriodWithAggregatesFilter<"TrainingSession"> | $Enums.PricePeriod
@@ -474,6 +486,7 @@ export type TrainingSessionCreateInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -500,6 +513,7 @@ export type TrainingSessionUncheckedCreateInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -526,6 +540,7 @@ export type TrainingSessionUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -552,6 +567,7 @@ export type TrainingSessionUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -578,6 +594,7 @@ export type TrainingSessionCreateManyInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -601,6 +618,7 @@ export type TrainingSessionUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -621,6 +639,7 @@ export type TrainingSessionUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -660,6 +679,7 @@ export type TrainingSessionCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   descriptionAr?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
+  posterImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   price?: Prisma.SortOrder
   pricePeriod?: Prisma.SortOrder
@@ -689,6 +709,7 @@ export type TrainingSessionMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   descriptionAr?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
+  posterImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   price?: Prisma.SortOrder
   pricePeriod?: Prisma.SortOrder
@@ -712,6 +733,7 @@ export type TrainingSessionMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   descriptionAr?: Prisma.SortOrder
   coverImageUrl?: Prisma.SortOrder
+  posterImageUrl?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   price?: Prisma.SortOrder
   pricePeriod?: Prisma.SortOrder
@@ -941,6 +963,7 @@ export type TrainingSessionCreateWithoutTrainerInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -966,6 +989,7 @@ export type TrainingSessionUncheckedCreateWithoutTrainerInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1020,6 +1044,7 @@ export type TrainingSessionScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   descriptionAr?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   coverImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
+  posterImageUrl?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   duration?: Prisma.StringNullableFilter<"TrainingSession"> | string | null
   price?: Prisma.IntNullableFilter<"TrainingSession"> | number | null
   pricePeriod?: Prisma.EnumPricePeriodFilter<"TrainingSession"> | $Enums.PricePeriod
@@ -1043,6 +1068,7 @@ export type TrainingSessionCreateWithoutCategoryInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1068,6 +1094,7 @@ export type TrainingSessionUncheckedCreateWithoutCategoryInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1119,6 +1146,7 @@ export type TrainingSessionCreateWithoutFormationInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1144,6 +1172,7 @@ export type TrainingSessionUncheckedCreateWithoutFormationInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1195,6 +1224,7 @@ export type TrainingSessionCreateWithoutRegistrationsInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1220,6 +1250,7 @@ export type TrainingSessionUncheckedCreateWithoutRegistrationsInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1261,6 +1292,7 @@ export type TrainingSessionUpdateWithoutRegistrationsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1286,6 +1318,7 @@ export type TrainingSessionUncheckedUpdateWithoutRegistrationsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1311,6 +1344,7 @@ export type TrainingSessionCreateWithoutMaterialsInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1336,6 +1370,7 @@ export type TrainingSessionUncheckedCreateWithoutMaterialsInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1377,6 +1412,7 @@ export type TrainingSessionUpdateWithoutMaterialsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1402,6 +1438,7 @@ export type TrainingSessionUncheckedUpdateWithoutMaterialsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1427,6 +1464,7 @@ export type TrainingSessionCreateWithoutEnrollmentsInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1452,6 +1490,7 @@ export type TrainingSessionUncheckedCreateWithoutEnrollmentsInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1493,6 +1532,7 @@ export type TrainingSessionUpdateWithoutEnrollmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1518,6 +1558,7 @@ export type TrainingSessionUncheckedUpdateWithoutEnrollmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1543,6 +1584,7 @@ export type TrainingSessionCreateManyTrainerInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1565,6 +1607,7 @@ export type TrainingSessionUpdateWithoutTrainerInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1590,6 +1633,7 @@ export type TrainingSessionUncheckedUpdateWithoutTrainerInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1615,6 +1659,7 @@ export type TrainingSessionUncheckedUpdateManyWithoutTrainerInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1637,6 +1682,7 @@ export type TrainingSessionCreateManyCategoryInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1659,6 +1705,7 @@ export type TrainingSessionUpdateWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1684,6 +1731,7 @@ export type TrainingSessionUncheckedUpdateWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1709,6 +1757,7 @@ export type TrainingSessionUncheckedUpdateManyWithoutCategoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1731,6 +1780,7 @@ export type TrainingSessionCreateManyFormationInput = {
   description?: string | null
   descriptionAr?: string | null
   coverImageUrl?: string | null
+  posterImageUrl?: string | null
   duration?: string | null
   price?: number | null
   pricePeriod?: $Enums.PricePeriod
@@ -1753,6 +1803,7 @@ export type TrainingSessionUpdateWithoutFormationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1778,6 +1829,7 @@ export type TrainingSessionUncheckedUpdateWithoutFormationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1803,6 +1855,7 @@ export type TrainingSessionUncheckedUpdateManyWithoutFormationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posterImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricePeriod?: Prisma.EnumPricePeriodFieldUpdateOperationsInput | $Enums.PricePeriod
@@ -1874,6 +1927,7 @@ export type TrainingSessionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   description?: boolean
   descriptionAr?: boolean
   coverImageUrl?: boolean
+  posterImageUrl?: boolean
   duration?: boolean
   price?: boolean
   pricePeriod?: boolean
@@ -1906,6 +1960,7 @@ export type TrainingSessionSelectScalar = {
   description?: boolean
   descriptionAr?: boolean
   coverImageUrl?: boolean
+  posterImageUrl?: boolean
   duration?: boolean
   price?: boolean
   pricePeriod?: boolean
@@ -1923,7 +1978,7 @@ export type TrainingSessionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TrainingSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "descriptionAr" | "coverImageUrl" | "duration" | "price" | "pricePeriod" | "categoryId" | "formationId" | "trainerId" | "startDate" | "endDate" | "location" | "minCapacity" | "maxCapacity" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["trainingSession"]>
+export type TrainingSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "descriptionAr" | "coverImageUrl" | "posterImageUrl" | "duration" | "price" | "pricePeriod" | "categoryId" | "formationId" | "trainerId" | "startDate" | "endDate" | "location" | "minCapacity" | "maxCapacity" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["trainingSession"]>
 export type TrainingSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   formation?: boolean | Prisma.TrainingSession$formationArgs<ExtArgs>
@@ -1950,6 +2005,7 @@ export type $TrainingSessionPayload<ExtArgs extends runtime.Types.Extensions.Int
     description: string | null
     descriptionAr: string | null
     coverImageUrl: string | null
+    posterImageUrl: string | null
     duration: string | null
     price: number | null
     pricePeriod: $Enums.PricePeriod
@@ -2345,6 +2401,7 @@ export interface TrainingSessionFieldRefs {
   readonly description: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly descriptionAr: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly coverImageUrl: Prisma.FieldRef<"TrainingSession", 'String'>
+  readonly posterImageUrl: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly duration: Prisma.FieldRef<"TrainingSession", 'String'>
   readonly price: Prisma.FieldRef<"TrainingSession", 'Int'>
   readonly pricePeriod: Prisma.FieldRef<"TrainingSession", 'PricePeriod'>

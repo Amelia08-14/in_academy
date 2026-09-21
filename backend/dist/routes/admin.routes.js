@@ -598,7 +598,7 @@ router.get("/sessions", async (_req, res) => {
 // POST /api/admin/sessions
 router.post("/sessions", async (req, res) => {
     try {
-        const { title, description, descriptionAr, coverImageUrl, duration, price, pricePeriod, categoryId, formationId, startDate, endDate, location, minCapacity, maxCapacity, } = req.body;
+        const { title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId, startDate, endDate, location, minCapacity, maxCapacity, } = req.body;
         if (!startDate || (!categoryId && !formationId)) {
             res.status(400).json({ error: "startDate et formation ou branche sont requis" });
             return;
@@ -622,6 +622,7 @@ router.post("/sessions", async (req, res) => {
                 description: description ?? formation?.description ?? null,
                 descriptionAr: descriptionAr || formation?.descriptionAr || null,
                 coverImageUrl: coverImageUrl ?? formation?.coverImageUrl ?? null,
+                posterImageUrl: posterImageUrl || null,
                 duration: duration ?? formation?.duration ?? null,
                 price: price ?? formation?.price ?? null,
                 pricePeriod: pricePeriod === "MONTH" ? "MONTH" : "TOTAL",
@@ -645,7 +646,7 @@ router.post("/sessions", async (req, res) => {
 // PATCH /api/admin/sessions/:id
 router.patch("/sessions/:id", async (req, res) => {
     try {
-        const { title, description, descriptionAr, coverImageUrl, duration, price, pricePeriod, categoryId, formationId, startDate, endDate, location, minCapacity, maxCapacity, status, } = req.body;
+        const { title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId, startDate, endDate, location, minCapacity, maxCapacity, status, } = req.body;
         const validStatus = ["SCHEDULED", "ONGOING", "COMPLETED", "CANCELLED"];
         if (status !== undefined && !validStatus.includes(status)) {
             res.status(400).json({ error: "Statut invalide" });
@@ -665,6 +666,7 @@ router.patch("/sessions/:id", async (req, res) => {
                 ...(description !== undefined && { description }),
                 ...(descriptionAr !== undefined && { descriptionAr: descriptionAr || null }),
                 ...(coverImageUrl !== undefined && { coverImageUrl }),
+                ...(posterImageUrl !== undefined && { posterImageUrl: posterImageUrl || null }),
                 ...(duration !== undefined && { duration }),
                 ...(price !== undefined && { price }),
                 ...(pricePeriod !== undefined && { pricePeriod: pricePeriod === "MONTH" ? "MONTH" : "TOTAL" }),

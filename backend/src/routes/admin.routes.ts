@@ -636,10 +636,10 @@ router.get("/sessions", async (_req: AuthRequest, res: Response) => {
 router.post("/sessions", async (req: AuthRequest, res: Response) => {
   try {
     const {
-      title, description, descriptionAr, coverImageUrl, duration, price, pricePeriod, categoryId, formationId,
+      title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId,
       startDate, endDate, location, minCapacity, maxCapacity,
     } = req.body as {
-      title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; duration?: string;
+      title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; posterImageUrl?: string | null; duration?: string;
       price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; startDate: string; endDate?: string; location?: string;
       minCapacity?: number; maxCapacity?: number;
     };
@@ -672,6 +672,7 @@ router.post("/sessions", async (req: AuthRequest, res: Response) => {
         description: description ?? formation?.description ?? null,
         descriptionAr: descriptionAr || formation?.descriptionAr || null,
         coverImageUrl: coverImageUrl ?? formation?.coverImageUrl ?? null,
+        posterImageUrl: posterImageUrl || null,
         duration: duration ?? formation?.duration ?? null,
         price: price ?? formation?.price ?? null,
         pricePeriod: pricePeriod === "MONTH" ? "MONTH" : "TOTAL",
@@ -696,10 +697,10 @@ router.post("/sessions", async (req: AuthRequest, res: Response) => {
 router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
   try {
     const {
-      title, description, descriptionAr, coverImageUrl, duration, price, pricePeriod, categoryId, formationId,
+      title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId,
       startDate, endDate, location, minCapacity, maxCapacity, status,
     } = req.body as {
-      title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; duration?: string;
+      title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; posterImageUrl?: string | null; duration?: string;
       price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; startDate?: string; endDate?: string | null; location?: string;
       minCapacity?: number; maxCapacity?: number; status?: string;
     };
@@ -726,6 +727,7 @@ router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
         ...(description !== undefined && { description }),
         ...(descriptionAr !== undefined && { descriptionAr: descriptionAr || null }),
         ...(coverImageUrl !== undefined && { coverImageUrl }),
+        ...(posterImageUrl !== undefined && { posterImageUrl: posterImageUrl || null }),
         ...(duration !== undefined && { duration }),
         ...(price !== undefined && { price }),
         ...(pricePeriod !== undefined && { pricePeriod: pricePeriod === "MONTH" ? "MONTH" as const : "TOTAL" as const }),

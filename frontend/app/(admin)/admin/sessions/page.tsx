@@ -14,6 +14,7 @@ interface Session {
   description: string | null;
   descriptionAr: string | null;
   coverImageUrl: string | null;
+  posterImageUrl: string | null;
   duration: string | null;
   price: number | null;
   pricePeriod: "TOTAL" | "MONTH";
@@ -50,6 +51,7 @@ interface EditState {
   description: string;
   descriptionAr: string;
   coverImageUrl: string | null;
+  posterImageUrl: string | null;
   duration: string;
   price: number | null;
   pricePeriod: "TOTAL" | "MONTH";
@@ -69,6 +71,7 @@ const EMPTY: EditState = {
   description: "",
   descriptionAr: "",
   coverImageUrl: null,
+  posterImageUrl: null,
   duration: "",
   price: null,
   pricePeriod: "TOTAL",
@@ -340,6 +343,7 @@ export default function AdminSessionsPage() {
       description: s.description ?? "",
       descriptionAr: s.descriptionAr ?? "",
       coverImageUrl: s.coverImageUrl,
+      posterImageUrl: s.posterImageUrl,
       duration: s.duration ?? "",
       price: s.price,
       pricePeriod: s.pricePeriod ?? "TOTAL",
@@ -366,6 +370,7 @@ export default function AdminSessionsPage() {
         description: editing.description || null,
         descriptionAr: editing.descriptionAr || null,
         coverImageUrl: editing.coverImageUrl,
+        posterImageUrl: editing.posterImageUrl,
         duration: editing.duration || null,
         price: editing.price,
         pricePeriod: editing.pricePeriod,
@@ -599,6 +604,27 @@ export default function AdminSessionsPage() {
                 onUploaded={(url) => setEditing((v) => v ? { ...v, coverImageUrl: url } : v)}
                 tokenStorageKey="admin_token"
               />
+
+              {tab === "metier" && (
+                <>
+                  <FileUpload
+                    label="Affiche (format réseaux sociaux)"
+                    accept="image/*"
+                    currentUrl={editing.posterImageUrl}
+                    hint="Optionnelle — affichée sur la page de la formation, en plus de la couverture. Sans affiche, la page reste inchangée."
+                    onUploaded={(url) => setEditing((v) => v ? { ...v, posterImageUrl: url } : v)}
+                    tokenStorageKey="admin_token"
+                  />
+                  {editing.posterImageUrl && (
+                    <button
+                      type="button" className="admin-btn admin-btn--cancel" style={{ alignSelf: "flex-start" }}
+                      onClick={() => setEditing((v) => v ? { ...v, posterImageUrl: null } : v)}
+                    >
+                      Retirer l&apos;affiche
+                    </button>
+                  )}
+                </>
+              )}
 
               <div className="auth-row">
                 <div className="auth-field">

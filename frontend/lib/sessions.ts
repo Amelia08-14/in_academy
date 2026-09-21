@@ -7,6 +7,7 @@ export interface PublicSession {
   description: string | null;
   descriptionAr: string | null;
   coverImageUrl: string | null;
+  posterImageUrl: string | null;
   duration: string | null;
   price: number | null;
   pricePeriod: PricePeriod;

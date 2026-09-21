@@ -7973,3 +7973,20 @@ button {
     background: linear-gradient(0deg, rgba(6, 15, 30, 0.94) 0%, rgba(6, 15, 30, 0.72) 100%);
   }
 }
+
+/* Affiche (format réseaux sociaux) affichée en tête de la landing métier — hauteur libre, jamais rognée. */
+.metier-poster {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 0 36px;
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--navy-deeper);
+  box-shadow: 0 8px 32px rgba(10, 26, 48, 0.16);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.metier-poster:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(10, 26, 48, 0.22); }
+.metier-poster img { display: block; width: 100%; height: auto; }
+@media (max-width: 900px) { .metier-poster { max-width: 100%; } }

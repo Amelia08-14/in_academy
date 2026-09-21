@@ -259,6 +259,7 @@ model TrainingSession {
   description   String?        @db.Text
   descriptionAr String?        @db.Text // description en arabe (affichée en RTL)
   coverImageUrl String?
+  posterImageUrl String?       // affiche format réseaux sociaux (landing métier), en plus de la couverture
   duration      String?
   price         Int?
   pricePeriod   PricePeriod    @default(TOTAL)
