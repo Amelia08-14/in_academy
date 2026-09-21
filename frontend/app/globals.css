@@ -558,6 +558,30 @@ button {
   max-width: 620px;
 }
 
+/* Slide 1 — texte à gauche, vidéo à droite (fond blanc de la vidéo fondu dans le beige) */
+.hero-slide__inner--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 40px;
+  /* Fond opaque requis : mix-blend-mode ne mélange qu'à l'intérieur du contexte d'empilement. */
+  background: var(--beige-light);
+}
+
+.hero-slide__media {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-slide__video {
+  display: block;
+  width: min(100%, 640px, max(320px, calc(92vh - 200px)));
+  aspect-ratio: 1;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
 .hero-slide__eyebrow {
   display: inline-flex;
   align-items: center;
@@ -755,6 +779,19 @@ button {
 
   .hero-slide__text {
     max-width: 100%;
+  }
+
+  .hero-slide__inner--split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .hero-slide__media {
+    justify-content: center;
+  }
+
+  .hero-slide__video {
+    width: min(100%, 520px);
   }
 
   .hero-slide__features {

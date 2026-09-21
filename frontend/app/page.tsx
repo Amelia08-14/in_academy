@@ -209,9 +209,10 @@ function HeroSlider() {
 
   useEffect(() => {
     if (total === 1) { setSlide(0); return; }
-    const t = setInterval(() => setSlide((s) => (s + 1) % total), 8000);
-    return () => clearInterval(t);
-  }, [total]);
+    // Le slide vidéo dure 8 s : on lui laisse le temps de charger et de finir avant de tourner.
+    const t = setTimeout(() => setSlide((s) => (s + 1) % total), slide === 0 ? 11000 : 8000);
+    return () => clearTimeout(t);
+  }, [total, slide]);
 
   return (
     <section className="hero-slider" id="accueil">
@@ -225,12 +226,7 @@ function HeroSlider() {
             exit={{ opacity: 0, x: -24 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="hero-slide__bg">
-              <Image src="/banner.png" alt="" fill sizes="100vw" quality={95} style={{ objectFit: "cover", objectPosition: "75% center" }} priority />
-              <div className="hero-slide__bg-scrim" />
-            </div>
-
-            <div className="hero-slide__inner">
+            <div className="hero-slide__inner hero-slide__inner--split">
               <div className="hero-slide__text">
                 <h1 className="hero-slide__title">
                   Là où on croit <span className="hero-slide__title-accent">au</span> potentiel de chacun
@@ -272,6 +268,19 @@ function HeroSlider() {
                     Accompagnement personnalisé
                   </span>
                 </div>
+              </div>
+
+              {/* Lecture unique : l'animation se termine sur le réseau complet et reste figée. */}
+              <div className="hero-slide__media" aria-hidden="true">
+                <video
+                  className="hero-slide__video"
+                  src="/videos/hero_in_academy.mp4"
+                  autoPlay
+                  muted
+                  playsInline
+                  preload="auto"
+                  tabIndex={-1}
+                />
               </div>
             </div>
           </motion.div>
