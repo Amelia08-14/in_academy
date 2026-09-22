@@ -27,6 +27,14 @@ export default function ConfidentialitePage() {
           <h2>Conservation</h2>
           <p>Les données sont conservées le temps nécessaire à la gestion de votre relation avec IN ACADEMY.</p>
 
+          <h2>Cookies et traceurs</h2>
+          <p>
+            Avec votre consentement, nous utilisons le pixel Meta (Facebook) pour mesurer l&apos;audience du site et
+            la performance de nos campagnes. Ce traceur ne se dépose qu&apos;après acceptation via le bandeau affiché
+            lors de votre première visite ; vous pouvez à tout moment revenir sur votre choix en effaçant les données
+            de navigation de ce site dans votre navigateur.
+          </p>
+
           <h2>Vos droits</h2>
           <p>
             Vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour l&apos;exercer,
