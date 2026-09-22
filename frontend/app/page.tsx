@@ -203,174 +203,73 @@ function BranchesFan({ branches }: { branches: BranchItem[] }) {
 
 function HeroSlider() {
   const { isAuthenticated, homeRoute, roleLabel } = useAuth();
-  const [slide, setSlide] = useState(0);
-  // Slide 2 = choix d'inscription (Particulier / Entreprise) : inutile si connecté.
-  const total = isAuthenticated ? 1 : 2;
-
-  useEffect(() => {
-    if (total === 1) { setSlide(0); return; }
-    // Le slide vidéo dure 8 s : on lui laisse le temps de charger et de finir avant de tourner.
-    const t = setTimeout(() => setSlide((s) => (s + 1) % total), slide === 0 ? 11000 : 8000);
-    return () => clearTimeout(t);
-  }, [total, slide]);
 
   return (
     <section className="hero-slider" id="accueil">
-      <AnimatePresence mode="wait">
-        {slide === 0 ? (
-          <motion.div
-            key="slide-excellence"
-            className="hero-slide"
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -24 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="hero-slide__inner hero-slide__inner--split">
-              <div className="hero-slide__text">
-                <h1 className="hero-slide__title">
-                  Là où on croit <span className="hero-slide__title-accent">au</span> potentiel de chacun
-                </h1>
+      <motion.div
+        className="hero-slide"
+        initial={{ opacity: 0, x: 24 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="hero-slide__inner hero-slide__inner--split">
+          <div className="hero-slide__text">
+            <h1 className="hero-slide__title">
+              Là où on croit <span className="hero-slide__title-accent">au</span> potentiel de chacun
+            </h1>
 
-                <p className="hero-slide__subtitle">
-                  Centre de formation professionnelle certifiante dédié à l&apos;excellence.
-                  Nous formons les leaders de demain à travers des programmes
-                  rigoureux et adaptés aux exigences du marché.
-                </p>
+            <p className="hero-slide__subtitle">
+              Centre de formation professionnelle certifiante dédié à l&apos;excellence.
+              Nous formons les leaders de demain à travers des programmes
+              rigoureux et adaptés aux exigences du marché.
+            </p>
 
-                <div className="hero-slide__actions">
-                  <Link href="/branches" className="btn btn--primary">
-                    Découvrir les formations
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                  {!isAuthenticated && (
-                    <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
-                  )}
-                  {isAuthenticated && (
-                    <Link href={homeRoute} className="btn btn--outline">{roleLabel}</Link>
-                  )}
-                </div>
-
-                <div className="hero-slide__features">
-                  <span className="hero-slide__feature">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 21h18M6 21V7a1 1 0 0 1 1-1h4v15M13 21V3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v18" />
-                    </svg>
-                    Programmes de formation ciblés
-                  </span>
-                  <span className="hero-slide__feature-sep" aria-hidden="true" />
-                  <span className="hero-slide__feature">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    Accompagnement personnalisé
-                  </span>
-                </div>
-              </div>
-
-              {/* Lecture unique : l'animation se termine sur le réseau complet et reste figée. */}
-              <div className="hero-slide__media" aria-hidden="true">
-                <video
-                  className="hero-slide__video"
-                  src="/videos/hero_in_academy.mp4"
-                  autoPlay
-                  muted
-                  playsInline
-                  preload="auto"
-                  tabIndex={-1}
-                />
-              </div>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="slide-choice"
-            className="hero-slide"
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -24 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="hero-slide__bg">
-              <Image src="/banner2.png" alt="" fill sizes="100vw" quality={95} style={{ objectFit: "cover", objectPosition: "80% center" }} priority />
-              <div className="hero-slide__bg-scrim" />
+            <div className="hero-slide__actions">
+              <Link href="/branches" className="btn btn--primary">
+                Découvrir les formations
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+              {!isAuthenticated && (
+                <Link href="/connexion" className="btn btn--outline">Se connecter</Link>
+              )}
+              {isAuthenticated && (
+                <Link href={homeRoute} className="btn btn--outline">{roleLabel}</Link>
+              )}
             </div>
 
-            <div className="hero-slide__inner">
-              <div className="hero-slide__text">
-                <span className="hero-slide__eyebrow">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
-                  </svg>
-                  Commencer maintenant
-                </span>
-
-                <h1 className="hero-slide__title">
-                  Vous êtes particulier
-                  <em>ou entreprise ?</em>
-                </h1>
-
-                <p className="hero-slide__subtitle">
-                  Choisissez votre profil pour accéder directement au formulaire
-                  d&apos;inscription qui vous correspond.
-                </p>
-
-                <div className="hero-slide__choices">
-                  <Link href="/inscription" className="hero-slide__choice">
-                    <span className="hero-slide__choice-icon">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </span>
-                    <span className="hero-slide__choice-text">
-                      <strong>Particulier</strong>
-                      <span>Je m&apos;inscris à une formation</span>
-                    </span>
-                    <span className="hero-slide__choice-arrow">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
-                    </span>
-                  </Link>
-
-                  <Link href="/inscription-entreprise" className="hero-slide__choice">
-                    <span className="hero-slide__choice-icon">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 21h18M6 21V7l6-4 6 4v14M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1" />
-                      </svg>
-                    </span>
-                    <span className="hero-slide__choice-text">
-                      <strong>Entreprise</strong>
-                      <span>Je forme mes équipes / je demande un devis</span>
-                    </span>
-                    <span className="hero-slide__choice-arrow">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
-                    </span>
-                  </Link>
-                </div>
-              </div>
+            <div className="hero-slide__features">
+              <span className="hero-slide__feature">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 21h18M6 21V7a1 1 0 0 1 1-1h4v15M13 21V3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v18" />
+                </svg>
+                Programmes de formation ciblés
+              </span>
+              <span className="hero-slide__feature-sep" aria-hidden="true" />
+              <span className="hero-slide__feature">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                Accompagnement personnalisé
+              </span>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
 
-      <div className="hero-slider__nav">
-        <div className="hero-slider__dots">
-          {Array.from({ length: total }).map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              className={`hero-slider__dot${i === slide ? " hero-slider__dot--active" : ""}`}
-              onClick={() => setSlide(i)}
-              aria-label={`Aller au slide ${i + 1}`}
+          {/* Lecture unique : l'animation se termine sur le réseau complet et reste figée. */}
+          <div className="hero-slide__media" aria-hidden="true">
+            <video
+              className="hero-slide__video"
+              src="/videos/hero_in_academy.mp4"
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              tabIndex={-1}
             />
-          ))}
+          </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
