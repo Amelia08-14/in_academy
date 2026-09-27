@@ -7370,6 +7370,12 @@ button {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Reçue le / Statut : contenu toujours court (date, badge) — ne doit jamais
+   passer à la ligne, même si la colonne est étroite. */
+.session-regs-table td:nth-child(5),
+.session-regs-table td:nth-child(6) {
+  white-space: nowrap;
+}
 
 .admin-cell-actions--compact { flex-wrap: nowrap; gap: 6px; }
 
