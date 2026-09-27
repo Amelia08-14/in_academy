@@ -5792,6 +5792,11 @@ button {
   box-shadow: 0 8px 48px rgba(1, 30, 65, 0.22);
 }
 
+@media (max-width: 560px) {
+  .admin-modal-overlay { padding: 12px; }
+  .admin-modal { padding: 22px 18px; border-radius: 16px; }
+}
+
 .admin-modal__header {
   display: flex;
   align-items: center;
@@ -7375,6 +7380,24 @@ button {
 .session-regs-table td:nth-child(5),
 .session-regs-table td:nth-child(6) {
   white-space: nowrap;
+}
+
+/* En dessous de cette largeur, les % de colgroup écraseraient chaque colonne à
+   quelques pixels (texte et boutons chevauchants, illisibles) au lieu de
+   déclencher le scroll horizontal de .admin-table-wrap : on revient au calcul
+   naturel des largeurs + un min-width, pour que le tableau devienne
+   scrollable-mais-lisible plutôt que cassé sur mobile. */
+@media (max-width: 700px) {
+  .session-regs-table {
+    table-layout: auto;
+    min-width: 640px;
+  }
+  .session-regs-table td:nth-child(2),
+  .session-regs-table td:nth-child(4) {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
 }
 
 .admin-cell-actions--compact { flex-wrap: nowrap; gap: 6px; }

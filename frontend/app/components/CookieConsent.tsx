@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 const CONSENT_KEY = "ia_cookie_consent";
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
@@ -12,6 +13,7 @@ type Consent = "granted" | "denied";
 // Bandeau de consentement cookies (RGPD) : le pixel Meta ne se charge
 // qu'après acceptation explicite, jamais par défaut.
 export default function CookieConsent() {
+  const pathname = usePathname();
   const [consent, setConsent] = useState<Consent | null>(null);
   const [bannerVisible, setBannerVisible] = useState(false);
 
@@ -32,6 +34,11 @@ export default function CookieConsent() {
     setConsent(value);
     setBannerVisible(false);
   }
+
+  // Back-office interne : pas de mesure d'audience à consentir, et le bandeau
+  // (fixed, pleine largeur, z-index au-dessus des modales admin) bloquait les
+  // boutons en bas d'écran sur mobile — rien n'y était cliquable.
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>
