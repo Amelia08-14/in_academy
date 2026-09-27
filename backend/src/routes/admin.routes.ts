@@ -612,6 +612,7 @@ router.get("/sessions", async (_req: AuthRequest, res: Response) => {
       include: {
         category: true,
         formation: true,
+        trainer: { select: { id: true, displayName: true } },
         _count: { select: { enrollments: { where: { status: "CONFIRMED" } } } },
         registrations: { select: { status: true } },
       },
@@ -636,11 +637,11 @@ router.get("/sessions", async (_req: AuthRequest, res: Response) => {
 router.post("/sessions", async (req: AuthRequest, res: Response) => {
   try {
     const {
-      title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId,
+      title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId, trainerId,
       startDate, endDate, location, minCapacity, maxCapacity,
     } = req.body as {
       title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; posterImageUrl?: string | null; duration?: string;
-      price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; startDate: string; endDate?: string; location?: string;
+      price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; trainerId?: string | null; startDate: string; endDate?: string; location?: string;
       minCapacity?: number; maxCapacity?: number;
     };
 
@@ -678,13 +679,14 @@ router.post("/sessions", async (req: AuthRequest, res: Response) => {
         pricePeriod: pricePeriod === "MONTH" ? "MONTH" : "TOTAL",
         categoryId: resolvedCategoryId,
         formationId: formation?.id ?? null,
+        trainerId: trainerId || null,
         startDate: new Date(startDate),
         endDate: endDate ? new Date(endDate) : null,
         location: location ?? null,
         minCapacity: minCapacity ?? 1,
         maxCapacity: maxCapacity ?? 20,
       },
-      include: { category: true },
+      include: { category: true, trainer: { select: { id: true, displayName: true } } },
     });
     res.status(201).json(session);
   } catch (err) {
@@ -697,11 +699,11 @@ router.post("/sessions", async (req: AuthRequest, res: Response) => {
 router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
   try {
     const {
-      title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId,
+      title, description, descriptionAr, coverImageUrl, posterImageUrl, duration, price, pricePeriod, categoryId, formationId, trainerId,
       startDate, endDate, location, minCapacity, maxCapacity, status,
     } = req.body as {
       title?: string; description?: string; descriptionAr?: string | null; coverImageUrl?: string; posterImageUrl?: string | null; duration?: string;
-      price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; startDate?: string; endDate?: string | null; location?: string;
+      price?: number | null; pricePeriod?: string; categoryId?: string; formationId?: string | null; trainerId?: string | null; startDate?: string; endDate?: string | null; location?: string;
       minCapacity?: number; maxCapacity?: number; status?: string;
     };
 
@@ -742,6 +744,7 @@ router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
           price: price !== undefined ? price : formation.price,
         }),
         ...(categoryId !== undefined && !formation && { categoryId }),
+        ...(trainerId !== undefined && { trainerId: trainerId || null }),
         ...(startDate !== undefined && { startDate: new Date(startDate) }),
         ...(endDate !== undefined && { endDate: endDate ? new Date(endDate) : null }),
         ...(location !== undefined && { location }),
@@ -749,7 +752,7 @@ router.patch("/sessions/:id", async (req: AuthRequest, res: Response) => {
         ...(maxCapacity !== undefined && { maxCapacity }),
         ...(status !== undefined && { status: status as "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED" }),
       },
-      include: { category: true, formation: true },
+      include: { category: true, formation: true, trainer: { select: { id: true, displayName: true } } },
     });
     res.json(session);
   } catch (err) {

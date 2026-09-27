@@ -165,7 +165,7 @@ router.get("/me", async (req: Request, res: Response) => {
     const payload = verifyToken(header.slice(7));
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
-      include: { learnerProfile: true, companyAdmin: { include: { company: true } } },
+      include: { learnerProfile: true, companyAdmin: { include: { company: true } }, trainerProfile: { include: { trainer: true } } },
     });
     if (!user) { res.status(404).json({ error: "Utilisateur introuvable" }); return; }
     const { hashedPassword: _, ...safeUser } = user;

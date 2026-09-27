@@ -7,6 +7,7 @@ import { formatDa } from "@/lib/format";
 import { fileUrl } from "@/lib/fileUrl";
 
 interface Category { id: string; name: string; isMetier?: boolean }
+interface TrainerOption { id: string; displayName: string }
 type Tab = "particulier" | "metier";
 interface Session {
   id: string;
@@ -26,6 +27,8 @@ interface Session {
   minCapacity: number;
   maxCapacity: number;
   status: "SCHEDULED" | "ONGOING" | "COMPLETED" | "CANCELLED";
+  trainerId: string | null;
+  trainer: TrainerOption | null;
   _count: { enrollments: number };
   registrationCounts: { confirmed: number; pending: number; total: number };
 }
@@ -63,6 +66,7 @@ interface EditState {
   minCapacity: number;
   maxCapacity: number;
   status: Session["status"];
+  trainerId: string;
 }
 
 const EMPTY: EditState = {
@@ -83,6 +87,7 @@ const EMPTY: EditState = {
   minCapacity: 1,
   maxCapacity: 20,
   status: "SCHEDULED",
+  trainerId: "",
 };
 
 const STATUS_LABELS: Record<Session["status"], string> = {
@@ -224,7 +229,7 @@ function SessionRegistrationsModal({
 
   return (
     <div className="admin-modal-overlay" onClick={onClose}>
-      <div className="admin-modal" style={{ maxWidth: 1100, width: "95vw" }} onClick={(e) => e.stopPropagation()}>
+      <div className="admin-modal" style={{ maxWidth: 1240, width: "96vw" }} onClick={(e) => e.stopPropagation()}>
         <div className="admin-modal__header">
           <h2 className="admin-modal__title" style={{ fontSize: 16 }}>Inscrits (inscription directe) — {session.title}</h2>
           <button className="admin-modal__close" onClick={onClose}>✕</button>
@@ -238,10 +243,19 @@ function SessionRegistrationsModal({
           <p style={{ color: "var(--text-muted)", fontSize: 14 }}>Aucune inscription directe pour l&apos;instant.</p>
         ) : (
           <div className="admin-table-wrap">
-            <table className="admin-table">
+            <table className="admin-table session-regs-table">
+              <colgroup>
+                <col style={{ width: "14%" }} />
+                <col style={{ width: "17%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "14%" }} />
+                <col style={{ width: "8%" }} />
+                <col style={{ width: "8%" }} />
+                <col style={{ width: "29%" }} />
+              </colgroup>
               <thead>
                 <tr>
-                  <th>Nom</th><th>Prénom</th><th>Email</th><th>Téléphone</th><th>Niveau d&apos;étude</th>
+                  <th>Nom</th><th>Email</th><th>Téléphone</th><th>Niveau d&apos;étude</th>
                   <th>Reçue le</th><th>Statut</th><th></th>
                 </tr>
               </thead>
@@ -249,26 +263,25 @@ function SessionRegistrationsModal({
                 {regs.map((r) => (
                   <tr key={r.id}>
                     <td>
-                      {r.lastName}
+                      {r.firstName} {r.lastName}
                       {r.userId && (
                         <span className="admin-badge admin-badge--role" style={{ marginLeft: 8, fontSize: 10 }}>compte</span>
                       )}
                     </td>
-                    <td>{r.firstName}</td>
-                    <td style={{ fontSize: 13 }}>{r.email}</td>
+                    <td style={{ fontSize: 13 }} title={r.email}>{r.email}</td>
                     <td style={{ fontSize: 13, whiteSpace: "nowrap" }}>{r.phone}</td>
-                    <td style={{ fontSize: 13 }}>{r.educationLevel}</td>
-                    <td style={{ fontSize: 12, color: "var(--text-muted)" }}>{new Date(r.createdAt).toLocaleDateString("fr-FR")}</td>
+                    <td style={{ fontSize: 13 }} title={r.educationLevel}>{r.educationLevel}</td>
+                    <td style={{ fontSize: 12, color: "var(--text-muted)", whiteSpace: "nowrap" }}>{new Date(r.createdAt).toLocaleDateString("fr-FR")}</td>
                     <td><span className={`admin-badge admin-badge--${REG_CLS[r.status]}`}>{REG_LABEL[r.status]}</span></td>
                     <td>
-                      <div className="admin-cell-actions">
+                      <div className="admin-cell-actions admin-cell-actions--compact">
                         {r.status !== "CONFIRMED" && (
-                          <button className="admin-btn admin-btn--confirm" onClick={() => act(r.id, "confirm")}>Valider</button>
+                          <button className="admin-btn admin-btn--confirm admin-btn--sm" onClick={() => act(r.id, "confirm")}>Valider</button>
                         )}
                         {r.status !== "REJECTED" && (
-                          <button className="admin-btn admin-btn--cancel" onClick={() => act(r.id, "reject")}>Refuser</button>
+                          <button className="admin-btn admin-btn--cancel admin-btn--sm" onClick={() => act(r.id, "reject")}>Refuser</button>
                         )}
-                        <button className="admin-btn" onClick={() => act(r.id, "delete")}>Retirer</button>
+                        <button className="admin-btn admin-btn--sm" onClick={() => act(r.id, "delete")}>Retirer</button>
                       </div>
                     </td>
                   </tr>
@@ -285,6 +298,7 @@ function SessionRegistrationsModal({
 export default function AdminSessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [trainers, setTrainers] = useState<TrainerOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>("particulier");
   const [search, setSearch] = useState("");
@@ -311,8 +325,9 @@ export default function AdminSessionsPage() {
     Promise.all([
       api.get<Session[]>("/admin/sessions"),
       api.get<Category[]>("/admin/categories"),
+      api.get<TrainerOption[]>("/trainers"),
     ])
-      .then(([s, c]) => { setSessions(s); setCategories(c); })
+      .then(([s, c, t]) => { setSessions(s); setCategories(c); setTrainers(t); })
       .finally(() => setLoading(false));
   };
 
@@ -355,6 +370,7 @@ export default function AdminSessionsPage() {
       minCapacity: s.minCapacity,
       maxCapacity: s.maxCapacity,
       status: s.status,
+      trainerId: s.trainerId ?? "",
     });
     setSaveError("");
   };
@@ -380,6 +396,7 @@ export default function AdminSessionsPage() {
         minCapacity: editing.minCapacity,
         maxCapacity: editing.maxCapacity,
         status: editing.status,
+        trainerId: editing.trainerId || null,
       };
       if (editing.id) {
         await api.patch(`/admin/sessions/${editing.id}`, payload);
@@ -626,6 +643,23 @@ export default function AdminSessionsPage() {
                 </>
               )}
 
+              <div className="auth-field">
+                <label className="auth-label">Formateur assigné (optionnel)</label>
+                <select
+                  className="auth-input"
+                  value={editing.trainerId}
+                  onChange={(e) => setEditing((v) => v ? { ...v, trainerId: e.target.value } : v)}
+                >
+                  <option value="">Aucun formateur assigné</option>
+                  {trainers.map((t) => (
+                    <option key={t.id} value={t.id}>{t.displayName}</option>
+                  ))}
+                </select>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+                  Le formateur assigné voit cette session dans son espace formateur et peut y ajouter des supports de cours.
+                </p>
+              </div>
+
               <div className="auth-row">
                 <div className="auth-field">
                   <label className="auth-label">Nombre d&apos;inscrits minimum</label>
@@ -726,7 +760,10 @@ export default function AdminSessionsPage() {
             )}
             {filtered.map((s) => (
               <tr key={s.id}>
-                <td><span className="admin-table__name">{s.title}</span></td>
+                <td>
+                  <span className="admin-table__name">{s.title}</span>
+                  {s.trainer && <span className="admin-table__email">👤 {s.trainer.displayName}</span>}
+                </td>
                 <td style={{ fontSize: 12, color: "var(--text-muted)" }}>{s.category.name}</td>
                 <td style={{ fontSize: 13 }}>{new Date(s.startDate).toLocaleDateString("fr-FR")}</td>
                 <td style={{ fontSize: 13 }}>{s.duration ?? <span style={{ color: "var(--border)" }}>—</span>}</td>

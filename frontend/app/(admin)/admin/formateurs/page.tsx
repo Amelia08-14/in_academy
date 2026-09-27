@@ -20,6 +20,7 @@ interface Trainer {
   cvUrl: string | null;
   isActive: boolean;
   formations: FormationLink[];
+  trainerProfile: { id: string } | null;
 }
 
 const EMPTY_FORM = {
@@ -36,6 +37,11 @@ export default function AdminFormateursPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [accountTrainer, setAccountTrainer] = useState<Trainer | null>(null);
+  const [accountForm, setAccountForm] = useState({ email: "", password: "" });
+  const [accountSaving, setAccountSaving] = useState(false);
+  const [accountError, setAccountError] = useState("");
+  const [accountSuccess, setAccountSuccess] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -109,6 +115,29 @@ export default function AdminFormateursPage() {
       load();
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : "Suppression impossible (formateur lié à des formations).");
+    }
+  };
+
+  const openAccount = (t: Trainer) => {
+    setAccountTrainer(t);
+    setAccountForm({ email: t.email ?? "", password: "" });
+    setAccountError("");
+    setAccountSuccess(false);
+  };
+
+  const handleCreateAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!accountTrainer) return;
+    setAccountSaving(true);
+    setAccountError("");
+    try {
+      await api.post(`/trainers/${accountTrainer.id}/account`, accountForm);
+      setAccountSuccess(true);
+      load();
+    } catch (err: unknown) {
+      setAccountError(err instanceof Error ? err.message : "Erreur lors de la création du compte");
+    } finally {
+      setAccountSaving(false);
     }
   };
 
@@ -263,12 +292,13 @@ export default function AdminFormateursPage() {
               <th>Spécialité</th>
               <th>Formations</th>
               <th>Statut</th>
+              <th>Compte</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && !loading && (
-              <tr><td colSpan={5} className="admin-table__empty">Aucun formateur trouvé</td></tr>
+              <tr><td colSpan={6} className="admin-table__empty">Aucun formateur trouvé</td></tr>
             )}
             {filtered.map((t) => (
               <tr key={t.id} style={{ opacity: t.isActive ? 1 : 0.55 }}>
@@ -291,6 +321,13 @@ export default function AdminFormateursPage() {
                   <span className={`admin-badge admin-badge--${t.isActive ? "confirmed" : "cancelled"}`}>
                     {t.isActive ? "Actif" : "Inactif"}
                   </span>
+                </td>
+                <td>
+                  {t.trainerProfile ? (
+                    <span className="admin-badge admin-badge--confirmed">Compte actif</span>
+                  ) : (
+                    <button className="admin-btn" onClick={() => openAccount(t)}>+ Créer un compte</button>
+                  )}
                 </td>
                 <td>
                   <div className="admin-actions">
@@ -320,6 +357,64 @@ export default function AdminFormateursPage() {
           </tbody>
         </table>
       </div>
+
+      {/* ── Création de compte formateur ── */}
+      {accountTrainer && (
+        <div className="admin-modal-overlay" onClick={() => setAccountTrainer(null)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal__header">
+              <h2 className="admin-modal__title" style={{ fontSize: 16 }}>
+                Créer un compte pour {accountTrainer.displayName}
+              </h2>
+              <button className="admin-modal__close" onClick={() => setAccountTrainer(null)}>✕</button>
+            </div>
+
+            <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>
+              Ce compte lui donne accès à son espace formateur : les sessions qui lui sont
+              assignées, et l&apos;ajout de supports de cours pour chacune.
+            </p>
+
+            {accountError && <div className="auth-error">{accountError}</div>}
+            {accountSuccess ? (
+              <>
+                <div className="auth-success" style={{ marginBottom: 16 }}>
+                  Compte créé avec succès. Communiquez ces identifiants au formateur.
+                </div>
+                <div className="auth-form-actions">
+                  <button type="button" className="btn btn--primary" onClick={() => setAccountTrainer(null)}>Fermer</button>
+                </div>
+              </>
+            ) : (
+              <form onSubmit={handleCreateAccount} className="auth-form">
+                <div className="auth-field">
+                  <label className="auth-label">Email *</label>
+                  <input
+                    type="email" className="auth-input" required
+                    value={accountForm.email}
+                    onChange={(e) => setAccountForm((v) => ({ ...v, email: e.target.value }))}
+                    placeholder="formateur@email.com"
+                  />
+                </div>
+                <div className="auth-field">
+                  <label className="auth-label">Mot de passe *</label>
+                  <input
+                    type="password" className="auth-input" required minLength={8}
+                    value={accountForm.password}
+                    onChange={(e) => setAccountForm((v) => ({ ...v, password: e.target.value }))}
+                    placeholder="Min. 8 caractères"
+                  />
+                </div>
+                <div className="auth-form-actions">
+                  <button type="button" className="btn btn--outline" onClick={() => setAccountTrainer(null)}>Annuler</button>
+                  <button type="submit" className="btn btn--primary" disabled={accountSaving}>
+                    {accountSaving ? "Création…" : "Créer le compte"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

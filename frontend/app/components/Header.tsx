@@ -12,6 +12,7 @@ interface Me {
   email: string;
   learnerProfile: { firstName: string; lastName: string } | null;
   companyAdmin: { firstName: string | null; lastName: string | null; company: { raisonSociale: string } } | null;
+  trainerProfile: { firstName: string; lastName: string } | null;
 }
 
 function initials(text: string): string {
@@ -90,7 +91,9 @@ export default function Header() {
 
   const displayName = me?.learnerProfile
     ? `${me.learnerProfile.firstName} ${me.learnerProfile.lastName}`
-    : me?.companyAdmin?.company.raisonSociale ?? null;
+    : me?.trainerProfile
+      ? `${me.trainerProfile.firstName} ${me.trainerProfile.lastName}`
+      : me?.companyAdmin?.company.raisonSociale ?? null;
 
   const subLabel =
     role === "COMPANY_ADMIN" && me?.companyAdmin?.firstName
@@ -103,10 +106,12 @@ export default function Header() {
           { label: "Mes devis", href: "/espace-entreprise?tab=devis" },
           { label: "Mes formations", href: "/espace-entreprise?tab=formations" },
         ]
-      : [
-          { label: "Mon profil", href: "/dashboard?tab=profil" },
-          { label: "Mes formations", href: "/dashboard?tab=formations" },
-        ];
+      : role === "TRAINER"
+        ? [{ label: "Mes sessions", href: "/espace-formateur" }]
+        : [
+            { label: "Mon profil", href: "/dashboard?tab=profil" },
+            { label: "Mes formations", href: "/dashboard?tab=formations" },
+          ];
 
   return (
     <>

@@ -141,6 +141,7 @@ export type LearnerProfileScalarFieldEnum = (typeof LearnerProfileScalarFieldEnu
 export const TrainerProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  trainerId: 'trainerId',
   firstName: 'firstName',
   lastName: 'lastName',
   phone: 'phone',
@@ -530,6 +531,7 @@ export type LearnerProfileOrderByRelevanceFieldEnum = (typeof LearnerProfileOrde
 export const TrainerProfileOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
+  trainerId: 'trainerId',
   firstName: 'firstName',
   lastName: 'lastName',
   phone: 'phone'

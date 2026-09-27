@@ -1,4 +1,5 @@
 import { Router, Response } from "express";
+import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { authenticate, requireRole, AuthRequest } from "@/middlewares/auth.middleware";
 import { z } from "zod";
@@ -34,6 +35,9 @@ router.get("/", async (_req: AuthRequest, res: Response) => {
           },
         },
       },
+      // Présence (sans détail) : permet à l'admin de savoir si ce formateur a déjà
+      // un compte de connexion, sans exposer d'info sensible sur la route publique.
+      trainerProfile: { select: { id: true } },
     },
   });
   res.json(trainers);
@@ -101,6 +105,52 @@ router.delete("/:id", async (req: AuthRequest, res: Response) => {
     data: { isActive: false },
   });
   res.json({ success: true });
+});
+
+// POST /api/trainers/:id/account — crée un compte de connexion (rôle TRAINER) pour ce
+// formateur, afin qu'il accède à son espace formateur (sessions assignées, supports de cours).
+router.post("/:id/account", async (req: AuthRequest, res: Response) => {
+  try {
+    const trainerId = req.params["id"] as string;
+    const { email, password } = req.body as { email?: string; password?: string };
+    if (!email || !password || password.length < 8) {
+      res.status(400).json({ error: "Email et mot de passe (8 caractères minimum) requis" });
+      return;
+    }
+
+    const trainer = await prisma.trainer.findUnique({
+      where: { id: trainerId },
+      include: { trainerProfile: true },
+    });
+    if (!trainer) { res.status(404).json({ error: "Formateur introuvable" }); return; }
+    if (trainer.trainerProfile) { res.status(409).json({ error: "Ce formateur a déjà un compte" }); return; }
+
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) { res.status(409).json({ error: "Cet email est déjà utilisé" }); return; }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await prisma.user.create({
+      data: {
+        email,
+        hashedPassword,
+        role: "TRAINER",
+        trainerProfile: {
+          create: {
+            trainerId: trainer.id,
+            firstName: trainer.firstName,
+            lastName: trainer.lastName,
+            phone: trainer.phone,
+          },
+        },
+      },
+      include: { trainerProfile: true },
+      omit: { hashedPassword: true },
+    });
+    res.status(201).json(user);
+  } catch (err) {
+    console.error("[trainers account post]", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
 });
 
 // PATCH /api/trainers/:id/formations — lier/délier des formations

@@ -7357,6 +7357,24 @@ button {
 
 .admin-table tbody tr:hover td { background: #fafbfc; }
 
+/* Table compacte (ex. inscrits d'une session) : largeurs fixes via <colgroup>,
+   pour que les colonnes + boutons d'action tiennent sans scroll horizontal
+   dans une modale au lieu de laisser le navigateur deviner les largeurs. */
+.session-regs-table {
+  min-width: 0;
+  table-layout: fixed;
+}
+.session-regs-table td:nth-child(2),
+.session-regs-table td:nth-child(4) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-cell-actions--compact { flex-wrap: nowrap; gap: 6px; }
+
+.admin-btn--sm { padding: 5px 9px; font-size: 11px; }
+
 .admin-table__empty {
   height: 150px;
   padding: 46px 24px !important;

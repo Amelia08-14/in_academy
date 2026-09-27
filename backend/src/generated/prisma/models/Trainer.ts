@@ -240,6 +240,7 @@ export type TrainerWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Trainer"> | Date | string
   formations?: Prisma.FormationTrainerListRelationFilter
   sessions?: Prisma.TrainingSessionListRelationFilter
+  trainerProfile?: Prisma.XOR<Prisma.TrainerProfileNullableScalarRelationFilter, Prisma.TrainerProfileWhereInput> | null
 }
 
 export type TrainerOrderByWithRelationInput = {
@@ -257,6 +258,7 @@ export type TrainerOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   formations?: Prisma.FormationTrainerOrderByRelationAggregateInput
   sessions?: Prisma.TrainingSessionOrderByRelationAggregateInput
+  trainerProfile?: Prisma.TrainerProfileOrderByWithRelationInput
   _relevance?: Prisma.TrainerOrderByRelevanceInput
 }
 
@@ -278,6 +280,7 @@ export type TrainerWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Trainer"> | Date | string
   formations?: Prisma.FormationTrainerListRelationFilter
   sessions?: Prisma.TrainingSessionListRelationFilter
+  trainerProfile?: Prisma.XOR<Prisma.TrainerProfileNullableScalarRelationFilter, Prisma.TrainerProfileWhereInput> | null
 }, "id" | "email">
 
 export type TrainerOrderByWithAggregationInput = {
@@ -331,6 +334,7 @@ export type TrainerCreateInput = {
   updatedAt?: Date | string
   formations?: Prisma.FormationTrainerCreateNestedManyWithoutTrainerInput
   sessions?: Prisma.TrainingSessionCreateNestedManyWithoutTrainerInput
+  trainerProfile?: Prisma.TrainerProfileCreateNestedOneWithoutTrainerInput
 }
 
 export type TrainerUncheckedCreateInput = {
@@ -348,6 +352,7 @@ export type TrainerUncheckedCreateInput = {
   updatedAt?: Date | string
   formations?: Prisma.FormationTrainerUncheckedCreateNestedManyWithoutTrainerInput
   sessions?: Prisma.TrainingSessionUncheckedCreateNestedManyWithoutTrainerInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedCreateNestedOneWithoutTrainerInput
 }
 
 export type TrainerUpdateInput = {
@@ -365,6 +370,7 @@ export type TrainerUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formations?: Prisma.FormationTrainerUpdateManyWithoutTrainerNestedInput
   sessions?: Prisma.TrainingSessionUpdateManyWithoutTrainerNestedInput
+  trainerProfile?: Prisma.TrainerProfileUpdateOneWithoutTrainerNestedInput
 }
 
 export type TrainerUncheckedUpdateInput = {
@@ -382,6 +388,7 @@ export type TrainerUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formations?: Prisma.FormationTrainerUncheckedUpdateManyWithoutTrainerNestedInput
   sessions?: Prisma.TrainingSessionUncheckedUpdateManyWithoutTrainerNestedInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedUpdateOneWithoutTrainerNestedInput
 }
 
 export type TrainerCreateManyInput = {
@@ -427,6 +434,11 @@ export type TrainerUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TrainerNullableScalarRelationFilter = {
+  is?: Prisma.TrainerWhereInput | null
+  isNot?: Prisma.TrainerWhereInput | null
 }
 
 export type TrainerOrderByRelevanceInput = {
@@ -485,9 +497,20 @@ export type TrainerScalarRelationFilter = {
   isNot?: Prisma.TrainerWhereInput
 }
 
-export type TrainerNullableScalarRelationFilter = {
-  is?: Prisma.TrainerWhereInput | null
-  isNot?: Prisma.TrainerWhereInput | null
+export type TrainerCreateNestedOneWithoutTrainerProfileInput = {
+  create?: Prisma.XOR<Prisma.TrainerCreateWithoutTrainerProfileInput, Prisma.TrainerUncheckedCreateWithoutTrainerProfileInput>
+  connectOrCreate?: Prisma.TrainerCreateOrConnectWithoutTrainerProfileInput
+  connect?: Prisma.TrainerWhereUniqueInput
+}
+
+export type TrainerUpdateOneWithoutTrainerProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.TrainerCreateWithoutTrainerProfileInput, Prisma.TrainerUncheckedCreateWithoutTrainerProfileInput>
+  connectOrCreate?: Prisma.TrainerCreateOrConnectWithoutTrainerProfileInput
+  upsert?: Prisma.TrainerUpsertWithoutTrainerProfileInput
+  disconnect?: Prisma.TrainerWhereInput | boolean
+  delete?: Prisma.TrainerWhereInput | boolean
+  connect?: Prisma.TrainerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TrainerUpdateToOneWithWhereWithoutTrainerProfileInput, Prisma.TrainerUpdateWithoutTrainerProfileInput>, Prisma.TrainerUncheckedUpdateWithoutTrainerProfileInput>
 }
 
 export type TrainerCreateNestedOneWithoutFormationsInput = {
@@ -520,6 +543,90 @@ export type TrainerUpdateOneWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TrainerUpdateToOneWithWhereWithoutSessionsInput, Prisma.TrainerUpdateWithoutSessionsInput>, Prisma.TrainerUncheckedUpdateWithoutSessionsInput>
 }
 
+export type TrainerCreateWithoutTrainerProfileInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  displayName: string
+  email?: string | null
+  phone?: string | null
+  speciality?: string | null
+  bio?: string | null
+  cvUrl?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  formations?: Prisma.FormationTrainerCreateNestedManyWithoutTrainerInput
+  sessions?: Prisma.TrainingSessionCreateNestedManyWithoutTrainerInput
+}
+
+export type TrainerUncheckedCreateWithoutTrainerProfileInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  displayName: string
+  email?: string | null
+  phone?: string | null
+  speciality?: string | null
+  bio?: string | null
+  cvUrl?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  formations?: Prisma.FormationTrainerUncheckedCreateNestedManyWithoutTrainerInput
+  sessions?: Prisma.TrainingSessionUncheckedCreateNestedManyWithoutTrainerInput
+}
+
+export type TrainerCreateOrConnectWithoutTrainerProfileInput = {
+  where: Prisma.TrainerWhereUniqueInput
+  create: Prisma.XOR<Prisma.TrainerCreateWithoutTrainerProfileInput, Prisma.TrainerUncheckedCreateWithoutTrainerProfileInput>
+}
+
+export type TrainerUpsertWithoutTrainerProfileInput = {
+  update: Prisma.XOR<Prisma.TrainerUpdateWithoutTrainerProfileInput, Prisma.TrainerUncheckedUpdateWithoutTrainerProfileInput>
+  create: Prisma.XOR<Prisma.TrainerCreateWithoutTrainerProfileInput, Prisma.TrainerUncheckedCreateWithoutTrainerProfileInput>
+  where?: Prisma.TrainerWhereInput
+}
+
+export type TrainerUpdateToOneWithWhereWithoutTrainerProfileInput = {
+  where?: Prisma.TrainerWhereInput
+  data: Prisma.XOR<Prisma.TrainerUpdateWithoutTrainerProfileInput, Prisma.TrainerUncheckedUpdateWithoutTrainerProfileInput>
+}
+
+export type TrainerUpdateWithoutTrainerProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  formations?: Prisma.FormationTrainerUpdateManyWithoutTrainerNestedInput
+  sessions?: Prisma.TrainingSessionUpdateManyWithoutTrainerNestedInput
+}
+
+export type TrainerUncheckedUpdateWithoutTrainerProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  speciality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  formations?: Prisma.FormationTrainerUncheckedUpdateManyWithoutTrainerNestedInput
+  sessions?: Prisma.TrainingSessionUncheckedUpdateManyWithoutTrainerNestedInput
+}
+
 export type TrainerCreateWithoutFormationsInput = {
   id?: string
   firstName: string
@@ -534,6 +641,7 @@ export type TrainerCreateWithoutFormationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.TrainingSessionCreateNestedManyWithoutTrainerInput
+  trainerProfile?: Prisma.TrainerProfileCreateNestedOneWithoutTrainerInput
 }
 
 export type TrainerUncheckedCreateWithoutFormationsInput = {
@@ -550,6 +658,7 @@ export type TrainerUncheckedCreateWithoutFormationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.TrainingSessionUncheckedCreateNestedManyWithoutTrainerInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedCreateNestedOneWithoutTrainerInput
 }
 
 export type TrainerCreateOrConnectWithoutFormationsInput = {
@@ -582,6 +691,7 @@ export type TrainerUpdateWithoutFormationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.TrainingSessionUpdateManyWithoutTrainerNestedInput
+  trainerProfile?: Prisma.TrainerProfileUpdateOneWithoutTrainerNestedInput
 }
 
 export type TrainerUncheckedUpdateWithoutFormationsInput = {
@@ -598,6 +708,7 @@ export type TrainerUncheckedUpdateWithoutFormationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.TrainingSessionUncheckedUpdateManyWithoutTrainerNestedInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedUpdateOneWithoutTrainerNestedInput
 }
 
 export type TrainerCreateWithoutSessionsInput = {
@@ -614,6 +725,7 @@ export type TrainerCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formations?: Prisma.FormationTrainerCreateNestedManyWithoutTrainerInput
+  trainerProfile?: Prisma.TrainerProfileCreateNestedOneWithoutTrainerInput
 }
 
 export type TrainerUncheckedCreateWithoutSessionsInput = {
@@ -630,6 +742,7 @@ export type TrainerUncheckedCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   formations?: Prisma.FormationTrainerUncheckedCreateNestedManyWithoutTrainerInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedCreateNestedOneWithoutTrainerInput
 }
 
 export type TrainerCreateOrConnectWithoutSessionsInput = {
@@ -662,6 +775,7 @@ export type TrainerUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formations?: Prisma.FormationTrainerUpdateManyWithoutTrainerNestedInput
+  trainerProfile?: Prisma.TrainerProfileUpdateOneWithoutTrainerNestedInput
 }
 
 export type TrainerUncheckedUpdateWithoutSessionsInput = {
@@ -678,6 +792,7 @@ export type TrainerUncheckedUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   formations?: Prisma.FormationTrainerUncheckedUpdateManyWithoutTrainerNestedInput
+  trainerProfile?: Prisma.TrainerProfileUncheckedUpdateOneWithoutTrainerNestedInput
 }
 
 
@@ -735,6 +850,7 @@ export type TrainerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   updatedAt?: boolean
   formations?: boolean | Prisma.Trainer$formationsArgs<ExtArgs>
   sessions?: boolean | Prisma.Trainer$sessionsArgs<ExtArgs>
+  trainerProfile?: boolean | Prisma.Trainer$trainerProfileArgs<ExtArgs>
   _count?: boolean | Prisma.TrainerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trainer"]>
 
@@ -759,6 +875,7 @@ export type TrainerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type TrainerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   formations?: boolean | Prisma.Trainer$formationsArgs<ExtArgs>
   sessions?: boolean | Prisma.Trainer$sessionsArgs<ExtArgs>
+  trainerProfile?: boolean | Prisma.Trainer$trainerProfileArgs<ExtArgs>
   _count?: boolean | Prisma.TrainerCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -767,6 +884,7 @@ export type $TrainerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     formations: Prisma.$FormationTrainerPayload<ExtArgs>[]
     sessions: Prisma.$TrainingSessionPayload<ExtArgs>[]
+    trainerProfile: Prisma.$TrainerProfilePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1123,6 +1241,7 @@ export interface Prisma__TrainerClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   formations<T extends Prisma.Trainer$formationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trainer$formationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormationTrainerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.Trainer$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trainer$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrainingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  trainerProfile<T extends Prisma.Trainer$trainerProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trainer$trainerProfileArgs<ExtArgs>>): Prisma.Prisma__TrainerProfileClient<runtime.Types.Result.GetResult<Prisma.$TrainerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1557,6 +1676,25 @@ export type Trainer$sessionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.TrainingSessionScalarFieldEnum | Prisma.TrainingSessionScalarFieldEnum[]
+}
+
+/**
+ * Trainer.trainerProfile
+ */
+export type Trainer$trainerProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TrainerProfile
+   */
+  select?: Prisma.TrainerProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TrainerProfile
+   */
+  omit?: Prisma.TrainerProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TrainerProfileInclude<ExtArgs> | null
+  where?: Prisma.TrainerProfileWhereInput
 }
 
 /**

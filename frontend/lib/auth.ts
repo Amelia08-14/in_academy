@@ -32,6 +32,7 @@ export function roleHomeRoute(role: string | null): string {
   if (!role) return "/connexion";
   if (ADMIN_ROLES.includes(role as Role)) return "/admin";
   if (role === "COMPANY_ADMIN") return "/espace-entreprise";
+  if (role === "TRAINER") return "/espace-formateur";
   return "/dashboard";
 }
 
